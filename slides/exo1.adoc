@@ -1,0 +1,24 @@
+=== Project init
+
+start.spring.io
+
+image:webmvc.png[]
+
+=== 1er controller
+
+Créer HelloController.kt dans un sous-package controller
+[source,kotlin]
+----
+@RestController
+class HelloController {
+
+    @GetMapping("/hello")
+    fun hello() = "world"
+}
+----
+
+=== Start && test
+
+Lancer **Application.kt qui est à la racine du projet (clic droit -> run)
+
+Appeler GET localhost:8080/hello et vérifier que la réponse est bien world

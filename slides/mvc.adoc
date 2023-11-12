@@ -1,0 +1,122 @@
+== spring-boot-starter-mvc
+
+----
+curl -XGET localhot:8080/hello
+----
+
+[fragment, step=1]
+----
+Hello World
+----
+
+[transition=fade-out]
+== RestController
+
+[source,kotlin]
+----
+@RestController
+class HelloController {
+
+
+
+}
+----
+
+[transition=fade-in]
+== RestController
+
+[source,kotlin]
+----
+@RestController
+class HelloController {
+
+    @GetMapping("/hello")
+    fun hello() = "Hello World"
+}
+----
+
+== Code !
+
+image:keyboard.jpg[]
+
+include::exo1.adoc[]
+
+== Parameters
+
+[source,kotlin]
+----
+@GetMapping("/hello")
+fun queryParam(@RequestParam name: String) = "world of $name"
+
+@GetMapping("/hello/{name}")
+fun path(@PathVariable name: String) = "world of $name"
+
+@PostMapping("/hello")
+fun body(@RequestBody name: String) = "world of $name"
+
+@GetMapping("/hello")
+fun header(@RequestHeader name: String) = "world of $name"
+----
+
+== Code retour
+
+[source,kotlin]
+----
+    @GetMapping("/hello/{name}")
+    fun path(@PathVariable name: String) = "world of $name"
+
+    @GetMapping("/hello/{name}")
+    fun helloPath(@PathVariable name: String) =
+        ResponseEntity.status(HttpStatus.OK).body("world of $name")
+----
+
+== Code retour
+
+[source,kotlin]
+----
+    @GetMapping("/hello/{name}")
+    fun path(@PathVariable name: String) = "world of $name"
+
+    @GetMapping("/hello/{name}")
+    fun helloPath(@PathVariable name: String) =
+        ResponseEntity.ok("world of $name")
+----
+
+== Code retour
+
+[source,kotlin]
+----
+    @GetMapping("/hello/{name}")
+    fun helloPath(@PathVariable name: String) = if (name.length <= 2) {
+        ResponseEntity.badRequest().body("Name size must be > 2")
+    } else {
+        ResponseEntity.ok("world of $name")
+    }
+----
+
+== DTO
+
+Desing Pattern - Data Transfert Object
+
+Objet simple représentant la donnée
+
+Dans le cas d'une API REST / Json il doit ne pas contenir de cycle pour etre serializable en json.
+
+== DTO
+
+[source,kotlin]
+----
+data class PersonDTO(val name: String, val age: Int)
+----
+
+[source,kotlin]
+----
+@GetMapping("/hello")
+fun hello() = ResponseEntity.ok(PersonDTO("John", 42))
+----
+
+== Code !
+
+image:keyboard.jpg[]
+
+include::exo2.adoc[]

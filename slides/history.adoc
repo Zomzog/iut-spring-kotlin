@@ -1,0 +1,75 @@
+== Spring - Histoire
+
+image:snow-white-blow.gif[]
+
+== Spring - Histoire
+
+[mermaid]
+----
+%%{init: { 'theme': 'dark', 'gitGraph': {'showBranches': true, 'showCommitLabel':true,'mainBranchName': 'Spring'}} }%%
+gitGraph
+    commit id:"2002"
+    commit id:"2004" tag:"1.0"
+    commit id:"2006" tag:"2.0"
+    commit id:"2009" tag:"3.0"
+    commit id:"2013" tag:"4.0"
+    branch SpringBoot
+    commit id:"2014" tag:"1.0.0"
+    checkout Spring
+    commit id:"2017" tag:"5.0"
+    checkout SpringBoot
+    merge Spring id:"2018" tag:"2.0.0"
+    checkout Spring
+    commit id:"2022" tag:"6.0"
+    checkout SpringBoot
+    merge Spring id:"2022-11" tag:"3.0.0"
+----
+== Spring
+
+[mermaid]
+....
+flowchart TD
+    classes --> war{war}
+    spring-lib --> war
+    web.xml --> war
+    war --> tomcat
+    tomcat <--> debug
+....
+
+== Springboot
+
+[mermaid]
+....
+flowchart TD
+    classes --> jar{jar}
+    spring-lib --> springboot-starter
+    tomcat --> springboot-starter
+    springboot-starter --> jar
+    jar --> run(java -jar mon.jar)
+....
+
+[transition=fade-out]
+[.columns]
+== Spring vs SpringBoot
+
+[.column]
+Spring
+image:ingredients.jpg[]
+
+[fragment, step=1]
+[.column]
+SpringBoot
+image:gateau.jpg[]
+
+[transition=fade-in]
+[.columns]
+== Spring vs SpringBoot
+
+[.column]
+Spring
+image:ingredients.jpg[]
+
+[.column]
+SpringBoot
+image:alsa.jpg[]
+

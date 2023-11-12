@@ -1,0 +1,158 @@
+== Tests
+
+image:code_coverage.jpg[]
+
+== Pyramide des Tests
+
+image:pyramide_test.webp[]
+
+== Unit tests
+
+Ces tests ne sont pas liés à l'utilisation de spring.
+
+On peut utiliser un framework de test au choix (junit, spock...)
+et un système d'assertion au choix (junit, assertk...)
+
+Junit est embarqué dans les dependances Spring
+
+== Unit tests
+
+[source,kotlin]
+----
+@Service
+class DummyService {
+
+    fun doSomething(pony: String) = if (pony.length < 3) {
+        "bad"
+    } else {
+        "good"
+    }
+}
+----
+
+[source,kotlin]
+----
+class DummyServiceTest {
+
+    private val service = DummyService()
+
+    @Test
+    fun `length gt 3 is good`() {
+        // WHEN
+       val result = service.doSomething("pony")
+        // THEN
+        assertThat(result).isEqualTo("good") // assertK
+    }
+}
+----
+
+== Integration tests
+
+[source,kotlin]
+----
+@SpringBootTest
+class DummyServiceTest {
+    @Autowired
+    private lateinit var service: DummyService
+
+    @Test
+    fun `length gt 3 is good`() {
+        // WHEN
+       val result = service.doSomething("pony")
+        // THEN
+        assertThat(result).isEqualTo("good") // assertK
+    }
+}
+----
+
+== Bouchons (mock) pour test d'integration
+
+[source,kotlin]
+----
+interface Dependency {
+    fun call(): Boolean
+}
+----
+
+[source,kotlin]
+----
+@Service
+class DummyService(val dependency: Dependency) {
+
+    fun callDep(pony: String) = if (dependency.call()) {
+        "good"
+    } else {
+        "bad"
+    }
+}
+----
+
+== Mockk (version Kotlin de Mockito)
+
+[source,kotlin]
+----
+@SpringBootTest
+class DummyServiceIntTest {
+    @Autowired
+    private lateinit var service: DummyService
+
+    @Test
+    fun `call good`() {
+        // WHEN
+        val result = service.callDep("pony")
+        // THEN
+        assertThat(result).isEqualTo("good")
+    }
+}
+----
+
+
+== Mockk (version Kotlin de Mockito)
+
+[source,kotlin]
+----
+@SpringBootTest
+class DummyServiceIntTest {
+    @MockkBean
+    private lateinit var dependency: Dependency
+    @Autowired
+    private lateinit var service: DummyService
+
+    @Test
+    fun `call good`() {
+        // WHEN
+        val result = service.callDep("pony")
+        // THEN
+        assertThat(result).isEqualTo("good")
+    }
+}
+----
+
+== Mockk (version Kotlin de Mockito)
+
+[source,kotlin]
+----
+@SpringBootTest
+class DummyServiceIntTest {
+    @MockkBean
+    private lateinit var dependency: Dependency
+    @Autowired
+    private lateinit var service: DummyService
+
+    @Test
+    fun `call good`() {
+        // GIVEN
+        every { dependency.call() } returns true
+        // WHEN
+        val result = service.callDep("pony")
+        // THEN
+        assertThat(result).isEqualTo("good")
+    }
+}
+----
+
+== Code !
+
+image:keyboard.jpg[]
+
+include::exo3.adoc[]

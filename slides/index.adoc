@@ -1,0 +1,22 @@
+:source-highlighter: highlightjs
+:revealjs_theme: moon
+:revealjs_progress: true
+:revealjs_slideNumber: true
+:revealjs_history: true
+:revealjs_showNotes: false
+:revealjs_width: 1080
+:imagesdir: images
+:customcss: css/custom.css
+:docinfo: private
+:kroki-default-format: png
+
+== spring / kotlin
+
+include::history.adoc[]
+
+include::di.adoc[]
+
+include::mvc.adoc[]
+
+include::test.adoc[]
+

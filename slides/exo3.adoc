@@ -1,0 +1,7 @@
+=== Unit tests
+
+Sans utiliser springboot, ajoutez une couverture de test unitaire à 100% sur UserService
+
+=== Integration tests
+
+En utilisant @SpringBootTest ajoutez une couverture de tests à 100% sur UserController en utilisant un mock de UserService
