@@ -12,6 +12,26 @@
 
 == spring / kotlin
 
+Qualité Algorithmique
+
+[.columns]
+== Thibault Duperron
+
+[.column]
+--
+image:bigM.png[]
+--
+[.column.is-three-quarters]
+--
+Decathlon Digital
+
+Lead tech Backend
+
+Slides & Exo
+
+https://github.com/Zomzog/iut-spring-kotlin
+--
+
 include::history.adoc[]
 
 include::di.adoc[]

@@ -41,19 +41,75 @@ image:keyboard.jpg[]
 
 include::exo1.adoc[]
 
+== API Rest
+
+[.highlight-current-red.step]#GET# [.highlight-current-red.step]#/pony#/[.highlight-current-red.step]#{name}#/[.highlight-current-red.step]#type#
+
+== API Rest
+
+GET /pony/{name}/[.highlight-red.step]#?type=earth#
+
+== List
+
+[source]
+----
+GET /ponies?age=42
+----
+
+== Create
+
+[source]
+----
+POST /ponies
+----
+
+== Get one
+
+[source]
+----
+GET /ponies/{name}
+----
+
+== Update one
+
+[source]
+----
+PUT /ponies/{name}
+----
+
+== Delete one
+[source]
+----
+POST /ponies/{name}
+----
+
+
 == Parameters
 
+[fragment, step=0]
 [source,kotlin]
 ----
 @GetMapping("/hello")
 fun queryParam(@RequestParam name: String) = "world of $name"
+----
 
+[fragment, step=1]
+[source,kotlin]
+----
 @GetMapping("/hello/{name}")
 fun path(@PathVariable name: String) = "world of $name"
+----
 
+[fragment, step=2]
+[source,kotlin]
+----
 @PostMapping("/hello")
 fun body(@RequestBody name: String) = "world of $name"
+----
 
+[fragment, step=3]
+[source,kotlin]
+----
 @GetMapping("/hello")
 fun header(@RequestHeader name: String) = "world of $name"
 ----
@@ -100,7 +156,7 @@ Desing Pattern - Data Transfert Object
 
 Objet simple représentant la donnée
 
-Dans le cas d'une API REST / Json il doit ne pas contenir de cycle pour etre serializable en json.
+Dans le cas d'une API REST / Json il doit ne pas contenir de cycle pour être serializable en json.
 
 == DTO
 
