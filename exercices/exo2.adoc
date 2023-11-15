@@ -1,0 +1,163 @@
+=== CRUD
+
+Le but de cet exercice est de créer un premier CRUD (Create, Read, Update, Delete)
+
+Le CRUD doit manipuler des utilisateurs dont on a les informations: Nom, Prenom, Age, Email
+
+Pour cette implementation une Map en mémoire permettra de faire office de base de données.
+La clé unique est l'adresse email.
+
+L'implémentation se fera dans une classe UserController
+
+=== Create
+
+Le premier endpoint POST `/api/users` qui prend le JSON d'un utilisateur, l'enregistre dans la MAP et repond un HTTP 201 avec le contenu de l'utilisateur en body
+
+Exemple d'appel:
+----
+curl --location 'localhost:8080/api/users' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 10,
+    "email": "John@Doe.pony"
+}'
+----
+
+=== Create - Conflit
+
+Un endpoint de création normalement doit signaler si la ressource existe déjà.
+
+Modifier le endpoint pour que si on envoie deux fois la même adresse email, la réponse soit un HTTP 409 (conflit)
+
+Exemple d'appel:
+----
+curl --location 'localhost:8080/api/users' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 10,
+    "email": "John@Doe.pony"
+}' \ &&
+curl --location 'localhost:8080/api/users' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "firstName": "Another",
+    "lastName": "Name",
+    "age": 42,
+    "email": "John@Doe.pony"
+}'
+----
+
+=== Read - List
+
+Le premier endpoint de lecture est un endpoint de liste.
+Un appel à GET `/api/users` doit répondre 200 avec la liste des utilisateurs qui sont dans la MAP
+
+
+Exemple d'appel:
+----
+curl --location 'localhost:8080/api/users'
+----
+Reponse:
+[source,json]
+----
+[
+    {
+        "email": "John@Doe.pony",
+        "firstName": "John",
+        "lastName": "Doe",
+        "age": 10
+    }
+]
+----
+
+=== Read - One
+
+Ajouter un endpoint GET `/api/users/{email}` qui retourne
+
+- un status 200 avec le contenu de l'utilisateur s'il existe dans la MAP
+- un status 404 sinon
+
+Exemple d'appel:
+----
+curl --location 'localhost:8080/api/users/John@Doe.pony'
+----
+Reponse:
+[source,json]
+----
+{
+    "email": "John@Doe.pony",
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 10
+}
+----
+
+=== Update
+Ajouter un endpoint PUT `/api/users/{email}` qui retourne
+
+- un status 200 si l'utilisateur existe, met à jour l'utilisateur dans la MAP et le retourne
+- un status 400 sinon
+
+Exemple d'appel:
+----
+curl --location --request PUT 'localhost:8080/api/users/John@Doe.pony' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 42,
+    "email": "John@Doe.pony"
+}'
+----
+Reponse:
+[source,json]
+----
+{
+    "email": "John@Doe.pony",
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 42
+}
+----
+
+=== Delete
+Ajouter un endpoint DELETE `/api/users/{email}` qui retourne
+
+- un status 204 si l'utilisateur existe et le supprime de la MAP
+- un status 400 sinon
+
+Exemple d'appel:
+----
+curl --location --request DELETE 'localhost:8080/api/users/John@Doe.pony'
+----
+
+=== List filtré
+
+Ajouter sur la liste des utilisateurs la possibilité de filtrer par age
+
+Exemple d'appel:
+----
+curl --location 'localhost:8080/api/users?age=42'
+----
+
+Reponse:
+[source,json]
+----
+[
+    {
+        "email": "John@Doe.pony",
+        "firstName": "John",
+        "lastName": "Doe",
+        "age": 42
+    }
+]
+----
+
+
+=== Séparation en service
+
+Si ce n'est pas déjà fait, déplacez la MAP dans un 2nd service (UserService) qui sera injecté dans le RestController
