@@ -9,6 +9,7 @@
 :customcss: css/custom.css
 :docinfo: private
 :kroki-default-format: png
+:icons: font
 
 == spring / kotlin
 
@@ -39,4 +40,12 @@ include::di.adoc[]
 include::mvc.adoc[]
 
 include::test.adoc[]
+
+include::oas3.adoc[]
+
+include::validation.adoc[]
+
+include::jpa.adoc[]
+
+include::actuator.adoc[]
 

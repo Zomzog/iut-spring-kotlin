@@ -1,7 +1,7 @@
 == spring-boot-starter-mvc
 
 ----
-curl -XGET localhot:8080/hello
+curl -XGET localhost:8080/hello
 ----
 
 [fragment, step=1]

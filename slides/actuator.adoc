@@ -1,0 +1,89 @@
+== Spring config
+
+application.properties
+
+application.yml
+
+== Spring config
+
+application-dev.properties
+
+application-dev.yml
+
+== Activation d'un profile
+
+VM option:
+
+`-Dspring.profiles.active=dev`
+
+TIP: Intellij ultimate fournis un champ pour les rajouter directement
+
+== Accès aux properties
+
+[source,kotlin]
+----
+@Value("\${custom.value:defaultValue}")
+private lateinit var value: String
+----
+
+== Accès aux properties
+
+[source,kotlin]
+----
+@ConfigurationProperties("custom-prop")
+data class CustomProperties(val demo: String)
+
+@Configuration
+@EnableConfigurationProperties(CustomProperties::class)
+class PropertiesConfig
+----
+
+== Actuators
+
+Pour etre "production ready" une application doit etre en mesure de fournir:
+
+- un health-check
+- des metrics
+- des logs
+
+== Spring Actuators
+
+Ajouter la dependance Spring fournis directement plusieurs endpoints.
+
+Exemples:
+
+/health santé de l'application
+
+/info information général sur l'application
+
+/metrics metriques de l'application
+
+/shutdown stop l'appication
+
+== Actuator config
+
+[source,yaml]
+----
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health
+----
+
+== Actuator customization
+
+[source,kotlin]
+----
+@Component
+@EndpointWebExtension(endpoint = InfoEndpoint::class)
+class CustomInfo(val delegate: InfoEndpoint) {
+
+    @ReadOperation
+    fun info(): WebEndpointResponse<Map<*, *>> {
+        val info = this.delegate.info()
+        info["custom.value"] = "pony"
+        return WebEndpointResponse(info, 200)
+    }
+}
+----

@@ -1,0 +1,303 @@
+== Database Access
+
+[fragment]#Spring Data JPA#
+
+[fragment]#jOOQ#
+
+[fragment]#MyBatis#
+
+== DAO
+
+Data Access Object
+
+Design pattern pour séparer l'accès aux données persistantes
+
+== n-tier architecture
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart TD
+    RestController <--> |DTO <-> Domain| Service
+    Service <--> |Domain <-> Entity| DAO
+    DAO <--> DatabaseDriver
+    DatabaseDriver <--> Database
+----
+
+== JPA
+
+Java Persistence API
+
+Interface de programmation Java permettant d'organiser des données relationnelles
+
+JSR / Jakarta
+
+== n-tier architecture
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart TD
+    RestController <--> |DTO <-> Domain| Service
+    Service <--> |Domain <-> Entity| JpaRepository
+    JpaRepository <--> EntityManager
+    EntityManager <--> DatabaseDriver
+    DatabaseDriver <--> Database
+----
+
+== Spring Data JPA
+
+spring-boot-starter-data-jpa
+
++
+
+driver jdbc
+
+=
+
+Data Access Object (DAO) Générés
+
+== n-tier architecture
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart TD
+    RestController <--> |DTO <-> Domain| Service
+    Service <--> |Domain <-> Entity| JpaRepository
+    JpaRepository <--> SpringMagic
+----
+
+== Entity
+
+Objet qui a une identité indépendante des changements de ses attributs.
+
+Utilisé pour représenter un objet en base de donnée
+
+[transition=fade-out]
+== Entity
+
+[source,kotlin]
+----
+import jakarta.persistence.*
+
+
+
+data class DemoEntity(
+
+
+        val id: Int?,
+        val name: String,
+)
+----
+
+
+[transition=fade-out]
+== Entity
+
+[source,kotlin]
+----
+import jakarta.persistence.*
+
+@Entity
+
+data class DemoEntity(
+
+
+        val id: Int?,
+        val name: String,
+)
+----
+
+[transition=fade-out]
+== Entity
+
+[source,kotlin]
+----
+import jakarta.persistence.*
+
+@Entity
+@Table(name = "Demo")
+data class DemoEntity(
+
+
+        val id: Int?,
+        val name: String,
+)
+----
+
+[transition=fade-out]
+== Entity
+
+[source,kotlin]
+----
+import jakarta.persistence.*
+
+@Entity
+@Table(name = "Demo")
+data class DemoEntity(
+        @Id
+
+        val id: Int?,
+        val name: String,
+)
+----
+
+[transition=fade-out]
+== Entity
+
+[source,kotlin]
+----
+import jakarta.persistence.*
+
+@Entity
+@Table(name = "Demo")
+data class DemoEntity(
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Int?,
+        val name: String,
+)
+----
+
+[transition=fade-out]
+== Entity
+
+[source,kotlin]
+----
+import jakarta.persistence.*
+
+@Entity
+@Table(name = "Demo")
+data class DemoEntity(
+        @Id
+
+        val id: UUID = UUID.randomUUID(),
+        val name: String,
+)
+----
+
+== Jpa Repository
+
+[source, kotlin]
+----
+interface JpaRepository<ENTITY, ID>
+----
+
+[source, kotlin, step=1]
+----
+interface DemoRepository : JpaRepository<DemoEntity, UUID>
+----
+
+== Jpa Repository
+
+[source, kotlin]
+----
+fun save(entity: T): T
+
+fun findAll(): List<T>;
+
+fun findById(id: ID): Optional<T>
+
+fun deleteById(id: ID): Unit
+
+fun deleteAll(): Unit
+----
+
+== Jpa Repository Custom Query
+
+[source, kotlin]
+----
+interface DemoRepository : JpaRepository<DemoEntity, UUID> {
+
+    fun findAllByName(name: String): List<DemoEntity>
+}
+----
+
+link:https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html#jpa.query-methods.query-creation[Doc de la syntax]
+
+== Jpa Custom Query
+
+[source, kotlin]
+----
+@Query(value = "SELECT d from DemoEntity d where d.name = :name")
+fun manual(name: String): List<DemoEntity>
+----
+
+[source, kotlin, step=1]
+----
+@Query(value = """SELECT d from DemoEntity d
+    where (:name is null or d.name = :name)""")
+fun manual(name: String?): List<DemoEntity>
+----
+
+== Jpa Criteria
+
+[source, kotlin]
+----
+interface DemoRepositoryCustom {
+    fun criteria(name: String?): List<DemoEntity>
+}
+
+interface DemoRepository :
+        JpaRepository<DemoEntity, UUID>,
+        DemoRepositoryCustom
+----
+
+
+== Jpa Criteria
+
+[source, kotlin]
+----
+class DemoRepositoryCustomImpl : DemoRepositoryCustom {
+    @PersistenceContext
+    private lateinit var entityManager: EntityManager
+
+    override fun criteria(name: String?): List<DemoEntity> {
+        val criteriaBuilder = entityManager.criteriaBuilder
+        val queryBuilder = criteriaBuilder.createQuery(DemoEntity::class.java)
+        val root: Root<DemoEntity> = queryBuilder.from(DemoEntity::class.java)
+        var query = queryBuilder.select(root)
+        if (name != null) {
+            val nameField: Path<DemoEntity> = root.get("name")
+            query = query.where(criteriaBuilder.equal(nameField, name))
+        }
+        return entityManager.createQuery(query).resultList
+    }
+}
+----
+
+== Test Jpa
+
+Spring propose des tests de "Layer"
+
+Ces tests ne lancent qu'une partie de l'application.
+
+Pour JPA il faut remplacer @SpringBootTest par @DataJpaTest
+
+== Test Jpa
+
+[source, kotlin]
+----
+@DataJpaTest
+class DemoRepositoryTest {
+    @Autowired
+    private lateinit var jpaRepository: DemoRepository
+
+    @Test
+    fun `find one existing`() {
+       // GIVEN
+        jpaRepository.save(DemoEntity(randomUUID(), "name"))
+        // WHEN
+        val result = jpaRepository.findAllByName("name")
+        // THEN
+        assertThat(result).hasSize(1)
+    }
+}
+----
+
+== Code !
+
+image:keyboard.jpg[]
+
+include::exo4.adoc[]
