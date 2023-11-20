@@ -1,0 +1,24 @@
+=== Changements
+
+Renommer UserService en UserInMemoryRepository
+
+=== Ajout des dependances
+
+image:jpa.png[]
+
+WARNING: Bien prendre tous les ajouts
+
+=== Preparation
+
+Extraire une interface UserRepository de UserInMemoryRepository
+
+=== JPA
+
+Créer un classe UserDatabaseRepository qui implemente UserRepository et qui utilise une interface de type JpaRepository pour requeter la base de données.
+
+=== Test
+
+Couvrir avec des tests UserDatabaseRepository
+
+TIP: UserDatabaseRepository peut etre crée dans un BeforeEach
+

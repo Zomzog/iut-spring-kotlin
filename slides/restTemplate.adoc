@@ -1,0 +1,43 @@
+== RestTemplate
+
+Spring fournis un client HTTP
+
+[source,kotlin]
+----
+val restTemplate = RestTemplate()
+val result: ResponseEntity<List<UserDTO>> =
+  restTemplate.getForEntity("http://localhost:9999/api/users")
+if (result.statusCode.is2xxSuccessful) {
+    return result.body
+} else {
+    throw Exception("Fail")
+}
+----
+
+== RestTemplate
+
+Simplification des appels
+
+[source,kotlin]
+----
+val restTemplate = RestTemplateBuilder().rootUri("http://localhost:9999")
+                                        .build()
+val result: ResponseEntity<List<UserDTO>> =
+              restTemplate.getForEntity("/api/users")
+----
+
+== Body
+
+[source,kotlin]
+----
+val body = UserDTO("email", "name", "last", 1)
+val entity = HttpEntity(body)
+val result = restTemplate
+              .postForEntity("/api/users", entity, UserDTO::class.java)
+----
+
+== Code !
+
+image:keyboard.jpg[]
+
+include::exo7.adoc[]
