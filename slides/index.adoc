@@ -34,18 +34,21 @@ https://github.com/Zomzog/iut-spring-kotlin
 --
 
 include::history.adoc[]
-
 include::di.adoc[]
-
 include::mvc.adoc[]
-
 include::test.adoc[]
-
+include::validation.adoc[]
 include::oas3.adoc[]
 
-include::validation.adoc[]
+== Code !
+
+image:keyboard.jpg[]
+
+include::exo4.adoc[]
+
 
 include::jpa.adoc[]
-
 include::actuator.adoc[]
+
+include::restTemplate.adoc[]
 

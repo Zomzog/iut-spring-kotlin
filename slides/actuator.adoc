@@ -1,5 +1,7 @@
 == Spring config
 
+A la racine du dossier ressources
+
 application.properties
 
 application.yml
@@ -9,6 +11,12 @@ application.yml
 application-dev.properties
 
 application-dev.yml
+
+== Ordre
+
+En cas de conflit la valeur prise est celle du dernier profile
+
+En yaml on peut supprimer une valeur avec `~`
 
 == Activation d'un profile
 
@@ -87,3 +95,9 @@ class CustomInfo(val delegate: InfoEndpoint) {
     }
 }
 ----
+
+== Code !
+
+image:keyboard.jpg[]
+
+include::exo6.adoc[]

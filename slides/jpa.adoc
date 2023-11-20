@@ -72,7 +72,7 @@ flowchart TD
 
 Objet qui a une identité indépendante des changements de ses attributs.
 
-Utilisé pour représenter un objet en base de donnée
+Utilisé pour représenter un objet en base de données
 
 [transition=fade-out]
 == Entity
@@ -300,4 +300,4 @@ class DemoRepositoryTest {
 
 image:keyboard.jpg[]
 
-include::exo4.adoc[]
+include::exo5.adoc[]

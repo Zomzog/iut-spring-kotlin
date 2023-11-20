@@ -6,9 +6,9 @@ image:oas3.jpg[]
 
 Un IDL (Interface Definition Language) pour décrire des APIs
 
-Le but est de fournir un contrat entre producteur et consomateur de l'APIs
+Le but est de fournir un contrat entre producteur et consommateur de l'APIs
 
-En général en YAML mais peut s'écrire en JSON
+format: YAML ou JSON
 
 == Info
 
@@ -131,10 +131,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pet
+              $ref: '#/components/schemas/Pet'
           application/xml:
             schema:
-              $ref: '#/components/schemas/Pet''
+              $ref: '#/components/schemas/Pet'
         required: true
 ----
 
@@ -183,7 +183,7 @@ Swagger UI
 
 image:swagger_ui.png[]
 
-== Génération VSGénération
+== Génération VS Génération
 
 image:codecontract.jpg[]
 
@@ -212,5 +212,7 @@ Avec juste l'ajout de la dépendance on a:
 [source, kotlin]
 ----
 @Parameter(description = "id of book to be searched")
-  @PathVariable id: UUID
+@PathVariable id: UUID
 ----
+
+
