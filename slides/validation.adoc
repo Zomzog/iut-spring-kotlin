@@ -26,7 +26,6 @@ class DemoController(val demoRepository: DemoRepository) {
 [source, kotlin]
 ----
 data class DemoDTO(
-        @Id
         val id: UUID = UUID.randomUUID(),
         @field:Size(min=5, max=10)
         val name: String,
@@ -125,5 +124,23 @@ class DemoControllerTest {
                     content { jsonPath("$.[0].name", `is`("name")) }
                 }
     }
+}
+----
+
+== WebMvcTest
+
+[source,kotlin]
+----
+fun post() {
+    // GIVEN
+    every { demoRepository.save(any()) } returns DemoEntity(name = "name")
+    mockMvc.post("/api/demo") {
+        contentType = MediaType.APPLICATION_JSON
+        content = ObjectMapper().writeValueAsString(DemoEntity(name = "name"))
+    }
+            .andExpect {
+                status { isOk() }
+                content { jsonPath("$.name", `is`("name")) }
+            }
 }
 ----
