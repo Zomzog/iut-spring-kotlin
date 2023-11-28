@@ -1,3 +1,19 @@
+=== Beans
+
+En utilisant les conditions sur les beans, faire en sorte que:
+
+- sans profile la base h2 soit utilisé
+
+- avec le profile dev la version inMemory soit utilisé
+
+=== Logs
+
+Modifier les logs pour qu'ils soient sous la forme
+
+`INFO - class - threadId - message`
+
+Ajouter des logs info au début des appels HTTP et de debug dans les repositories
+
 === Actuator
 
 Ajouter la dépendance actuator à votre projet et vérifier qu'elle fonctionne

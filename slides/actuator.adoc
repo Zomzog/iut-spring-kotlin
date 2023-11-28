@@ -40,15 +40,38 @@ private lateinit var value: String
 ----
 @ConfigurationProperties("custom-prop")
 data class CustomProperties(val demo: String)
+----
 
+[fragment,step=1]
+[source,kotlin]
+----
 @Configuration
 @EnableConfigurationProperties(CustomProperties::class)
 class PropertiesConfig
 ----
 
+[fragment,step=2]
+TIP: ajouter `spring-boot-configuration-processor`
+pour avoir la génération de l'auto completion dans les fichiers de conf
+
+== Accès aux properties
+
+[source,kotlin]
+----
+@Configuration
+class DatabaseConfig {
+    @ConditionalOnProperty("db.external",
+                           havingValue = "false",
+                           matchIfMissing = true)
+    @Bean
+    fun inMemory() = UserInMemoryRepository()
+}
+----
+
+
 == Actuators
 
-Pour etre "production ready" une application doit etre en mesure de fournir:
+Pour être "production ready" une application doit être en mesure de fournir:
 
 - un health-check
 - des metrics
@@ -64,7 +87,7 @@ Exemples:
 
 /info information général sur l'application
 
-/metrics metriques de l'application
+/metrics métriques de l'application
 
 /shutdown stop l'appication
 
@@ -94,6 +117,72 @@ class CustomInfo(val delegate: InfoEndpoint) {
         return WebEndpointResponse(info, 200)
     }
 }
+----
+
+== Logs
+
+De base dans spring:
+
+- slf4j
+
+- logback
+
+Optionel:
+
+- oshai:kotlin-logging
+
+== Niveaux de log
+
+- ERROR
+
+- WARN
+
+- INFO
+
+- DEBUG
+
+- TRACE
+
+== Niveau de log
+
+[source,yaml]
+----
+logging:
+  level:
+    org.springframework.web: DEBUG
+    bzh.zomzog.prez: WARN
+----
+
+== logback
+
+logback-spring.xml
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
+  <logger name="org.springframework.web" level="DEBUG"/>
+</configuration>
+----
+
+== logback
+
+[source,xml]
+----
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  <withJansi>true</withJansi>
+  <encoder>
+    <pattern>[%thread] %highlight(%-5level) %cyan(%logger{15}) -%kvp -%msg %n</pattern>
+  </encoder>
+</appender>
+<root level="DEBUG">
+  <appender-ref ref="STDOUT" />
+</root>
 ----
 
 == Code !
