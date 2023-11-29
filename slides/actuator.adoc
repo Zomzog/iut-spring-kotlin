@@ -79,17 +79,24 @@ Pour être "production ready" une application doit être en mesure de fournir:
 
 == Spring Actuators
 
-Ajouter la dependance Spring fournis directement plusieurs endpoints.
+Ajouter la dependance Spring fournis directement plusieurs endpoints sous `/actuator`
 
-Exemples:
+[%autowidth.stretch]
+|===
+|endpoints | description
 
-/health santé de l'application
+|/actuator/health
+|santé de l'application
 
-/info information général sur l'application
+|/actuator/info
+|information général sur l'application
 
-/metrics métriques de l'application
+|/actuator/metrics
+|métriques de l'application
 
-/shutdown stop l'appication
+|/actuator/beans
+|liste des beans et de leur dépendance
+|===
 
 == Actuator config
 
@@ -101,6 +108,8 @@ management:
       exposure:
         include: info, health
 ----
+
+TIP: '*' expose tous les enpoints
 
 == Actuator customization
 
