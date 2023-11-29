@@ -1,4 +1,4 @@
-== Database Access
+== Accès à la base de données
 
 [fragment]#Spring Data JPA#
 
@@ -10,9 +10,9 @@
 
 Data Access Object
 
-Design pattern pour séparer l'accès aux données persistantes
+Design pattern pour séparer l'accès aux données persistantes.
 
-== n-tier architecture
+== Architecture n-tier
 
 [mermaid]
 ----
@@ -28,11 +28,11 @@ flowchart TD
 
 Java Persistence API
 
-Interface de programmation Java permettant d'organiser des données relationnelles
+Interface de programmation Java permettant d'organiser des données relationnelles.
 
 JSR / Jakarta
 
-== n-tier architecture
+== Architecture n-tier
 
 [mermaid]
 ----
@@ -55,9 +55,9 @@ driver jdbc
 
 =
 
-Data Access Object (DAO) Générés
+Data Access Object (DAO) généré
 
-== n-tier architecture
+== Architecture n-tier
 
 [mermaid]
 ----
@@ -72,7 +72,7 @@ flowchart TD
 
 Objet qui a une identité indépendante des changements de ses attributs.
 
-Utilisé pour représenter un objet en base de données
+Utilisé pour représenter un objet en base de données.
 
 [transition=fade-out]
 == Entity
@@ -269,11 +269,11 @@ class DemoRepositoryCustomImpl : DemoRepositoryCustom {
 
 == Test Jpa
 
-Spring propose des tests de "Layer"
+Spring propose des tests de "Layer".
 
 Ces tests ne lancent qu'une partie de l'application.
 
-Pour JPA il faut remplacer @SpringBootTest par @DataJpaTest
+Pour JPA, il faut remplacer @SpringBootTest par @DataJpaTest.
 
 == Test Jpa
 

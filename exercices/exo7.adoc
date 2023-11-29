@@ -1,13 +1,13 @@
 === Premier test
 
-Faire une classe IndirectUserController qui reprend l'ensemble des endpoints de UserController mais avec en path `/indirect/users`
+Faire une classe IndirectUserController qui reprend l'ensemble des endpoints de UserController mais avec en path `/indirect/users`.
 
-Chaque endpoint utilisera le restControlleur pour appeler le endpoint correspondant de UserController
+Chaque endpoint utilisera le restControlleur pour appeler le endpoint correspondant de UserController.
 
-=== Bean Config
+=== Configuration de Bean
 
 RestTemplate est un bon candidat pour un bean.
 
 Déplacer sa création en tant que bean dans une classe RestTemplateConfig.
 
-Utiliser une valeur de properties pour la rootUri.
+Utiliser une valeur de propriétés pour la rootUri.

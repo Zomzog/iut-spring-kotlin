@@ -2,7 +2,7 @@
 
 spring-boot-starter-validation
 
-Permet d'ajouter de la validation sur les parametres des methodes
+Permet d'ajouter de la validation sur les paramètres des méthodes.
 
 == Validation globale
 
@@ -16,7 +16,7 @@ class DemoController(val demoRepository: DemoRepository) {
       = if (name == null) ...
 ----
 
-== Validation Body
+== Validation du body
 
 [source, kotlin]
 ----
@@ -34,9 +34,9 @@ data class DemoDTO(
 
 == Gestion des erreurs
 
-Les erreurs de validations n'entrent pas dans le code de la fonction.
+Les erreurs de validation n'entrent pas dans le code de la fonction.
 
-La gestion est externe et générique
+La gestion est externe et générique.
 
 [transition=fade-out]
 == ControllerAdvice
@@ -98,13 +98,13 @@ class HttpErrorHandler : ResponseEntityExceptionHandler() {
 }
 ----
 
-== Test
+== Tests
 
-Spring propose des tests de couche (layer)
+Spring propose des tests de couche (layer).
 
 Ces tests ne lancent qu'une partie de l'application.
 
-Pour la partie web il faut remplacer @SpringBootTest par @WebMvcTest
+Pour la partie web il faut remplacer @SpringBootTest par @WebMvcTest.
 
 == WebMvcTest
 

@@ -1,36 +1,36 @@
 === Beans
 
-En utilisant les conditions sur les beans, faire en sorte que:
+En utilisant les conditions sur les beans, faire en sorte que :
 
-- sans profile la base h2 soit utilisé
+- sans profil, la base h2 soit utilisée,
 
-- avec le profile dev la version inMemory soit utilisé
+- avec le profil dev la version inMemory soit utilisée.
 
 === Logs
 
-Modifier les logs pour qu'ils soient sous la forme
+Modifier les logs pour qu'ils soient sous la forme : 
 
 `INFO - class - threadId - message`
 
-Ajouter des logs info au début des appels HTTP et de debug dans les repositories
+Ajouter des logs info au début des appels HTTP et de debug dans les repositories.
 
-=== Actuator
+=== Actionneurs
 
-Ajouter la dépendance actuator à votre projet et vérifier qu'elle fonctionne
+Ajouter la dépendance actuator à votre projet et vérifier qu'elle fonctionne.
 
-Les endpoints sont sous localhost:8080/actuator
+Les endpoints sont sous localhost:8080/actuator.
 
-Par exemple localhost:8080/actuator/info
+Par exemple : localhost:8080/actuator/info.
 
-=== Profiles dans Info
+=== Profils dans Info
 
-En utilisant l'approche @Value, ajouter la liste des profiles spring actifs (la valeur passé en variable d'environnement)
+En utilisant l'approche @Value, ajouter la liste des profils Spring actifs (la valeur passée en variable d'environnement).
 
-La réponse de /actuator/info doit contenir `"profiles": "dev"` en cas de profile dev `"profiles": ""` sans
+La réponse de /actuator/info doit contenir `"profiles": "dev"` en cas de profil dev `"profiles": ""` sinon.
 
 === Info custom
 
-Ajouter au fichier de properties
+Ajouter au fichier de propriétés : 
 
 [source,yaml]
 ----
@@ -39,7 +39,7 @@ iut:
     exo: 6
 ----
 
-En utilisant l'approche @ConfigurationProperties ajouter le contenu à /actuator/info qui doit donc répondre:
+En utilisant l'approche @ConfigurationProperties, ajouter le contenu à /actuator/info qui doit donc répondre :
 
 [source,json]
 ----
@@ -55,9 +55,9 @@ En utilisant l'approche @ConfigurationProperties ajouter le contenu à /actuator
 
 === Sécurité
 
-Certains endpoints de l'actuator éxposent des données sensibles voir sont dangereux
+Certains endpoints de l'actionneur exposent des données sensibles, voire sont dangereux.
 
-En modifiant les properties sans profile il ne doit y avoir que health, info et metrics.
-Avec le profile dev, shutdown est disponible.
+En modifiant les propriétés sans profil, il ne doit y avoir que : health, info et metrics.
+Avec le profil dev : shutdown est disponible.
 
-Changer le port des actuators pour le port 9001
+Changer le port des actionneurs pour le port 9001.

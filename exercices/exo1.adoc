@@ -1,12 +1,13 @@
-=== Project init
+=== Initialisation du projet
 
 start.spring.io
 
 image:webmvc.png[]
 
-=== 1er controller
+=== Premier controller
 
-Créer HelloController.kt dans un sous-package controller
+Créer HelloController.kt dans un sous-package controller.
+
 [source,kotlin]
 ----
 @RestController
@@ -17,8 +18,8 @@ class HelloController {
 }
 ----
 
-=== Start && test
+=== Lancer && tester
 
-Lancer **Application.kt qui est à la racine du projet (clic droit -> run)
+Lancer **Application.kt qui est à la racine du projet (clic droit -> run).
 
-Appeler GET localhost:8080/hello et vérifier que la réponse est bien world
+Appeler GET localhost:8080/hello et vérifier que la réponse est bien world.

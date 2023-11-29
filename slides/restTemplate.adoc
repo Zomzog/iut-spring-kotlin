@@ -1,6 +1,6 @@
 == RestTemplate
 
-Spring fournis un client HTTP
+Spring fournis un client HTTP :
 
 [source,kotlin]
 ----
@@ -16,7 +16,7 @@ if (result.statusCode.is2xxSuccessful) {
 
 == RestTemplate
 
-Simplification des appels
+Simplification des appels :
 
 [source,kotlin]
 ----

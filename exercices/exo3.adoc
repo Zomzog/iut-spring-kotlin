@@ -1,7 +1,7 @@
-=== Unit tests
+=== Tests unitaires
 
-Sans utiliser @SpringBootTest, ajouter une couverture de test unitaire à 100% sur UserInMemoryRepository
+Sans utiliser @SpringBootTest, ajouter une couverture de tests unitaire à 100% sur UserInMemoryRepository.
 
-=== Integration tests
+=== Tests d'intégration
 
-En utilisant @SpringBootTest ajouter une couverture de tests à 100% sur UserController en utilisant un mock de UserInMemoryRepository
+En utilisant @SpringBootTest, ajouter une couverture de tests à 100% sur UserController en utilisant un mock de UserInMemoryRepository.

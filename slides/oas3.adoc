@@ -4,11 +4,11 @@ image:oas3.jpg[]
 
 == OAS3 ?
 
-Un IDL (Interface Definition Language) pour décrire des APIs
+Un IDL (Interface Definition Language) pour décrire des APIs.
 
-Le but est de fournir un contrat entre producteur et consommateur de l'APIs
+Le but est de fournir un contrat entre producteur et consommateur de l'API.
 
-format: YAML ou JSON
+format: YAML ou JSON.
 
 == Info
 
@@ -191,7 +191,7 @@ image:codecontract.jpg[]
 
 springdoc-openapi-starter-webmvc-ui
 
-Avec juste l'ajout de la dépendance on a:
+Avec juste l'ajout de la dépendance on a :
 
 - swagger-ui: http://server:port/swagger-ui.html
 - l'OAS3: http://server:port/v3/api-docs
