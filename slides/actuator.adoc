@@ -40,15 +40,38 @@ private lateinit var value: String
 ----
 @ConfigurationProperties("custom-prop")
 data class CustomProperties(val demo: String)
+----
 
+[fragment,step=1]
+[source,kotlin]
+----
 @Configuration
 @EnableConfigurationProperties(CustomProperties::class)
 class PropertiesConfig
 ----
 
+[fragment,step=2]
+TIP: ajouter `spring-boot-configuration-processor`
+pour avoir la génération de l'auto completion dans les fichiers de conf
+
+== Accès aux properties
+
+[source,kotlin]
+----
+@Configuration
+class DatabaseConfig {
+    @ConditionalOnProperty("db.external",
+                           havingValue = "false",
+                           matchIfMissing = true)
+    @Bean
+    fun inMemory() = UserInMemoryRepository()
+}
+----
+
+
 == Actuators
 
-Pour etre "production ready" une application doit etre en mesure de fournir:
+Pour être "production ready" une application doit être en mesure de fournir:
 
 - un health-check
 - des metrics
@@ -56,17 +79,24 @@ Pour etre "production ready" une application doit etre en mesure de fournir:
 
 == Spring Actuators
 
-Ajouter la dependance Spring fournis directement plusieurs endpoints.
+Ajouter la dependance Spring fournis directement plusieurs endpoints sous `/actuator`
 
-Exemples:
+[%autowidth.stretch]
+|===
+|endpoints | description
 
-/health santé de l'application
+|/actuator/health
+|santé de l'application
 
-/info information général sur l'application
+|/actuator/info
+|information général sur l'application
 
-/metrics metriques de l'application
+|/actuator/metrics
+|métriques de l'application
 
-/shutdown stop l'appication
+|/actuator/beans
+|liste des beans et de leur dépendance
+|===
 
 == Actuator config
 
@@ -78,6 +108,8 @@ management:
       exposure:
         include: info, health
 ----
+
+TIP: '*' expose tous les enpoints
 
 == Actuator customization
 
@@ -94,6 +126,72 @@ class CustomInfo(val delegate: InfoEndpoint) {
         return WebEndpointResponse(info, 200)
     }
 }
+----
+
+== Logs
+
+De base dans spring:
+
+- slf4j
+
+- logback
+
+Optionel:
+
+- oshai:kotlin-logging
+
+== Niveaux de log
+
+- ERROR
+
+- WARN
+
+- INFO
+
+- DEBUG
+
+- TRACE
+
+== Niveau de log
+
+[source,yaml]
+----
+logging:
+  level:
+    org.springframework.web: DEBUG
+    bzh.zomzog.prez: WARN
+----
+
+== logback
+
+logback-spring.xml
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
+  <logger name="org.springframework.web" level="DEBUG"/>
+</configuration>
+----
+
+== logback
+
+[source,xml]
+----
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  <withJansi>true</withJansi>
+  <encoder>
+    <pattern>[%thread] %highlight(%-5level) %cyan(%logger{15}) -%kvp -%msg %n</pattern>
+  </encoder>
+</appender>
+<root level="DEBUG">
+  <appender-ref ref="STDOUT" />
+</root>
 ----
 
 == Code !

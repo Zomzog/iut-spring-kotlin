@@ -1,6 +1,6 @@
 === Premier test
 
-Faire une classe IndirectUserController qui remprend l'ensemble des endpoints de UserController mais avec en path `/indirect/users`
+Faire une classe IndirectUserController qui reprend l'ensemble des endpoints de UserController mais avec en path `/indirect/users`
 
 Chaque endpoint utilisera le restControlleur pour appeler le endpoint correspondant de UserController
 
