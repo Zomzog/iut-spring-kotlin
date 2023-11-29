@@ -194,6 +194,19 @@ logback-spring.xml
 </root>
 ----
 
+== logger
+
+[source,kotlin]
+----
+private val logger = LoggerFactory.getLogger(javaClass)
+----
+
+[source,kotlin]
+----
+logger.trace("trace of ${name}")
+logger.warn("warning with exception", Exception())
+----
+
 == Code !
 
 image:keyboard.jpg[]
