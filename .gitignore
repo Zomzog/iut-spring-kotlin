@@ -54,3 +54,5 @@ web_modules/
 
 # Optional eslint cache
 .eslintcache
+
+correction/.gradle/
