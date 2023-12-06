@@ -41,11 +41,11 @@ class UserEntity(
         @Id val email: String,
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(referencedColumnName = "email")
-        val phone: Phone,
+        val phone: PhoneEntity,
 ) {
 @Entity
 @Table(name = "phone")
-class Phone(
+class PhoneEntity(
         @Id // Doit être unique, peut aussi être un @Column(unique = true)
         val email: String,
         val number: String,
@@ -60,10 +60,10 @@ class UserEntity(
         @Id val email: String,
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "fk_email")
-        var phone: Phone?,
+        var phone: PhoneEntity?,
 )
 
-class Phone(
+class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
         @OneToOne(mappedBy = "phone")
         val user: UserEntity,
@@ -78,11 +78,11 @@ class Phone(
 class UserEntity(
         @Id val email: String,
         @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL])
-        var phone: Phone?,
+        var phone: PhoneEntity?,
 )
 
 
-class Phone(
+class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
         @OneToOne
         val user: UserEntity,
@@ -98,10 +98,11 @@ class Phone(
 class UserEntity(
         @Id val email: String,
         @OneToMany(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email") val phones: List<Phone> = emptyList(),
+        @JoinColumn(referencedColumnName = "email")
+        val phones: List<PhoneEntity> = emptyList(),
 )
 
-class Phone(
+class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
         val email: String,
         val number: String,
@@ -115,16 +116,17 @@ class Phone(
 class UserEntity(
         @Id val email: String,
         @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
-        var phones: List<Phone> = emptyList(),
+        var phones: List<PhoneEntity> = emptyList(),
 )
 
-class Phone(
+class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
         @ManyToOne
         @JoinColumn(name="fk_email")
         val user: UserEntity?,
         val number: String,
 )
+----
 
 == ManyToMany
 
@@ -132,18 +134,14 @@ class Phone(
 ----
 class UserEntity(
         @Id val email: String,
-        val firstName: String,
-        val lastName: String,
-        val age: Int,
         @ManyToMany(cascade = [CascadeType.ALL])
         @JoinTable(
                 name = "user_phone",
                 joinColumns = [JoinColumn(name = "email")],
                 inverseJoinColumns = [JoinColumn(name = "id")])
-        var phones: List<Phone> = emptyList(),
+        var phones: List<PhoneEntity> = emptyList(),
 )
-
-class Phone(
+class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
         @ManyToMany
         val user: List<UserEntity>,
