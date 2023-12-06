@@ -1,14 +1,14 @@
 === OAS3
 
-Rajouter la dépendance springdoc-openapi-starter-webmvc-ui
+Rajouter la dépendance springdoc-openapi-starter-webmvc-ui.
 
-Vérifier que swagger-ui et l'OAS3 sont accessibles
+Vérifier que swagger-ui et l'OAS3 sont accessibles.
 
 === Documentation
 
-Ajouter la documentation des endpoints de UserController
+Ajouter la documentation des endpoints de UserController.
 
-La doc généré doit ressembler à ça:
+La doc générée doit ressembler à ça :
 
 [source, json]
 ----
@@ -262,19 +262,19 @@ La doc généré doit ressembler à ça:
 
 === Validation
 
-Ajouter de la validation:
+Ajouter de la validation :
 
-- le nom doit faire entre 2 et 30 caractères
-- le prénom ne doit pas être vide
-- l'âge doit être supérieur à 15
-- l'email doit avoir un format valide
+- le nom doit faire entre 2 et 30 caractères,
+- le prénom ne doit pas être vide,
+- l'âge doit être supérieur à 15,
+- l'email doit avoir un format valide.
 
 === Gestion des erreurs
 
-Changer la gestion des erreurs en passant par des exceptions
+Changer la gestion des erreurs en passant par des exceptions.
 
-Créer des exceptions spécifiques qui sont lancés depuis les contrôleurs et attrapés dans un ControllerAdvice
+Créer des exceptions spécifiques qui sont lancées depuis les contrôleurs et attrapées dans un ControllerAdvice.
 
 === Tests
 
-Faire une couverture des cas nominaux et des cas d'erreurs de UserController en utilisant WebMvcTest
+Faire une couverture des cas nominaux et des cas d'erreurs de UserController en utilisant WebMvcTest.

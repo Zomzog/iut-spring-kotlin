@@ -49,42 +49,42 @@ include::exo1.adoc[]
 
 GET /pony/{name}/[.highlight-red.step]#?type=earth#
 
-== List
+== Lister
 
 [source]
 ----
 GET /ponies?age=42
 ----
 
-== Create
+== Créer
 
 [source]
 ----
 POST /ponies
 ----
 
-== Get one
+== Obtenir un élément
 
 [source]
 ----
 GET /ponies/{name}
 ----
 
-== Update one
+== Mettre à jour un élément
 
 [source]
 ----
 PUT /ponies/{name}
 ----
 
-== Delete one
+== Supprimer un élément
 [source]
 ----
 POST /ponies/{name}
 ----
 
 
-== Parameters
+== Paramètres
 
 [fragment, step=0]
 [source,kotlin]
@@ -156,7 +156,7 @@ Desing Pattern - Data Transfert Object
 
 Objet simple représentant la donnée
 
-Dans le cas d'une API REST / Json il doit ne pas contenir de cycle pour être serializable en json.
+Dans le cas d'une API REST / Json il ne doit pas contenir de cycle pour être sérialisable en json.
 
 == DTO
 

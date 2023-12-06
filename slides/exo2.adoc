@@ -1,17 +1,17 @@
 === CRUD
 
-Le but de cet exercice est de créer un premier CRUD (Create, Read, Update, Delete)
+Le but de cet exercice est de créer un premier CRUD (Create, Read, Update, Delete).
 
-Le CRUD doit manipuler des utilisateurs dont on a les informations: Nom, Prenom, Age, Email
+Le CRUD doit manipuler des utilisateurs dont on a les informations: Nom, Prénom, Âge et Email.
 
-Pour cette implementation une Map en mémoire permettra de faire office de base de données.
+Pour cette implémentation, une Map en mémoire permettra de faire office de base de données.
 La clé unique est l'adresse email.
 
-L'implémentation se fera dans une classe UserController
+L'implémentation se fera dans une classe UserController.
 
 === Create
 
-Le premier endpoint POST `/api/users` qui prend le JSON d'un utilisateur, l'enregistre dans la MAP et repond un HTTP 201 avec le contenu de l'utilisateur en body
+Le premier endpoint POST `/api/users` qui prend le JSON d'un utilisateur, l'enregistre dans la Map et répond un HTTP 201 avec le contenu de l'utilisateur en body.
 
 Exemple d'appel:
 ----
@@ -27,9 +27,9 @@ curl --location 'localhost:8080/api/users' \
 
 === Create - Conflit
 
-Un endpoint de création normalement doit signaler si la ressource existe déjà.
+Un endpoint de création doit normalement signaler si la ressource existe déjà.
 
-Modifier le endpoint pour que si on envoie deux fois la même adresse email, la réponse soit un HTTP 409 (conflit)
+Modifier le endpoint pour que si on envoie deux fois la même adresse email, la réponse soit un HTTP 409 (conflit).
 
 Exemple d'appel:
 ----
@@ -51,10 +51,10 @@ curl --location 'localhost:8080/api/users' \
 }'
 ----
 
-=== Read - List
+=== Read - Liste
 
 Le premier endpoint de lecture est un endpoint de liste.
-Un appel à GET `/api/users` doit répondre 200 avec la liste des utilisateurs qui sont dans la MAP
+Un appel à GET `/api/users` doit répondre 200 avec la liste des utilisateurs qui sont dans la Map.
 
 
 Exemple d'appel:
@@ -74,12 +74,12 @@ Reponse:
 ]
 ----
 
-=== Read - One
+=== Read - Unique
 
-Ajouter un endpoint GET `/api/users/{email}` qui retourne
+Ajouter un endpoint GET `/api/users/{email}` qui retourne :
 
-- un status 200 avec le contenu de l'utilisateur s'il existe dans la MAP
-- un status 404 sinon
+- un status 200 avec le contenu de l'utilisateur s'il existe dans la Map,
+- un status 404 sinon.
 
 Exemple d'appel:
 ----
@@ -97,10 +97,10 @@ Reponse:
 ----
 
 === Update
-Ajouter un endpoint PUT `/api/users/{email}` qui retourne
+Ajouter un endpoint PUT `/api/users/{email}` qui retourne :
 
-- un status 200 si l'utilisateur existe, met à jour l'utilisateur dans la MAP et le retourne
-- un status 400 sinon
+- un status 200 si l'utilisateur existe, met à jour l'utilisateur dans la Map et le retourne,
+- un status 400 sinon.
 
 Exemple d'appel:
 ----
@@ -125,19 +125,19 @@ Reponse:
 ----
 
 === Delete
-Ajouter un endpoint DELETE `/api/users/{email}` qui retourne
+Ajouter un endpoint DELETE `/api/users/{email}` qui retourne :
 
-- un status 204 si l'utilisateur existe et le supprime de la MAP
-- un status 400 sinon
+- un status 204 si l'utilisateur existe et le supprime de la Map,
+- un status 400 sinon.
 
 Exemple d'appel:
 ----
 curl --location --request DELETE 'localhost:8080/api/users/John@Doe.pony'
 ----
 
-=== List filtré
+=== Liste filtrée
 
-Ajouter sur la liste des utilisateurs la possibilité de filtrer par age
+Ajouter sur la liste des utilisateurs la possibilité de filtrer par âge.
 
 Exemple d'appel:
 ----
@@ -160,5 +160,4 @@ Reponse:
 
 === Séparation en service
 
-Si ce n'est pas déjà fait, déplacez la MAP dans un 2nd service (UserService) qui sera injecté dans le RestController
-
+Si ce n'est pas déjà fait, déplacer la Map dans un second service (UserService) qui sera injecté dans le RestController.

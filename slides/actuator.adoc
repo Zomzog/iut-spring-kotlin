@@ -1,12 +1,12 @@
-== Spring config
+== Configuration de Spring
 
-A la racine du dossier ressources
+À la racine du dossier ressources.
 
 application.properties
 
 application.yml
 
-== Spring config
+== Configuration de Spring
 
 application-dev.properties
 
@@ -14,19 +14,19 @@ application-dev.yml
 
 == Ordre
 
-En cas de conflit la valeur prise est celle du dernier profile
+En cas de conflit, la valeur prise est celle du dernier profil.
 
-En yaml on peut supprimer une valeur avec `~`
+En yaml, on peut supprimer une valeur avec `~`.
 
-== Activation d'un profile
+== Activation d'un profil
 
-VM option:
+VM option :
 
 `-Dspring.profiles.active=dev`
 
-TIP: Intellij ultimate fournis un champ pour les rajouter directement
+TIP: Intellij ultimate fournit un champ pour les rajouter directement.
 
-== Accès aux properties
+== Accès aux propriétés
 
 [source,kotlin]
 ----
@@ -34,7 +34,7 @@ TIP: Intellij ultimate fournis un champ pour les rajouter directement
 private lateinit var value: String
 ----
 
-== Accès aux properties
+== Accès aux propriétés
 
 [source,kotlin]
 ----
@@ -51,10 +51,10 @@ class PropertiesConfig
 ----
 
 [fragment,step=2]
-TIP: ajouter `spring-boot-configuration-processor`
-pour avoir la génération de l'auto completion dans les fichiers de conf
+TIP: Ajouter `spring-boot-configuration-processor`
+pour avoir la génération de l'auto-complétion dans les fichiers de configuration.
 
-== Accès aux properties
+== Accès aux propriétés
 
 [source,kotlin]
 ----
@@ -69,17 +69,17 @@ class DatabaseConfig {
 ----
 
 
-== Actuators
+== Actionneurs
 
-Pour être "production ready" une application doit être en mesure de fournir:
+Pour être "production ready" une application doit être en mesure de fournir :
 
-- un health-check
-- des metrics
-- des logs
+- un health-check,
+- des metrics,
+- des logs.
 
-== Spring Actuators
+== Actionneurs Spring
 
-Ajouter la dependance Spring fournis directement plusieurs endpoints sous `/actuator`
+Ajouter la dépendance Spring fournit directement plusieurs endpoints sous `/actuator`.
 
 [%autowidth.stretch]
 |===
@@ -98,7 +98,7 @@ Ajouter la dependance Spring fournis directement plusieurs endpoints sous `/actu
 |liste des beans et de leur dépendance
 |===
 
-== Actuator config
+== Configuration des actionneurs
 
 [source,yaml]
 ----
@@ -109,9 +109,9 @@ management:
         include: info, health
 ----
 
-TIP: '*' expose tous les enpoints
+TIP: '*' expose tous les enpoints.
 
-== Actuator customization
+== Customisation des actionneurs
 
 [source,kotlin]
 ----
@@ -130,15 +130,15 @@ class CustomInfo(val delegate: InfoEndpoint) {
 
 == Logs
 
-De base dans spring:
+De base dans Spring :
 
-- slf4j
+- slf4j,
 
-- logback
+- logback.
 
-Optionel:
+Optionel :
 
-- oshai:kotlin-logging
+- oshai:kotlin-logging.
 
 == Niveaux de log
 
@@ -152,7 +152,7 @@ Optionel:
 
 - TRACE
 
-== Niveau de log
+== Niveaux de log
 
 [source,yaml]
 ----

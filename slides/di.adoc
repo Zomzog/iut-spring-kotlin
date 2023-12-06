@@ -1,8 +1,8 @@
-== Injection dependances
+== Injection de dépendances
 
 image:di_everywhere.webp[]
 
-== Injection dependances
+== Injection de dépendances
 
 [mermaid]
 ----
@@ -20,7 +20,7 @@ classDiagram
     AService ..> PostgresDb
 ----
 
-== Injection dependances
+== Injection de dépendances
 
 [mermaid]
 ----
@@ -44,7 +44,7 @@ classDiagram
     AService ..> MySqlDb
 ----
 
-== Injection dependances
+== Injection de dépendances
 
 [mermaid]
 ----
@@ -70,7 +70,7 @@ classDiagram
     DbAccess <|.. MySqlDb
 ----
 
-== Injection dependances
+== Injection de dépendances
 
 [source,kotlin]
 ----
@@ -93,7 +93,7 @@ val appPg = AService(PostgresDb())
 val appMy = AService(MySqlDb())
 ----
 
-== Injection dependances
+== Injection de dépendances
 
 [source,kotlin]
 ----

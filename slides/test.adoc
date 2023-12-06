@@ -6,16 +6,16 @@ image:code_coverage.jpg[]
 
 image:pyramide_test.webp[]
 
-== Unit tests
+== Tests unitaires
 
 Ces tests ne sont pas liés à l'utilisation de spring.
 
 On peut utiliser un framework de test au choix (junit, spock...)
-et un système d'assertion au choix (junit, assertk...)
+et un système d'assertion au choix (junit, assertk...).
 
-Junit est embarqué dans les dependances Spring
+Junit est embarqué dans les dépendances Spring.
 
-== Unit tests
+== Tests unitaires
 
 [source,kotlin]
 ----
@@ -46,7 +46,7 @@ class DummyServiceTest {
 }
 ----
 
-== Integration tests
+== Tests d'intégration
 
 [source,kotlin]
 ----

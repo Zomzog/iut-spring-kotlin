@@ -36,7 +36,7 @@ flowchart TD
     tomcat <--> debug
 ....
 
-== Springboot
+== Spring Boot
 
 [mermaid]
 ....
@@ -50,7 +50,7 @@ flowchart TD
 
 [transition=fade-out]
 [.columns]
-== Spring vs SpringBoot
+== Spring vs Spring Boot
 
 [.column]
 Spring
@@ -63,13 +63,13 @@ image:gateau.jpg[]
 
 [transition=fade-in]
 [.columns]
-== Spring vs SpringBoot
+== Spring vs Spring Boot
 
 [.column]
 Spring
 image:ingredients.jpg[]
 
 [.column]
-SpringBoot
+Spring Boot
 image:alsa.jpg[]
 
