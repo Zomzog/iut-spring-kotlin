@@ -43,11 +43,11 @@ include::exo1.adoc[]
 
 == API Rest
 
-[.highlight-current-red.step]#GET# [.highlight-current-red.step]#/pony#/[.highlight-current-red.step]#{name}#/[.highlight-current-red.step]#type#
+[.highlight-current-red.step]#GET# [.highlight-current-red.step]#/ponies#/[.highlight-current-red.step]#{name}#/[.highlight-current-red.step]#type#
 
 == API Rest
 
-GET /pony/{name}/[.highlight-red.step]#?type=earth#
+GET /ponies/{name}/[.highlight-red.step]#?type=earth#
 
 == Lister
 

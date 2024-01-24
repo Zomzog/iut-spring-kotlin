@@ -106,6 +106,14 @@ class DummyServiceIntTest {
 }
 ----
 
+[%notitle]
+== WARNING
+
+image:warning.gif[]
+
+`@SpringBootTest` ne fonctionne que dans un sous package de l'application `@SpringBootApplication`
+
+image:warning.gif[]
 
 == Mockk (version Kotlin de Mockito)
 
@@ -150,6 +158,27 @@ class DummyServiceIntTest {
     }
 }
 ----
+
+== Every
+
+[fragment, step=0]
+[source,kotlin]
+----
+every { dependency.call() } returns true
+----
+
+[fragment, step=1]
+[source,kotlin]
+----
+every { dependency.call(Pony("name") } returns "23"
+----
+
+[fragment, step=2]
+[source,kotlin]
+----
+every { dependency.call(any(), any()) } throws Exception("Nope")
+----
+
 
 == Code !
 

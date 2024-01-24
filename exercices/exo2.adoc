@@ -158,6 +158,27 @@ Reponse:
 ----
 
 
-=== Séparation en service
+=== Séparation en service et DTO
 
-Si ce n'est pas déjà fait, déplacer la Map dans un second service (UserService) qui sera injecté dans le RestController.
+Si ce n'est pas déjà fait, découper le code en 3:
+
+- UserController qui déclare le endpoint et fait une conversion UserDTO (monde externe) -> User (domaine interne)
+- UserInMemoryRepository qui contient en propriété privée la Map
+- UserService qui contient le reste du code métier
+
+----
+/src
+ /main
+  /kotlin
+   /monpackage
+    /controller
+     /dto
+      UserDTO.kt
+     UserController.kt
+    /domain
+     User.kt
+    /service
+     UserService.kt
+    /repository
+     UserInMemoryRepository.kt
+----

@@ -43,19 +43,3 @@ include::test.adoc[]
 
 include::validation.adoc[]
 
-include::oas3.adoc[]
-
-== Code !
-
-image:keyboard.jpg[]
-
-include::exo4.adoc[]
-
-include::jpa.adoc[]
-
-include::jpa2.adoc[]
-
-include::actuator.adoc[]
-
-include::restTemplate.adoc[]
-
