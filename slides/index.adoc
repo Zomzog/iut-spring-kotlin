@@ -35,3 +35,5 @@ https://github.com/Zomzog/iut-spring-kotlin
 --
 
 include::tp1/index.adoc[]
+
+include::tp2/index.adoc[]
