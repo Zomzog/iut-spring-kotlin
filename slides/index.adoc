@@ -8,7 +8,6 @@
 :imagesdir: images
 :customcss: css/custom.css
 :docinfo: private
-:kroki-server-url: http://localhost:8000
 :kroki-default-format: png
 :icons: font
 
