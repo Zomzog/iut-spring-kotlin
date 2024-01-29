@@ -1,0 +1,7 @@
+dossier exo images KO
+
+slide warning mal placé
+
+decoupe en 3 complexe sans gestion d'erreur
+
+pas de BeforeEach AfterEach dans les exemples

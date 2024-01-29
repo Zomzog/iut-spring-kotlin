@@ -8,6 +8,7 @@
 :imagesdir: images
 :customcss: css/custom.css
 :docinfo: private
+:kroki-server-url: http://localhost:8000
 :kroki-default-format: png
 :icons: font
 
@@ -33,13 +34,4 @@ Slides & Exo
 https://github.com/Zomzog/iut-spring-kotlin
 --
 
-include::history.adoc[]
-
-include::di.adoc[]
-
-include::mvc.adoc[]
-
-include::test.adoc[]
-
-include::validation.adoc[]
-
+include::tp1/index.adoc[]
