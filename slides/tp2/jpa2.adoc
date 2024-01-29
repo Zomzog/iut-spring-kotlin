@@ -23,15 +23,20 @@ Une relation peut être uni-directionnel ie je ne peux aller que de l'objet A ve
 
 ou bi-directionnel ie je peux aller de A à B et de B à A.
 
-== JoinColumn
+== Join-Column
 
-L'annotation JoinColumn permet de fournir à hibernate des informations sur la manière de lier les entités.
+L'annotation @JoinColumn permet de fournir à hibernate des informations sur la manière de lier les entités.
 
 name: nom de la foreign key
 
 referencedColumnName : le nom de la colonne de l'autre entité utilisé pour la jointure.
 
-== OneToOne
+[source,kotlin]
+----
+@JoinColumn(referencedColumnName = "email")
+----
+
+== One-To-One
 
 [source,kotlin]
 ----
@@ -52,7 +57,7 @@ class PhoneEntity(
 )
 ----
 
-== OneToOne
+== One-To-One
 
 [source,kotlin]
 ----
@@ -71,7 +76,7 @@ class PhoneEntity(
 )
 ----
 
-== OneToOne
+== One-To-One
 
 [source,kotlin]
 ----
@@ -90,7 +95,7 @@ class PhoneEntity(
 )
 ----
 
-== OneToMany
+== One-To-Many
 
 
 [source,kotlin]
@@ -109,7 +114,7 @@ class PhoneEntity(
 )
 ----
 
-== ManyToOne
+== Many-To-One
 
 [source,kotlin]
 ----
@@ -128,7 +133,7 @@ class PhoneEntity(
 )
 ----
 
-== ManyToMany
+== Many-To-Many
 
 [source,kotlin]
 ----
@@ -148,3 +153,11 @@ class PhoneEntity(
         val number: String,
 )
 ----
+
+
+== Code !
+
+image:keyboard.jpg[]
+
+include::exo7.adoc[]
+

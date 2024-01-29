@@ -300,4 +300,4 @@ class DemoRepositoryTest {
 
 image:keyboard.jpg[]
 
-include::exo5.adoc[]
+include::exo6.adoc[]
