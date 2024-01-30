@@ -4,7 +4,7 @@ En utilisant l'approche @Value, faire un endpoint `/info` qui donne la liste des
 
 La réponse de /info doit contenir `"profiles": "dev"` en cas de profil dev `"profiles": ""` sinon.
 
-Exemple d'appel:
+=== Exemple d'appel:
 ----
 curl --location 'localhost:8080/api/info'
 ----
