@@ -7,7 +7,7 @@ import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import java.sql.SQLException
 
-@Configuration
+//@Configuration
 class H2Config {
     private lateinit var webServer: Server
 
