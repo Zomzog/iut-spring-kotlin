@@ -1,7 +1,7 @@
 dossier exo images KO
 
-slide warning mal placé
+slide warning mal placé -- OK
 
 decoupe en 3 complexe sans gestion d'erreur
 
-pas de BeforeEach AfterEach dans les exemples
+pas de BeforeEach AfterEach dans les exemples -- OK
