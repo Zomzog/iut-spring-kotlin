@@ -30,3 +30,8 @@ En modifiant les propriétés
 - Avec le profil dev : shutdown est disponible.
 
 Changer le port des actuators pour le port 9001.
+
+=== Metrics
+
+Ajouter une métrique `api.call` qui s'incrémente à chaque appel des endpoints.
+Utiliser les dimensions pour faire la difference entre GET/PUT/POST/DELETE

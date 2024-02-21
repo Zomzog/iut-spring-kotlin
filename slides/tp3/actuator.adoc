@@ -57,3 +57,19 @@ class CustomInfo(val delegate: InfoEndpoint) {
     }
 }
 ----
+
+== Metrics
+
+micrometer-registry-prometheus
+
+[source,kotlin]
+----
+@Component
+class MetricsConfig(meterRegistry: MeterRegistry) {
+    private val myCount = meterRegistry.counter("name.my.count",
+                                                "aDimension", "theValue")
+
+    override fun theIncrement() {
+        myCount.increment()
+    }
+----

@@ -7,6 +7,8 @@ image:keyboard.jpg[]
 Le projet correction contient l'application dummy-app qui se lance sur le port 9999.
 
 C'est un micro service de géstion de poneys.
+
+=== CRUD
 Il expose un CRUD classique:
 
 - GET    /api/ponies
@@ -25,6 +27,7 @@ En utilisant un client RestTemplate:
 - lors de la récupération d'un utilisateur, aller chercher le détail sur dummy-app
 - lors de la suppression d'un utilisateur, supprimer le poney
 
+=== Json
 [source,json]
 ----
 [
