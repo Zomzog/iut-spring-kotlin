@@ -1,0 +1,19 @@
+== Code !
+
+image:keyboard.jpg[]
+
+=== OAS3
+
+Rajouter la dépendance springdoc-openapi-starter-webmvc-ui.
+
+Vérifier que swagger-ui et l'OAS3 sont accessibles.
+
+=== Documentation
+
+Ajouter la documentation des endpoints de UserController avec:
+
+- une description de chaque endpoints
+- une description de chaque parametre
+- une description des réponses http
+- des tags READ/WRITE suivant les endpoints
+

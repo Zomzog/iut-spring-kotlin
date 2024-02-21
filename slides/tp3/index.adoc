@@ -1,0 +1,15 @@
+== Round 3
+
+include::actuator.adoc[]
+
+include::log.adoc[]
+
+include::exo8.adoc[]
+
+include::oas3.adoc[]
+
+include::exo9.adoc[]
+
+include::restTemplate.adoc[]
+
+include::exo10.adoc[]

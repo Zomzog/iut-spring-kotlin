@@ -1,74 +1,12 @@
-
-== Actuators
-
-Pour être "production ready" une application doit être en mesure de fournir :
-
-- un health-check,
-- des metrics,
-- des logs.
-
-== Actionneurs Spring
-
-Ajouter la dépendance Spring fournit directement plusieurs endpoints sous `/actuator`.
-
-[%autowidth.stretch]
-|===
-|endpoints | description
-
-|/actuator/health
-|santé de l'application
-
-|/actuator/info
-|information général sur l'application
-
-|/actuator/metrics
-|métriques de l'application
-
-|/actuator/beans
-|liste des beans et de leur dépendance
-|===
-
-== Configuration des actionneurs
-
-[source,yaml]
-----
-management:
-  endpoints:
-    web:
-      exposure:
-        include: info, health
-----
-
-TIP: '*' expose tous les enpoints.
-
-== Customisation des actionneurs
-
-[source,kotlin]
-----
-@Component
-@EndpointWebExtension(endpoint = InfoEndpoint::class)
-class CustomInfo(val delegate: InfoEndpoint) {
-
-    @ReadOperation
-    fun info(): WebEndpointResponse<Map<*, *>> {
-        val info = this.delegate.info()
-        info["custom.value"] = "pony"
-        return WebEndpointResponse(info, 200)
-    }
-}
-----
-
 == Logs
 
 De base dans Spring :
 
-- slf4j,
-
-- logback.
+slf4j + logback
 
 Optionel :
 
-- oshai:kotlin-logging.
+oshai:kotlin-logging.
 
 == Niveaux de log
 
@@ -137,8 +75,3 @@ logger.trace("trace of ${name}")
 logger.warn("warning with exception", Exception())
 ----
 
-== Code !
-
-image:keyboard.jpg[]
-
-include::exo8.adoc[]

@@ -1,3 +1,7 @@
+== Code !
+
+image:keyboard.jpg[]
+
 === CRUD
 
 Le but de cet exercice est de créer un premier CRUD (Create, Read, Update, Delete).

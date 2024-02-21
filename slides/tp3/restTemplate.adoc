@@ -32,12 +32,8 @@ val result: ResponseEntity<List<UserDTO>> =
 ----
 val body = UserDTO("email", "name", "last", 1)
 val entity = HttpEntity(body)
-val result = restTemplate
+val single = restTemplate
               .postForEntity("/api/users", entity, UserDTO::class.java)
+val multi = restTemplate
+              .postForEntity("/api/users", entity, Array<UserDTO>::class.java)
 ----
-
-== Code !
-
-image:keyboard.jpg[]
-
-include::exo7.adoc[]

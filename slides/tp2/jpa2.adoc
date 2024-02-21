@@ -154,10 +154,5 @@ class PhoneEntity(
 )
 ----
 
-
-== Code !
-
-image:keyboard.jpg[]
-
 include::exo7.adoc[]
 

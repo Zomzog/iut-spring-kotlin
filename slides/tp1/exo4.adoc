@@ -1,3 +1,7 @@
+== Code !
+
+image:keyboard.jpg[]
+
 === Validation
 
 Ajouter de la validation :

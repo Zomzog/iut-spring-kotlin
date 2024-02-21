@@ -1,3 +1,7 @@
+== Code !
+
+image:keyboard.jpg[]
+
 === Profils dans Info
 
 En utilisant l'approche @Value, faire un endpoint `/info` qui donne la liste des profils Spring actifs (la valeur passée en variable d'environnement).

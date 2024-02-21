@@ -8,6 +8,7 @@
 :imagesdir: images
 :customcss: css/custom.css
 :docinfo: private
+:kroki-server-url: http://localhost:8000
 :kroki-default-format: png
 :icons: font
 
@@ -36,3 +37,5 @@ https://github.com/Zomzog/iut-spring-kotlin
 include::tp1/index.adoc[]
 
 include::tp2/index.adoc[]
+
+include::tp3/index.adoc[]

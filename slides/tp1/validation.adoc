@@ -145,8 +145,4 @@ fun post() {
 }
 ----
 
-== Code !
-
-image:keyboard.jpg[]
-
 include::exo4.adoc[]

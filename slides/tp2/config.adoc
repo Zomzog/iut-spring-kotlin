@@ -68,9 +68,4 @@ class DatabaseConfig {
 }
 ----
 
-
-== Code !
-
-image:keyboard.jpg[]
-
 include::exo5.adoc[]

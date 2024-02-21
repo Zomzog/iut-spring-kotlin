@@ -296,8 +296,4 @@ class DemoRepositoryTest {
 }
 ----
 
-== Code !
-
-image:keyboard.jpg[]
-
 include::exo6.adoc[]

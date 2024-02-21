@@ -35,10 +35,6 @@ class HelloController {
 }
 ----
 
-== Code !
-
-image:keyboard.jpg[]
-
 include::exo1.adoc[]
 
 == API Rest

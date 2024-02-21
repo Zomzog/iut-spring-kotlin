@@ -1,3 +1,7 @@
+== Code !
+
+image:keyboard.jpg[]
+
 === Initialisation du projet
 
 start.spring.io

@@ -1,0 +1,56 @@
+== Code !
+
+image:keyboard.jpg[]
+
+=== Dummy-app
+
+Le projet correction contient l'application dummy-app qui se lance sur le port 9999.
+
+C'est un micro service de géstion de poneys.
+Il expose un CRUD classique:
+
+- GET    /api/ponies
+- POST   /api/ponies `{ "name": "Le Nom", "type": "EARTH" }`
+- GET    /api/ponies/{id}
+- PUT    /api/ponies/{id} `{ "name": "Le Nom", "type": "EARTH" }`
+- DELETE /api/ponies/{id}
+
+=== RestTemplate
+
+En base ajouter un PonyId à votre UserEntity.
+
+En utilisant un client RestTemplate:
+
+- lors de la création d'un utilisateur, faire la création du poney et sauvegarder son ID en BDD
+- lors de la récupération d'un utilisateur, aller chercher le détail sur dummy-app
+- lors de la suppression d'un utilisateur, supprimer le poney
+
+[source,json]
+----
+[
+    {
+        "email": "John@Doe.pony",
+        (...)
+        "pony": {
+          "id": 1,
+          "name": "Pinkie Pie",
+          "type": "EARTH"
+        }
+    }
+]
+----
+
+=== Bean
+
+RestTemplate est un bon candidat pour un bean.
+
+Déplacer sa création en tant que bean dans une classe RestTemplateConfig.
+La rootUri doit être configurable en properties.
+
+=== Unicité
+
+Dummy-app ne peut pas avoir deux poneys avec le même nom.
+
+Ajouter un contrôle pour ne créer le poney que s'il n'existe pas
+et le supprimer uniquement si aucun autre utilisateur n'y est lié.
+
