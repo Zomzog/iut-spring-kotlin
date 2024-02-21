@@ -34,6 +34,8 @@ Slides & Exo
 https://github.com/Zomzog/iut-spring-kotlin
 --
 
-include::tp3/index.adoc[]
+include::tp1/index.adoc[]
 
-== The end
+include::tp2/index.adoc[]
+
+include::tp3/index.adoc[]

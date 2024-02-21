@@ -1,0 +1,148 @@
+== Hibernate x Spring
+
+spring-boot-starter-validation
+
+Permet d'ajouter de la validation sur les paramètres des méthodes.
+
+== Validation globale
+
+[source, kotlin]
+----
+@RestController
+@Validated
+class DemoController(val demoRepository: DemoRepository) {
+  @GetMapping
+  fun list(@RequestParam(required = false) @Size(min=2, max=20) name: String?)
+      = if (name == null) ...
+----
+
+== Validation du body
+
+[source, kotlin]
+----
+@Valid @RequestBody demo: DemoDTO
+----
+
+[source, kotlin]
+----
+data class DemoDTO(
+        val id: UUID = UUID.randomUUID(),
+        @field:Size(min=5, max=10)
+        val name: String,
+)
+----
+
+== Gestion des erreurs
+
+Les erreurs de validation n'entrent pas dans le code de la fonction.
+
+La gestion est externe et générique.
+
+[transition=fade-out]
+== ControllerAdvice
+
+[source, kotlin]
+----
+@ControllerAdvice
+class HttpErrorHandler {
+
+
+
+
+}
+----
+
+[transition=fade-out]
+== ControllerAdvice
+
+[source, kotlin]
+----
+@ControllerAdvice
+class HttpErrorHandler {
+
+
+    fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
+        ResponseEntity.badRequest().body("You're arg is invalid")
+}
+----
+
+[transition=fade-out]
+== ControllerAdvice
+
+[source, kotlin]
+----
+@ControllerAdvice
+class HttpErrorHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidExceptSion::class)
+    fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
+        ResponseEntity.badRequest().body("You're arg is invalid")
+}
+----
+
+[transition=fade-out]
+== ControllerAdvice - Spring
+
+[source, kotlin]
+----
+@ControllerAdvice
+class HttpErrorHandler : ResponseEntityExceptionHandler() {
+
+  override fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException,
+                                            headers: HttpHeaders,
+                                            status: HttpStatusCode,
+                                            request: WebRequest)
+                                            : ResponseEntity<Any>? {
+      return ResponseEntity.badRequest().body("You're arg is invalid")
+  }
+}
+----
+
+== Tests
+
+Spring propose des tests de couche (layer).
+
+Ces tests ne lancent qu'une partie de l'application.
+
+Pour la partie web il faut remplacer @SpringBootTest par @WebMvcTest.
+
+== WebMvcTest
+
+[source,kotlin]
+----
+@WebMvcTest(DemoController::class)
+class DemoControllerTest {
+
+    @Autowired
+    private lateinit var mockMvc: MockMvc
+
+    @Test
+    fun get() {
+        mockMvc.get("/api/demo")
+                .andExpect {
+                    status { isOk() }
+                    content { jsonPath("$.[0].name", `is`("name")) }
+                }
+    }
+}
+----
+
+== WebMvcTest
+
+[source,kotlin]
+----
+fun post() {
+    // GIVEN
+    every { demoRepository.save(any()) } returns DemoEntity(name = "name")
+    mockMvc.post("/api/demo") {
+        contentType = MediaType.APPLICATION_JSON
+        content = ObjectMapper().writeValueAsString(DemoEntity(name = "name"))
+    }
+            .andExpect {
+                status { isOk() }
+                content { jsonPath("$.name", `is`("name")) }
+            }
+}
+----
+
+include::exo4.adoc[]

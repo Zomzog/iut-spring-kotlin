@@ -1,0 +1,218 @@
+== Tests
+
+image:code_coverage.jpg[]
+
+== Pyramide des Tests
+
+image:pyramide_test.webp[]
+
+== Tests unitaires
+
+Ces tests ne sont pas liés à l'utilisation de spring.
+
+On peut utiliser un framework de test au choix (junit, spock...)
+et un système d'assertion au choix (junit, assertk...).
+
+Junit est embarqué dans les dépendances Spring.
+
+== Tests unitaires
+
+[source,kotlin]
+----
+@Service
+class DummyService {
+
+    fun doSomething(pony: String) = if (pony.length < 3) {
+        "bad"
+    } else {
+        "good"
+    }
+}
+----
+
+[source,kotlin]
+----
+class DummyServiceTest {
+
+    private val service = DummyService()
+
+    @Test
+    fun `length gt 3 is good`() {
+        // WHEN
+       val result = service.doSomething("pony")
+        // THEN
+        assertThat(result).isEqualTo("good") // assertK
+    }
+}
+----
+
+[.columns.is-vcentered]
+== Tests unitaires
+
+[.column.is-two-thirds]
+[source,kotlin]
+----
+@TestInstance(PER_CLASS)
+class PonyTest {
+    @BeforeAll
+    fun beforeAll() = println("before all")
+    @BeforeEach
+    fun beforeEach() = println("before each")
+    @Test
+    fun test1() = println("test1")
+    @Test
+    fun test2() = println("test2")
+    @AfterEach
+    fun afterEach() = println("after each")
+    @AfterAll
+    fun afterAll() = println("after all")
+}
+----
+
+[.column]
+[source,kotlin]
+----
+before all
+before each
+test1
+after each
+before each
+test2
+after each
+after all
+----
+
+== Tests d'intégration
+
+[source,kotlin]
+----
+@SpringBootTest
+class DummyServiceTest {
+    @Autowired
+    private lateinit var service: DummyService
+
+    @Test
+    fun `length gt 3 is good`() {
+        // WHEN
+       val result = service.doSomething("pony")
+        // THEN
+        assertThat(result).isEqualTo("good") // assertK
+    }
+}
+----
+
+[%notitle]
+== WARNING
+
+image:warning.gif[]
+
+`@SpringBootTest` ne fonctionne que dans un sous package de l'application `@SpringBootApplication`
+
+image:warning.gif[]
+
+== Bouchons (mock) pour test d'integration
+
+[source,kotlin]
+----
+interface Dependency {
+    fun call(): Boolean
+}
+----
+
+[source,kotlin]
+----
+@Service
+class DummyService(val dependency: Dependency) {
+
+    fun callDep(pony: String) = if (dependency.call()) {
+        "good"
+    } else {
+        "bad"
+    }
+}
+----
+
+== Mockk (version Kotlin de Mockito)
+
+[source,kotlin]
+----
+@SpringBootTest
+class DummyServiceIntTest {
+    @Autowired
+    private lateinit var service: DummyService
+
+    @Test
+    fun `call good`() {
+        // WHEN
+        val result = service.callDep("pony")
+        // THEN
+        assertThat(result).isEqualTo("good")
+    }
+}
+----
+
+== Mockk (version Kotlin de Mockito)
+
+[source,kotlin]
+----
+@SpringBootTest
+class DummyServiceIntTest {
+    @MockkBean
+    private lateinit var dependency: Dependency
+    @Autowired
+    private lateinit var service: DummyService
+
+    @Test
+    fun `call good`() {
+        // WHEN
+        val result = service.callDep("pony")
+        // THEN
+        assertThat(result).isEqualTo("good")
+    }
+}
+----
+
+== Mockk (version Kotlin de Mockito)
+
+[source,kotlin]
+----
+@SpringBootTest
+class DummyServiceIntTest {
+    @MockkBean
+    private lateinit var dependency: Dependency
+    @Autowired
+    private lateinit var service: DummyService
+
+    @Test
+    fun `call good`() {
+        // GIVEN
+        every { dependency.call() } returns true
+        // WHEN
+        val result = service.callDep("pony")
+        // THEN
+        assertThat(result).isEqualTo("good")
+    }
+}
+----
+
+== Every
+
+[fragment, step=0]
+[source,kotlin]
+----
+every { dependency.call() } returns true
+----
+
+[fragment, step=1]
+[source,kotlin]
+----
+every { dependency.call(Pony("name") } returns "23"
+----
+
+[fragment, step=2]
+[source,kotlin]
+----
+every { dependency.call(any(), any()) } throws Exception("Nope")
+----
+
+include::exo3.adoc[]
