@@ -1,77 +1,7 @@
 == Round 4
 
-== WebClient / WebFlux
+include::webclient.adoc[]
 
-`org.springframework.boot:spring-boot-starter-webflux`
+include::exo11.adoc[]
 
-Mono<Pony> : 1 item
 
-Flux<Pony> : n items
-
-== Mono donnée ou Erreur
-
-[source,kotlin]
-----
-Mono.error<String>(Exception())
-	.map(it -> it + "1") // non appelé
-----
-
-[source,kotlin]
-----
-Mono.just("Data")
-----
-
-== WebClient creation
-
-[source,kotlin]
-----
-val wc = WebClient.builder().baseUrl("http://localhost:9997")
-        .defaultHeaders {
-            it.add("name", "value")
-        }
-        .build()
-----
-
-== WebClient usage
-
-[source,kotlin]
-----
-wc.get()
-  .uri { uriBuilder: UriBuilder ->
-      uriBuilder.path("/api/ponies")
-  	    .build()
-  }.retrieve()
-  .bodyToMono<String>()
-  .block()
-----
-
-== Erreurs
-[source,kotlin]
-----
-wc.get()
-  .uri { ... }.retrieve()
-  .onStatus(
-  	{ status: HttpStatusCode -> status.isError },
-  	{ response -> Mono.error(
-		ResponseStatusException(response.statusCode(), "the error"))
-	}
-  )
-  .bodyToMono<String>()
-  .block()
-----
-
-== Retry
-[source,kotlin]
-----
-wc.get()
-  ...
-  .bodyToMono<String>()
-  .retryWhen(Retry.backoff(5, Duration.ofSeconds(1))
-  	.filter {
-  	    when (it) {
-  		is ResponseStatusException -> it.statusCode.is5xxServerError
-  		else -> false
-  	    }
-  	})
-  .block()
-----
