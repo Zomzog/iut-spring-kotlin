@@ -25,6 +25,6 @@ Les APIs doivent correspondre à ce contrat: link:expected-contract.yaml[expecte
 
 == Rendu
 
-Le code doit être livré dans un dépôt git (gitlab ou github) à la fin du dernier TP.
+Le code doit être livré dans un dépôt git (gitlab ou github) avant le 3/3/2024 23h59.
 
 Un fichier README peut-être rajouté à la racine du projet si besoin (justifier un choix hors des contrats, spécifier un blocage...)
