@@ -1,0 +1,364 @@
+openapi: 3.0.1
+info:
+  title: The expected service
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /api/v1/users/{email}:
+    get:
+      summary: Find a user by email
+      operationId: findOne
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionalError'
+    put:
+      tags:
+        - admin
+      operationId: update
+      parameters:
+        - name: apiKey
+          in: header
+          description: This API-key must be "admin-key" or respond 401
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: Invalid payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionalError'
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionalError'
+    delete:
+      tags:
+        - admin
+      operationId: delete
+      parameters:
+        - name: apiKey
+          in: header
+          description: This API-key must be "admin-key" or respond 401
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionalError'
+  /api/v1/users:
+    get:
+      operationId: list
+      parameters:
+        - name: apiKey
+          in: header
+          description: This API-key must be "admin-key" or respond 401
+          required: true
+          schema:
+            type: string
+        - name: age
+          in: query
+          required: false
+          schema:
+            minimum: 15
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: If response contains 0 to 10 users, all the expected users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+        '206':
+          description: If response contains more than 10 users, only the 10 firsts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+    post:
+      tags:
+        - admin
+      summary: Create a new user
+      operationId: create
+      parameters:
+        - name: apiKey
+          in: header
+          description: This API-key must be "admin-key" or respond 401
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreationDTO'
+        required: true
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '401':
+          description: Unauthorized
+  /api/v1/users/{email}/favoriteMovies:
+    post:
+      operationId: addFavoriteMovie
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMovieDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionalError'
+        '409':
+          description: Movie already in favorites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionalError'
+  /api/v1/users/{email}/favoriteMovies/{movieId}:
+    delete:
+      operationId: removeFavoriteMovie
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: Movie not in favorites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionalError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionalError'
+  /api/v1/movies/{movieId}:
+    delete:
+      tags:
+        - admin
+      operationId: deleteMovie
+      summary: Notification of movie deletion, all favorites must be removed
+      parameters:
+        - name: apiKey
+          in: header
+          description: This API-key must be "admin-key" or respond 401
+          required: true
+          schema:
+            type: string
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionalError'
+components:
+  schemas:
+    FunctionalError:
+      required:
+        - status
+        - message
+      type: object
+      properties:
+        status:
+          type: string
+          example: "404"
+        message:
+          type: string
+          example: "The error message"
+    MovieDTO:
+      required:
+        - id
+        - name
+        - releaseDate
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 42
+        name:
+          type: string
+          example: Jurassic Park
+        releaseDate:
+          summary: Release date with format YYYY-MM
+          type: string
+          example: 1993-05
+    UserDTO:
+      required:
+        - age
+        - email
+        - favoriteMovies
+        - firstName
+        - lastName
+      type: object
+      properties:
+        email:
+          type: string
+        firstName:
+          maxLength: 25
+          minLength: 2
+          type: string
+        lastName:
+          maxLength: 25
+          minLength: 2
+          type: string
+        age:
+          maximum: 99
+          minimum: 18
+          type: integer
+          format: int32
+        favoriteMovies:
+          type: array
+          items:
+            $ref: '#/components/schemas/MovieDTO'
+    UserCreationDTO:
+      required:
+        - age
+        - email
+        - firstName
+        - lastName
+      type: object
+      properties:
+        email:
+          type: string
+        firstName:
+          maxLength: 25
+          minLength: 2
+          type: string
+        lastName:
+          maxLength: 25
+          minLength: 2
+          type: string
+        age:
+          maximum: 99
+          minimum: 18
+          type: integer
+          format: int32
+    AddMovieDTO:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          minimum: 1
+          type: integer
+          format: int32
+    Unit:
+      type: object

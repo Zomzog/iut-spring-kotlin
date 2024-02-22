@@ -39,3 +39,5 @@ include::tp1/index.adoc[]
 include::tp2/index.adoc[]
 
 include::tp3/index.adoc[]
+
+include::tp4/index.adoc[]
