@@ -4,7 +4,6 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import bzh.zomzog.prez.springkotlin.controller.dto.UserDTO
 import bzh.zomzog.prez.springkotlin.domain.User
-import bzh.zomzog.prez.springkotlin.repository.UserRepository
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Nested

@@ -6,8 +6,19 @@ import bzh.zomzog.prez.springkotlin.dummy.domain.AlreadyExistError
 import bzh.zomzog.prez.springkotlin.dummy.service.PonyService
 import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.bodyToMono
 import org.springframework.web.reactive.function.server.*
+import org.springframework.web.server.ResponseStatusException
+import org.springframework.web.util.UriBuilder
+import reactor.core.publisher.Mono
+import reactor.netty.http.client.HttpClient
+import reactor.util.retry.Retry
+import reactor.util.retry.RetryBackoffSpec
+import java.time.Duration
 
 @Component
 class PonyHandler(val ponyService: PonyService) {
@@ -54,6 +65,7 @@ class PonyHandler(val ponyService: PonyService) {
             else -> ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR).bodyValueAndAwait("Internal error")
         }
     }
+
     suspend fun updateById(request: ServerRequest) = try {
         val id = request.pathVariable("id").toInt()
         val dto: PonyDTO = request.awaitBody()
