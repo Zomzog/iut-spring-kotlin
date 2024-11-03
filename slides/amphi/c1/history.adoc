@@ -1,3 +1,8 @@
+== Spring != Jakarta
+
+
+Spring a été créé en 2003 comme une alternative légère pour répondre à la complexité des premières versions des spécifications J2EE
+
 == Spring - Histoire
 
 image:snow-white-blow.gif[]
@@ -24,13 +29,28 @@ gitGraph
     checkout SpringBoot
     merge Spring id:"2022-11" tag:"3.0.0"
 ----
+
+== Spring
+
+Spring est en premier lieu un système d'injection de dépendances
+
+Spring fourni des librairies d'abstraction d'autres framworks
+
+- spring-security
+
+- spring-data
+
+- spring-kafka
+
+- ...
+
 == Spring
 
 [mermaid]
 ....
 flowchart TD
-    classes --> war{war}
-    spring-lib --> war
+    customCode --> war{war}
+    spring-libs --> war
     web.xml --> war
     war --> tomcat
     tomcat <--> debug
@@ -41,8 +61,8 @@ flowchart TD
 [mermaid]
 ....
 flowchart TD
-    classes --> jar{jar}
-    spring-lib --> springboot-starter
+    customCode --> jar{jar}
+    spring-libs --> springboot-starter
     tomcat --> springboot-starter
     springboot-starter --> jar
     jar --> run(java -jar mon.jar)

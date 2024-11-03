@@ -1,0 +1,135 @@
+== Java SE - Java Standard Edition
+
+[cols="1,5"]
+|===
+|JSR
+|Java Specification Requests, constituant les spécifications
+
+|JRE
+|un Java Runtime Environment, contenant le seul environnement d'exécution
+
+|JDK
+|Java Development Kit (JDK), contenant les bibliothèques logicielles (compilateur, debug...)
+|===
+
+[NOTE.speaker]
+--
+Java se découpe en 3 grandes parties
+Ca permet de faire des applications java "brut"
+--
+
+== Jakarta EE
+
+Historique des noms
+
+[cols="1,1"]
+|===
+|J2EE 
+|1999 - 2006
+
+|Java EE 
+|2006 - 2019
+
+|Jakarta EE
+|2019 -
+|===
+
+== Jakarta EE
+
+Ensemble de spécifications pour faire des applications pour les entreprises
+
+Les versions sont retro-compatible
+
+[%notitle]
+== Jakarta EE
+
+image:archi-jee.svg[width=100%]
+
+[NOTE.speaker]
+--
+JPA - Java Persistence API
+
+JTA - Java Transaction API
+
+JMS - Java Message Service
+
+EJB - Entreprise Java Bean
+
+CDI - Contexts and Dependency Injection
+
+Servlet - Point entrée application 
+
+JSP - Java Server page
+
+JSF - Java server face
+
+EL - Expressions Languages 
+
+JAX.WS - Java Api for XML Web Service
+
+JAX.RS - Java API for RESTful Web Service
+--
+
+== Jakarta EE - Entreprise Specification
+
+JPA - Java Persistence API
+
+JTA - Java Transaction API
+
+JMS - Java Message Service
+
+EJB - Entreprise Java Bean
+
+CDI - Contexts and Dependency Injection
+
+== Jakarta EE - Web specification
+
+Servlet - Point entrée application 
+
+JSP - Java Server page
+
+JSF - Java server face
+
+EL - Expressions Languages
+
+JAX.WS - Java Api for XML Web Service
+
+JAX.RS - Java API for RESTful Web Service
+
+== Serveur Application
+
+Implementation des spécifications JavaEE
+
+- Glassfish
+
+- WebLogic
+
+- WebSphere
+
+- JBoss
+
+- ...
+
+== Conteneur Web / Servlet
+
+Serveurs léger qui ne font "que" les parties servlet et jsp
+
+Exemple de serveurs développés en Java
+
+- Tomcat
+
+- Jetty
+
+== Fonctionnement
+
+Création de l'appication java et packaging en .WAR
+
+[fragment, step=1]
+Installation et lancement du serveur
+
+[fragment, step=2]
+Ajout du WAR dans le serveur
+
+[fragment, step=3]
+Déploiement du code et mapping des servlets
+

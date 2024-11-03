@@ -8,13 +8,21 @@
 :imagesdir: images
 :customcss: css/custom.css
 :docinfo: private
-:kroki-server-url: http://localhost:8000
+//:kroki-server-url: https://kroki.zomzog.fr
+:kroki-server-url: https://kroki.io
 :kroki-default-format: png
 :icons: font
 
-== spring / kotlin
+== Programmation avancée
 
-Qualité Algorithmique
+Slides:
+
+https://zomzog.fr/iut-spring-kotlin
+
+[qrcode, format="png", xdim=4]
+....
+Hello World!
+....
 
 [.columns]
 == Thibault Duperron
@@ -29,10 +37,8 @@ Decathlon Digital
 
 Lead tech Backend
 
-Slides & Exo
-
-https://github.com/Zomzog/iut-spring-kotlin
 --
+include::amphi/c1.adoc[]
 
 include::tp1/index.adoc[]
 

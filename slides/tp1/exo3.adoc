@@ -1,7 +1,3 @@
-== Code !
-
-image:keyboard.jpg[]
-
 === Libs
 
 ----
