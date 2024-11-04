@@ -2,8 +2,10 @@
 
 image:di_everywhere.webp[]
 
+[.columns]
 == Injection de dépendances
 
+[.column]
 [mermaid]
 ----
 %%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
@@ -20,13 +22,24 @@ classDiagram
     AService ..> PostgresDb
 ----
 
+[.column]
+[source,kotlin]
+----
+class AService() {
+    val db = PostgresDb()
+
+    fun findAll() = db.findAllInDb()
+}
+----
+
+[.columns]
 == Injection de dépendances
 
+[.column]
 [mermaid]
 ----
 %%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
 classDiagram
-    direction TD
     direction TD
     class AService {
         <<class>>
@@ -44,8 +57,25 @@ classDiagram
     AService ..> MySqlDb
 ----
 
+[.column]
+[source,kotlin]
+----
+class AService() {
+  val pg = PostgresDb()
+  val my = MySqlDb()
+
+  fun findAll(pg: Boolean) = if(pg) {
+    db.findAllInDb()
+  } else {
+    my.findAllInDb()
+  }
+}
+----
+
+[.columns]
 == Injection de dépendances
 
+[.column]
 [mermaid]
 ----
 %%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
@@ -70,16 +100,27 @@ classDiagram
     DbAccess <|.. MySqlDb
 ----
 
-== Injection de dépendances
-
+[.column]
 [source,kotlin]
 ----
-class AService(val dbAccess: DbAccess)
+class AService(val db: DbAccess) {}
+  fun findAll() = db.findAllInDb()
+}
 
-interface DbAccess
-class PostgresDb: DbAccess
-class MySqlDb: DbAccess
+interface DbAccess {
+  fun findAll() = TODO()
+}
+
+class PostgresDb(): DbAccess {
+  override fun findAll() = TODO()
+}
+
+class MySqlDb(): DbAccess{
+  override fun findAll() = TODO()
+}
 ----
+
+== Injection de dépendances
 
 [fragment, step=1]
 [source,kotlin]
@@ -93,29 +134,12 @@ val appPg = AService(PostgresDb())
 val appMy = AService(MySqlDb())
 ----
 
-== Injection de dépendances
-
-[source,kotlin]
-----
-class AService(val dbAccess: DbAccess)
-
-interface DbAccess
-class PostgresDb: DbAccess
-class MySqlDb: DbAccess
-----
-
-[source,kotlin]
-----
-val dbAccess = if (useMySql) MySqlDb() else PostgresDb()
-val appPg = AService(dbAccess)
-----
-
 [transition=slide-in]
 == Beans
 
 [source,kotlin]
 ----
-//
+@Configuration
 class MyConfig {
 
 
@@ -133,44 +157,26 @@ class MyConfig {
 
 [source,kotlin]
 ----
-//
-class MyConfig {
-    @Bean
-    fun myDb() = PostgresDb()
-
-
-
-
-
-
-}
-----
-
-
-[transition=fade-in]
-== Beans
-
-[source,kotlin]
-----
-//
+@Configuration
 class MyConfig {
     @Bean
     fun myDb() = PostgresDb()
 
-    @Bean
-    fun aService(dbAccess: DbAccess) = AService(dbAccess)
+
+
 
 
 
 }
 ----
 
+
 [transition=fade-in]
 == Beans
 
 [source,kotlin]
 ----
-//
+@Configuration
 class MyConfig {
     @Bean
     fun myDb() = PostgresDb()
@@ -178,8 +184,8 @@ class MyConfig {
     @Bean
     fun aService(dbAccess: DbAccess) = AService(dbAccess)
 
-    @Bean
-    fun restController(aService: AService) = RestController(aService)
+
+
 }
 ----
 
@@ -197,7 +203,7 @@ class MyConfig {
     fun aService(dbAccess: DbAccess) = AService(dbAccess)
 
     @Bean
-    fun restController(aService: AService) = RestController(aService)
+    fun another(dbAccess: DbAccess) = Other(myDb())
 }
 ----
 
@@ -215,9 +221,122 @@ class MyConfig {
     fun aService(dbAccess: DbAccess) = AService(dbAccess)
 
     @Bean
-    fun restController(aService: AService) = RestController(aService)
+    fun another(dbAccess: DbAccess) = Other(myDb())
 }
 ----
+
+== Application Context
+
+[source,kotlin]
+----
+fun main() {
+  val context: ApplicationContext = 
+     AnnotationConfigApplicationContext(MyConfig::class.java)
+
+
+}
+----
+
+[transition=fade-out]
+== Application Context
+
+[source,kotlin]
+----
+fun main() {
+  val context: ApplicationContext = 
+     AnnotationConfigApplicationContext(MyConfig::class.java)
+  val service = context.getBean(AService::class.java)
+
+}
+----
+
+[transition=fade-out]
+== Application Context
+
+[source,kotlin]
+----
+fun main() {
+  val context: ApplicationContext = 
+     AnnotationConfigApplicationContext(MyConfig::class.java)
+  val service = context.getBean(AService::class.java)
+  service.findAllInDb()
+}
+----
+
+== Scope
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb(aDriverFromALib: JdbcDriver) = GenericDb(aDriverFromALib)
+
+    @Bean
+    fun aService(dbAccess: DbAccess) = AService(dbAccess)
+
+    @Bean
+    fun another(dbAccess: DbAccess) = Other(myDb())
+}
+----
+
+aService.dbAccess == another.dbAccess
+
+[transition=fade-out]
+== Scope
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
+    fun myDb(aDriverFromALib: JdbcDriver) = GenericDb(aDriverFromALib)
+
+    @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
+    fun aService(dbAccess: DbAccess) = AService(dbAccess)
+
+    @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
+    fun another(dbAccess: DbAccess) = Other(myDb())
+}
+----
+
+aService.dbAccess == another.dbAccess
+
+[transition=fade-out]
+== Scope
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    fun myDb(aDriverFromALib: JdbcDriver) = GenericDb(aDriverFromALib)
+
+    @Bean
+    fun aService(dbAccess: DbAccess) = AService(dbAccess)
+
+    @Bean
+    fun another(dbAccess: DbAccess) = Other(myDb())
+}
+----
+
+aService.dbAccess != another.dbAccess
+
+== Scope
+
+Singleton -> un unique bean
+
+Prototype -> un bean par instance d'objet
+
+== Web-aware Scope
+
+Request -> un bean pour la durée de vie de la requête HTTP
+
+Session -> un bean pour la durée de la session HTTP
+
+Application -> un bean pour la durée de vie de la servlet 
+
+WebSocket -> un bean pour la durée de vie de la WebSocket
 
 [transition=fade-out]
 == Autowired

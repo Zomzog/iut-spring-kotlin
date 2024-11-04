@@ -1,11 +1,6 @@
 == Spring != Jakarta
 
-
 Spring a été créé en 2003 comme une alternative légère pour répondre à la complexité des premières versions des spécifications J2EE
-
-== Spring - Histoire
-
-image:snow-white-blow.gif[]
 
 == Spring - Histoire
 
