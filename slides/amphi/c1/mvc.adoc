@@ -1,0 +1,210 @@
+== Hello World Rest
+
+Requête
+----
+curl -XGET localhost:8080/hello
+----
+
+Réponse:
+
+----
+Hello World
+----
+
+== spring-boot-starter-web
+[source,xml]
+----
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+----
+
+[transition=fade-out]
+== RestController
+
+RestController -> Controller -> Component
+
+[transition=fade-out]
+== RestController
+
+[source,kotlin]
+----
+@RestController
+class HelloController {
+
+
+}
+----
+
+[transition=fade-in]
+== RestController
+
+[source,kotlin]
+----
+@RestController
+class HelloController {
+
+    @GetMapping("/hello")
+    fun hello() = "Hello World"
+}
+----
+
+[.columns.is-vcentered]
+== Mappings
+
+[.column]
+--
+GetMapping
+
+PostMapping
+
+PutMapping
+
+DeleteMapping
+--
+
+[.column]
+--
+alias ->
+--
+
+[.column]
+--
+RequestMapping
+--
+
+[NOTE.speaker]
+--
+Tous les verbes peuvent être gérés par RequestMapping
+--
+
+== API Rest
+
+[.highlight-current-red.step]#GET# [.highlight-current-red.step]#/ponies#/[.highlight-current-red.step]#{name}#/[.highlight-current-red.step]#type#
+
+== API Rest
+
+GET /ponies/{name}/[.highlight-red.step]#?type=earth#
+
+== Lister
+
+[source]
+----
+GET /ponies?age=42
+----
+
+== Créer
+
+[source]
+----
+POST /ponies
+----
+
+== Obtenir un élément
+
+[source]
+----
+GET /ponies/{name}
+----
+
+== Mettre à jour un élément
+
+[source]
+----
+PUT /ponies/{name}
+----
+
+== Supprimer un élément
+[source]
+----
+POST /ponies/{name}
+----
+
+
+== Paramètres
+
+[fragment, step=0]
+[source,kotlin]
+----
+@GetMapping("/hello")
+fun queryParam(@RequestParam name: String) = "world of $name"
+----
+
+[fragment, step=1]
+[source,kotlin]
+----
+@GetMapping("/hello/{name}")
+fun path(@PathVariable name: String) = "world of $name"
+----
+
+[fragment, step=2]
+[source,kotlin]
+----
+@PostMapping("/hello")
+fun body(@RequestBody name: String) = "world of $name"
+----
+
+[fragment, step=3]
+[source,kotlin]
+----
+@GetMapping("/hello")
+fun header(@RequestHeader name: String) = "world of $name"
+----
+
+== Code retour
+
+[source,kotlin]
+----
+    @GetMapping("/hello/{name}")
+    fun path(@PathVariable name: String) = "world of $name"
+
+    @GetMapping("/hello/{name}")
+    fun helloPath(@PathVariable name: String) =
+        ResponseEntity.status(HttpStatus.OK).body("world of $name")
+----
+
+== Code retour
+
+[source,kotlin]
+----
+    @GetMapping("/hello/{name}")
+    fun path(@PathVariable name: String) = "world of $name"
+
+    @GetMapping("/hello/{name}")
+    fun helloPath(@PathVariable name: String) =
+        ResponseEntity.ok("world of $name")
+----
+
+== Code retour
+
+[source,kotlin]
+----
+    @GetMapping("/hello/{name}")
+    fun helloPath(@PathVariable name: String) = if (name.length <= 2) {
+        ResponseEntity.badRequest().body("Name size must be > 2")
+    } else {
+        ResponseEntity.ok("world of $name")
+    }
+----
+
+== DTO
+
+Desing Pattern - Data Transfert Object
+
+Objet simple représentant la donnée
+
+Dans le cas d'une API REST / Json il ne doit pas contenir de cycle pour être sérialisable en json.
+
+== DTO
+
+[source,kotlin]
+----
+data class PersonDTO(val name: String, val age: Int)
+----
+
+[source,kotlin]
+----
+@GetMapping("/hello")
+fun hello() = ResponseEntity.ok(PersonDTO("John", 42))
+----

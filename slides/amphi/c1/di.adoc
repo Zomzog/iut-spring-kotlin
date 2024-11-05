@@ -1,0 +1,569 @@
+== Injection de dépendances
+
+image:di_everywhere.webp[]
+
+[.columns]
+== Injection de dépendances
+
+[.column]
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+classDiagram
+    direction TD
+    class AService {
+        <<class>>
+        +findAll()
+    }
+    class PostgresDb {
+        <<class>>
+        +findAllInDb()
+    }
+    AService ..> PostgresDb
+----
+
+[.column]
+[source,kotlin]
+----
+class AService() {
+    val db = PostgresDb()
+
+    fun findAll() = db.findAllInDb()
+}
+----
+
+[.columns]
+== Injection de dépendances
+
+[.column]
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+classDiagram
+    direction TD
+    class AService {
+        <<class>>
+        +findAll()
+    }
+    class MySqlDb {
+        <<class>>
+        +findAllInDb()
+    }
+    class PostgresDb {
+        <<class>>
+        +findAllInDb()
+    }
+    AService ..> PostgresDb
+    AService ..> MySqlDb
+----
+
+[.column]
+[source,kotlin]
+----
+class AService() {
+  val pg = PostgresDb()
+  val my = MySqlDb()
+
+  fun findAll(pg: Boolean) = if(pg) {
+    db.findAllInDb()
+  } else {
+    my.findAllInDb()
+  }
+}
+----
+
+[.columns]
+== Injection de dépendances
+
+[.column]
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+classDiagram
+    direction TD
+    class AService {
+        <<class>>
+        +findAll()
+    }
+    class DbAccess {
+        <<interface>>
+        +findAllInDb()
+    }
+    class PostgresDb {
+        <<class>>
+    }
+    class MySqlDb {
+        <<class>>
+    }
+    AService ..> DbAccess
+    DbAccess <|.. PostgresDb
+    DbAccess <|.. MySqlDb
+----
+
+[.column]
+[source,kotlin]
+----
+class AService(val db: DbAccess) {}
+  fun findAll() = db.findAllInDb()
+}
+
+interface DbAccess {
+  fun findAll() = TODO()
+}
+
+class PostgresDb(): DbAccess {
+  override fun findAll() = TODO()
+}
+
+class MySqlDb(): DbAccess{
+  override fun findAll() = TODO()
+}
+----
+
+== Injection de dépendances
+
+[fragment, step=1]
+[source,kotlin]
+----
+val appPg = AService(PostgresDb())
+----
+
+[fragment, step=2]
+[source,kotlin]
+----
+val appMy = AService(MySqlDb())
+----
+
+[transition=slide-in]
+== Beans
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+
+
+
+
+
+
+
+
+}
+----
+
+[transition=fade-in]
+== Beans
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+
+
+
+
+
+}
+----
+
+
+[transition=fade-in]
+== Beans
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+
+
+
+}
+----
+
+[transition=fade-in]
+== Beans
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+
+    @Bean
+    fun another() = Other(myDb())
+}
+----
+
+== Application Context
+
+[source,kotlin]
+----
+fun main() {
+  val context: ApplicationContext = 
+     AnnotationConfigApplicationContext(MyConfig::class.java)
+
+
+}
+----
+
+[transition=fade-out]
+== Application Context
+
+[source,kotlin]
+----
+fun main() {
+  val context: ApplicationContext = 
+     AnnotationConfigApplicationContext(MyConfig::class.java)
+  val service = context.getBean(AService::class.java)
+
+}
+----
+
+[transition=fade-out]
+== Application Context
+
+[source,kotlin]
+----
+fun main() {
+  val context: ApplicationContext = 
+     AnnotationConfigApplicationContext(MyConfig::class.java)
+  val service = context.getBean(AService::class.java)
+  service.findAllInDb()
+}
+----
+
+== Scope
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+
+    @Bean
+    fun another() = Other(myDb())
+}
+----
+
+aService.dbAccess == another.dbAccess
+
+[transition=fade-out]
+== Scope
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
+    fun myDb() = PostgresDb()
+
+    @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
+    fun aService() = AService(myDb())
+
+    @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
+    fun another() = Other(myDb())
+}
+----
+
+aService.dbAccess == another.dbAccess
+
+[transition=fade-out]
+== Scope
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+
+    @Bean
+    fun another() = Other(myDb())
+}
+----
+
+aService.dbAccess != another.dbAccess
+
+== Scope
+
+Singleton -> un unique bean
+
+Prototype -> un bean par instance d'objet
+
+== Web-aware Scope
+
+Request -> un bean pour la durée de vie de la requête HTTP
+
+Session -> un bean pour la durée de la session HTTP
+
+Application -> un bean pour la durée de vie de la servlet 
+
+WebSocket -> un bean pour la durée de vie de la WebSocket
+
+== Proxy proxy proxy
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+●   fun myDb() = PostgresDb()
+}
+----
+
+Stack du breakpoint
+[source]
+----
+myDb:4, MyConfig (bzh.zomzog)
+CGLIB$myDb$2:-1, MyConfig$$SpringCGLIB$$0 (bzh.zomzog)
+Invoke-1, MyConfig$$SpringCGLIB$$FastClass$$1 (bzh.zomzog)
+...
+----
+
+[NOTE.speaker]
+--
+Si on met un breakpoint sur l'appel de methode a cette stack
+
+Spring va encapsuler chaque instance dans des proxy
+
+CGLIB est un système de génération de code dynamique
+
+Tout doit être ouvert à l'extension (open class)
+--
+
+[transition=fade-out]
+== Autowired
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+}
+----
+
+[source,kotlin]
+----
+class AService (
+
+    val aService: AService
+)
+----
+
+[transition=fade-out]
+== Autowired
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService()
+}
+----
+
+[source,kotlin]
+----
+class AService {
+
+    lateinit var aService: AService
+}
+----
+
+[transition=fade-out]
+== Autowired
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService()
+}
+----
+
+[source,kotlin]
+----
+class AService {
+    @Autowired
+    lateinit var aService: AService
+}
+----
+
+[transition=fade-out]
+== Stereotype
+
+[source,kotlin]
+----
+@Configuration
+@ComponentScan("bzh.zomzog.iut.poc")
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    //@Bean
+    //fun aService() = AService()
+}
+----
+
+[source,kotlin]
+----
+@Service
+class AService {
+    @Autowired
+    lateinit var aService: AService
+}
+----
+
+[NOTE.speaker]
+--
+ComponentScan va forcer spring à chercher tous les stereotypes du package
+
+Service demande la création d'un bean de cette classe
+--
+
+== Stereotype
+
+@Component -> déclare que la classe doit devenir un bean lors du scan
+
+3 alias:
+
+@Controller
+
+@Service
+
+@Repository
+
+[NOTE.speaker]
+--
+Les 4 sont équivalent,
+ils sont plus sémantique pour de la documentation
+--
+
+== Stereotype - @Configuration
+
+[source,java]
+----
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component
+public @interface Configuration {
+}
+----
+
+@Configuration est une extension de component mais a son propre cycle de vie
+
+@Configuration crée quand même un bean
+
+== Depenency Injection
+
+[source,kotlin]
+----
+@Service
+class AService {
+    @Autowired
+    lateinit var aService: AService
+}
+----
+
+[source,kotlin]
+----
+@Service
+class AService(aService: AService) {
+}
+----
+
+== Depenency Injection
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+}
+----
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService(dbAccess: DBAccess) = AService(dbAccess)
+}
+----
+
+[transition=fade-in]
+== External Beans
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb(aDriverFromALib: JdbcDriver) = GenericDb(aDriverFromALib)
+
+    @Bean
+    fun aService() = AService(myDb())
+
+    @Bean
+    fun another() = Other(myDb())
+}
+----
+
+== Beans limits
+
+Le nom de chaque bean doit être unique
+
+Si plusieurs beans correspondent à un autowired, la résolution doit être fournie
+
+Il ne faut pas de cycle pour leur création
+
+== Noms
+
+Par défault, un bean à le nom de la méthode qui le crée
+
+On peut le forcer `@Bean("monNom")`
+
+== Conflit
+
+@Primary sur un bean -> en cas de conflit, c'est lui qui est choisi
+
+@Autowired @Qualifier("monNom") spécifie le bean attendu

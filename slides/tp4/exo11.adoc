@@ -1,7 +1,0 @@
-== Code !
-
-image:keyboard.jpg[]
-
-=== Dummy-app
-
-Reprendre l'exercice 10 en remplaçant le RestTemplate par un WebClient
