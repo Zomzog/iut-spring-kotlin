@@ -1,0 +1,55 @@
+== SpringBoot
+
+[source,kotlin]
+----
+@Configuration
+@ComponentScan("bzh.zomzog.iut.poc")
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+}
+----
+
+[source,kotlin]
+----
+fun main() {
+  val context: ApplicationContext = 
+     AnnotationConfigApplicationContext(MyConfig::class.java)
+  val service = context.getBean(AService::class.java)
+  service.findAllInDb()
+}
+----
+
+== SpringBoot
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+}
+----
+
+[source,kotlin]
+----
+@SpringBootApplication
+class PocApplication
+
+fun main(args: Array<String>) {
+    runApplication<PocApplication>(*args)
+----
+
+== Spring Boot Application
+
+@SpringBootApplication contient @ComponentScan
+
+[IMPORTANT]
+Il ne scan QUE son package et ses sous package
+
+== Spring Boot Application
+
+Lancer le main:
+
+- lance un tomcat qui écoute sur le port 8080
+- lance les auto-configurations et scans de package

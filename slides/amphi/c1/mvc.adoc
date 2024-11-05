@@ -1,13 +1,29 @@
-== spring-boot-starter-mvc
+== Hello World Rest
 
+Requête
 ----
 curl -XGET localhost:8080/hello
 ----
 
-[fragment, step=1]
+Réponse:
+
 ----
 Hello World
 ----
+
+== spring-boot-starter-web
+[source,xml]
+----
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+----
+
+[transition=fade-out]
+== RestController
+
+RestController -> Controller -> Component
 
 [transition=fade-out]
 == RestController
@@ -16,7 +32,6 @@ Hello World
 ----
 @RestController
 class HelloController {
-
 
 
 }
@@ -35,7 +50,34 @@ class HelloController {
 }
 ----
 
-include::exo1.adoc[]
+[.columns.is-vcentered]
+== Mappings
+
+[.column]
+--
+GetMapping
+
+PostMapping
+
+PutMapping
+
+DeleteMapping
+--
+
+[.column]
+--
+alias ->
+--
+
+[.column]
+--
+RequestMapping
+--
+
+[NOTE.speaker]
+--
+Tous les verbes peuvent être gérés par RequestMapping
+--
 
 == API Rest
 
@@ -166,9 +208,3 @@ data class PersonDTO(val name: String, val age: Int)
 @GetMapping("/hello")
 fun hello() = ResponseEntity.ok(PersonDTO("John", 42))
 ----
-
-== Code !
-
-image:keyboard.jpg[]
-
-include::exo2.adoc[]

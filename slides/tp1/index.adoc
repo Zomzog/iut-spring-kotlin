@@ -1,7 +1,0 @@
-include::exo1.adoc[]
-
-include::exo2.adoc[]
-
-include::exo3.adoc[]
-
-include::exo4.adoc[]

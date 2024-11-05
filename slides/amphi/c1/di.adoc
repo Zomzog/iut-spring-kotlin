@@ -182,7 +182,7 @@ class MyConfig {
     fun myDb() = PostgresDb()
 
     @Bean
-    fun aService(dbAccess: DbAccess) = AService(dbAccess)
+    fun aService() = AService(myDb())
 
 
 
@@ -200,28 +200,10 @@ class MyConfig {
     fun myDb() = PostgresDb()
 
     @Bean
-    fun aService(dbAccess: DbAccess) = AService(dbAccess)
+    fun aService() = AService(myDb())
 
     @Bean
-    fun another(dbAccess: DbAccess) = Other(myDb())
-}
-----
-
-[transition=fade-in]
-== External Beans
-
-[source,kotlin]
-----
-@Configuration
-class MyConfig {
-    @Bean
-    fun myDb(aDriverFromALib: JdbcDriver) = GenericDb(aDriverFromALib)
-
-    @Bean
-    fun aService(dbAccess: DbAccess) = AService(dbAccess)
-
-    @Bean
-    fun another(dbAccess: DbAccess) = Other(myDb())
+    fun another() = Other(myDb())
 }
 ----
 
@@ -270,13 +252,13 @@ fun main() {
 @Configuration
 class MyConfig {
     @Bean
-    fun myDb(aDriverFromALib: JdbcDriver) = GenericDb(aDriverFromALib)
+    fun myDb() = PostgresDb()
 
     @Bean
-    fun aService(dbAccess: DbAccess) = AService(dbAccess)
+    fun aService() = AService(myDb())
 
     @Bean
-    fun another(dbAccess: DbAccess) = Other(myDb())
+    fun another() = Other(myDb())
 }
 ----
 
@@ -290,13 +272,13 @@ aService.dbAccess == another.dbAccess
 @Configuration
 class MyConfig {
     @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
-    fun myDb(aDriverFromALib: JdbcDriver) = GenericDb(aDriverFromALib)
+    fun myDb() = PostgresDb()
 
     @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
-    fun aService(dbAccess: DbAccess) = AService(dbAccess)
+    fun aService() = AService(myDb())
 
     @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
-    fun another(dbAccess: DbAccess) = Other(myDb())
+    fun another() = Other(myDb())
 }
 ----
 
@@ -310,13 +292,13 @@ aService.dbAccess == another.dbAccess
 @Configuration
 class MyConfig {
     @Bean @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-    fun myDb(aDriverFromALib: JdbcDriver) = GenericDb(aDriverFromALib)
+    fun myDb() = PostgresDb()
 
     @Bean
-    fun aService(dbAccess: DbAccess) = AService(dbAccess)
+    fun aService() = AService(myDb())
 
     @Bean
-    fun another(dbAccess: DbAccess) = Other(myDb())
+    fun another() = Other(myDb())
 }
 ----
 
@@ -338,51 +320,178 @@ Application -> un bean pour la durée de vie de la servlet
 
 WebSocket -> un bean pour la durée de vie de la WebSocket
 
+== Proxy proxy proxy
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+●   fun myDb() = PostgresDb()
+}
+----
+
+Stack du breakpoint
+[source]
+----
+myDb:4, MyConfig (bzh.zomzog)
+CGLIB$myDb$2:-1, MyConfig$$SpringCGLIB$$0 (bzh.zomzog)
+Invoke-1, MyConfig$$SpringCGLIB$$FastClass$$1 (bzh.zomzog)
+...
+----
+
+[NOTE.speaker]
+--
+Si on met un breakpoint sur l'appel de methode a cette stack
+
+Spring va encapsuler chaque instance dans des proxy
+
+CGLIB est un système de génération de code dynamique
+
+Tout doit être ouvert à l'extension (open class)
+--
+
 [transition=fade-out]
 == Autowired
 
 [source,kotlin]
 ----
-//
-class RestController {
-    @Autowired
-    lateinit var aService: AService
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
 }
 ----
 
-[.hideCode]
 [source,kotlin]
 ----
-@Service
-class RestController(val aService: AService)
+class AService (
+
+    val aService: AService
+)
 ----
 
-[transition=fade-in]
+[transition=fade-out]
 == Autowired
 
 [source,kotlin]
 ----
-@Service
-class RestController {
-    @Autowired
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService()
+}
+----
+
+[source,kotlin]
+----
+class AService {
+
     lateinit var aService: AService
 }
 ----
 
-[fragment, step=1]
-[source,kotlin]
-----
-@Service
-class RestController(val aService: AService)
-----
-
-[transition=fade-in]
+[transition=fade-out]
 == Autowired
 
 [source,kotlin]
 ----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService()
+}
+----
+
+[source,kotlin]
+----
+class AService {
+    @Autowired
+    lateinit var aService: AService
+}
+----
+
+[transition=fade-out]
+== Stereotype
+
+[source,kotlin]
+----
+@Configuration
+@ComponentScan("bzh.zomzog.iut.poc")
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    //@Bean
+    //fun aService() = AService()
+}
+----
+
+[source,kotlin]
+----
 @Service
-class RestController {
+class AService {
+    @Autowired
+    lateinit var aService: AService
+}
+----
+
+[NOTE.speaker]
+--
+ComponentScan va forcer spring à chercher tous les stereotypes du package
+
+Service demande la création d'un bean de cette classe
+--
+
+== Stereotype
+
+@Component -> déclare que la classe doit devenir un bean lors du scan
+
+3 alias:
+
+@Controller
+
+@Service
+
+@Repository
+
+[NOTE.speaker]
+--
+Les 4 sont équivalent,
+ils sont plus sémantique pour de la documentation
+--
+
+== Stereotype - @Configuration
+
+[source,java]
+----
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component
+public @interface Configuration {
+}
+----
+
+@Configuration est une extension de component mais a son propre cycle de vie
+
+@Configuration crée quand même un bean
+
+== Depenency Injection
+
+[source,kotlin]
+----
+@Service
+class AService {
     @Autowired
     lateinit var aService: AService
 }
@@ -390,6 +499,71 @@ class RestController {
 
 [source,kotlin]
 ----
-@Service // @Component @Repository ...
-class RestController(val aService: AService)
+@Service
+class AService(aService: AService) {
+}
 ----
+
+== Depenency Injection
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+}
+----
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService(dbAccess: DBAccess) = AService(dbAccess)
+}
+----
+
+[transition=fade-in]
+== External Beans
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb(aDriverFromALib: JdbcDriver) = GenericDb(aDriverFromALib)
+
+    @Bean
+    fun aService() = AService(myDb())
+
+    @Bean
+    fun another() = Other(myDb())
+}
+----
+
+== Beans limits
+
+Le nom de chaque bean doit être unique
+
+Si plusieurs beans correspondent à un autowired, la résolution doit être fournie
+
+Il ne faut pas de cycle pour leur création
+
+== Noms
+
+Par défault, un bean à le nom de la méthode qui le crée
+
+On peut le forcer `@Bean("monNom")`
+
+== Conflit
+
+@Primary sur un bean -> en cas de conflit, c'est lui qui est choisi
+
+@Autowired @Qualifier("monNom") spécifie le bean attendu
