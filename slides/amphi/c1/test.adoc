@@ -214,5 +214,3 @@ every { dependency.call(Pony("name") } returns "23"
 ----
 every { dependency.call(any(), any()) } throws Exception("Nope")
 ----
-
-include::exo3.adoc[]

@@ -32,6 +32,12 @@ class AService() {
 }
 ----
 
+[NOTE.speaker]
+--
+Exemple d'application simple, 
+un service doit appeler un autre service de base de donnée
+--
+
 [.columns]
 == Injection de dépendances
 
@@ -71,6 +77,11 @@ class AService() {
   }
 }
 ----
+
+[NOTE.speaker]
+--
+Si j'ai deux implémentation de la base de donnée ça donne ça
+--
 
 [.columns]
 == Injection de dépendances
@@ -120,6 +131,11 @@ class MySqlDb(): DbAccess{
 }
 ----
 
+[NOTE.speaker]
+--
+On peut extraire une interface pour n'utiliser qu'une implémentation à la fois
+--
+
 == Injection de dépendances
 
 [fragment, step=1]
@@ -133,6 +149,11 @@ val appPg = AService(PostgresDb())
 ----
 val appMy = AService(MySqlDb())
 ----
+
+[NOTE.speaker]
+--
+On peut donc faire plusieurs versions de notre application avec soit l'une soit l'autre
+--
 
 [transition=slide-in]
 == Beans
@@ -152,6 +173,13 @@ class MyConfig {
 }
 ----
 
+[NOTE.speaker]
+--
+@Configuration dit à spring que c'est une classe de configuration
+
+Ça remplace la configuration XML
+--
+
 [transition=fade-in]
 == Beans
 
@@ -169,6 +197,11 @@ class MyConfig {
 
 }
 ----
+
+[NOTE.speaker]
+--
+@Bean explique à Spring qu'il va devoir gérer cette instance
+--
 
 
 [transition=fade-in]
@@ -188,6 +221,11 @@ class MyConfig {
 
 }
 ----
+
+[NOTE.speaker]
+--
+On peut utiliser ce bean dans un autre service
+--
 
 [transition=fade-in]
 == Beans
@@ -207,6 +245,11 @@ class MyConfig {
 }
 ----
 
+[NOTE.speaker]
+--
+Et dans un autre
+--
+
 == Application Context
 
 [source,kotlin]
@@ -218,6 +261,13 @@ fun main() {
 
 }
 ----
+
+[NOTE.speaker]
+--
+On va créer un context spring avec ce fichier de configuration
+
+*Context* DI 
+--
 
 [transition=fade-out]
 == Application Context
@@ -231,6 +281,11 @@ fun main() {
 
 }
 ----
+
+[NOTE.speaker]
+--
+Permet de récupérer dans le contexte des instances des beans
+--
 
 [transition=fade-out]
 == Application Context
@@ -263,6 +318,11 @@ class MyConfig {
 ----
 
 aService.dbAccess == another.dbAccess
+
+[NOTE.speaker]
+--
+Egalité de référence
+--
 
 [transition=fade-out]
 == Scope
@@ -342,9 +402,9 @@ Invoke-1, MyConfig$$SpringCGLIB$$FastClass$$1 (bzh.zomzog)
 
 [NOTE.speaker]
 --
-Si on met un breakpoint sur l'appel de methode a cette stack
+Si on met un breakpoint sur l'appel de methode à cette stack
 
-Spring va encapsuler chaque instance dans des proxy
+Spring va en-capsuler chaque instance dans des proxy
 
 CGLIB est un système de génération de code dynamique
 
@@ -482,7 +542,7 @@ public @interface Configuration {
 }
 ----
 
-@Configuration est une extension de component mais a son propre cycle de vie
+@Configuration est une extension de component, mais a son propre cycle de vie
 
 @Configuration crée quand même un bean
 
@@ -552,13 +612,13 @@ class MyConfig {
 
 Le nom de chaque bean doit être unique
 
-Si plusieurs beans correspondent à un autowired, la résolution doit être fournie
+Si plusieurs beans correspondent à un autowired, la résolution doit être explicitée
 
 Il ne faut pas de cycle pour leur création
 
 == Noms
 
-Par défault, un bean à le nom de la méthode qui le crée
+Par défaut, un bean a le nom de la méthode qui le crée
 
 On peut le forcer `@Bean("monNom")`
 

@@ -30,6 +30,8 @@ image:bigM.png[]
 --
 Decathlon Digital
 
+~100 personnes
+
 Lead tech Backend
 
 --

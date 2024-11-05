@@ -2,6 +2,17 @@
 
 Spring a été créé en 2003 comme une alternative légère pour répondre à la complexité des premières versions des spécifications J2EE
 
+Pas d'EJB
+
+Mais des servlets
+
+[NOTE.speaker]
+--
+Concurrent de Jakarta sur certains point
+
+Utilisateur sur d'autres
+--
+
 == Spring - Histoire
 
 [mermaid]
@@ -25,6 +36,13 @@ gitGraph
     merge Spring id:"2022-11" tag:"3.0.0"
 ----
 
+[NOTE.speaker]
+--
+Springboot est une surcouche de Spring
+
+Les deux sont liés
+--
+
 == Spring
 
 Spring est en premier lieu un système d'injection de dépendances
@@ -39,6 +57,11 @@ Spring fourni des librairies d'abstraction d'autres framworks
 
 - ...
 
+[NOTE.speaker]
+--
+
+--
+
 == Spring
 
 [mermaid]
@@ -51,6 +74,13 @@ flowchart TD
     tomcat <--> debug
 ....
 
+[NOTE.speaker]
+--
+Fonctionnement similaire, car il fonctionne dans un serveur JakartaEE
+
+Remote debug pour travailler
+--
+
 == Spring Boot
 
 [mermaid]
@@ -62,6 +92,15 @@ flowchart TD
     springboot-starter --> jar
     jar --> run(java -jar mon.jar)
 ....
+
+[NOTE.speaker]
+--
+Tomcat est une application en java donc peut être dans le jar
+
+On parle de fatJar = 1 jar avec tout dedans
+
+Debug direct comme si c'était un projet simple
+--
 
 [transition=fade-out]
 [.columns]
@@ -76,6 +115,13 @@ image:ingredients.jpg[]
 SpringBoot
 image:gateau.jpg[]
 
+[NOTE.speaker]
+--
+Spring est souvant présenté comme une sorte de boite à outils
+
+SpringBoot comme le résultat direct
+--
+
 [transition=fade-in]
 [.columns]
 == Spring vs Spring Boot
@@ -88,3 +134,7 @@ image:ingredients.jpg[]
 Spring Boot
 image:alsa.jpg[]
 
+[NOTE.speaker]
+--
+C'est pas si simple même si ça l'est plus
+--
