@@ -19,11 +19,6 @@ Slides:
 
 https://zomzog.fr/iut-spring-kotlin
 
-[qrcode, format="png", xdim=4]
-....
-Hello World!
-....
-
 [.columns]
 == Thibault Duperron
 

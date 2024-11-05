@@ -38,11 +38,23 @@ Historique des noms
 |2019 -
 |===
 
+[NOTE.speaker]
+--
+Multiple renommage du projet
+
+Changement de nom en jakarta suite au transfert de Oracle vers Eclipse
+--
+
 == Jakarta EE
 
 Ensemble de spécifications pour faire des applications pour les entreprises
 
 Les versions sont retro-compatible
+
+[NOTE.speaker]
+--
+
+--
 
 [%notitle]
 == Jakarta EE
@@ -74,31 +86,52 @@ JAX.WS - Java Api for XML Web Service
 JAX.RS - Java API for RESTful Web Service
 --
 
-== Jakarta EE - Entreprise Specification
+== JPA - Java Persistence API
 
-JPA - Java Persistence API
+Par exemple la communication avec une base de donnée
 
-JTA - Java Transaction API
+== JTA - Java Transaction API
 
-JMS - Java Message Service
+Par exemple une transaction SQL 
 
-EJB - Entreprise Java Bean
+== JMS - Java Message Service
 
-CDI - Contexts and Dependency Injection
+Par exemple la communication avec ActiveMq
 
-== Jakarta EE - Web specification
+== EJB - Entreprise Java Bean
 
-Servlet - Point entrée application 
+Composant logiciel pouvant être appelé par le serveur 
 
-JSP - Java Server page
+== CDI - Contexts and Dependency Injection
 
-JSF - Java server face
+== Servlet - Point entrée application 
+
+Classe Java de génération de contenu dynamique
+
+Non limité au HTTP (JDBC...)
+
+== JSP - Java Server page
+
+Génération contenu statique (html...)
+
+== JSF - Java server faces
 
 EL - Expressions Languages
+
+Application "riche" ie communication avec le serveur (validation...)
+
+[NOTE.speaker]
+--
+AJAX
+--
+
+== JAX
 
 JAX.WS - Java Api for XML Web Service
 
 JAX.RS - Java API for RESTful Web Service
+
+Communication http moderne
 
 == Serveur Application
 
@@ -114,15 +147,12 @@ Implementation des spécifications JavaEE
 
 - ...
 
-== Conteneur Web / Servlet
+[NOTE.speaker]
+--
+Glassfish = Implementation de référence par JakartaEE
 
-Serveurs léger qui ne font "que" les parties servlet et jsp
-
-Exemple de serveurs développés en Java
-
-- Tomcat
-
-- Jetty
+Serveurs complets qui couvrent tout (Servlet, EJB, JPA..)
+--
 
 == Fonctionnement
 
@@ -137,3 +167,27 @@ Ajout du WAR dans le serveur
 [fragment, step=3]
 Déploiement du code et mapping des servlets
 
+[%notitle]
+== Jakarta EE
+
+image:archi-jee.svg[width=100%]
+
+[NOTE.speaker]
+--
+Faut-il tout même pour un micro serivce?
+--
+
+== Conteneur Web / Servlet
+
+Serveurs léger qui ne font "que" les parties servlet et jsp
+
+Exemple de serveurs développés en Java
+
+- Tomcat
+
+- Jetty
+
+[NOTE.speaker]
+--
+Des serveurs écrits en Java
+--
