@@ -10,4 +10,4 @@ include::c1/mvc.adoc[]
 
 include::c1/test.adoc[]
 
-include::c1/validation.adoc[]
+//include::c1/validation.adoc[]
