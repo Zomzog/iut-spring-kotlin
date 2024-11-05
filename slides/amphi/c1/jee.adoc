@@ -88,11 +88,11 @@ JAX.RS - Java API for RESTful Web Service
 
 == JPA - Java Persistence API
 
-Par exemple la communication avec une base de donnée
+Par exemple la communication avec une base de données
 
 == JTA - Java Transaction API
 
-Par exemple une transaction SQL 
+Par exemple une transaction SQL
 
 == JMS - Java Message Service
 
@@ -112,7 +112,7 @@ Non limité au HTTP (JDBC...)
 
 == JSP - Java Server page
 
-Génération contenu statique (html...)
+Génération de contenu statique (html...)
 
 == JSF - Java server faces
 

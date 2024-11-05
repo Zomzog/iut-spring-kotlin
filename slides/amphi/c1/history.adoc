@@ -8,7 +8,7 @@ Mais des servlets
 
 [NOTE.speaker]
 --
-Concurrent de Jakarta sur certains point
+Concurrent de Jakarta sur certains points
 
 Utilisateur sur d'autres
 --
@@ -47,7 +47,7 @@ Les deux sont liés
 
 Spring est en premier lieu un système d'injection de dépendances
 
-Spring fourni des librairies d'abstraction d'autres framworks
+Spring fournit des librairies d'abstraction d'autres frameworks
 
 - spring-security
 
