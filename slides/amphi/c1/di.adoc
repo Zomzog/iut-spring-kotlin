@@ -430,7 +430,7 @@ class MyConfig {
 ----
 class AService (
 
-    val aService: AService
+    val database: DBAccess
 )
 ----
 
@@ -453,7 +453,7 @@ class MyConfig {
 ----
 class AService {
 
-    lateinit var aService: AService
+    lateinit var database: DbAccess
 }
 ----
 
@@ -476,7 +476,7 @@ class MyConfig {
 ----
 class AService {
     @Autowired
-    lateinit var aService: AService
+    lateinit var database: DbAccess
 }
 ----
 
@@ -501,7 +501,7 @@ class MyConfig {
 @Service
 class AService {
     @Autowired
-    lateinit var aService: AService
+    lateinit var database: DBAccess
 }
 ----
 
@@ -553,14 +553,14 @@ public @interface Configuration {
 @Service
 class AService {
     @Autowired
-    lateinit var aService: AService
+    lateinit var database: DBAccess
 }
 ----
 
 [source,kotlin]
 ----
 @Service
-class AService(aService: AService) {
+class AService(database: DBAccess) {
 }
 ----
 
