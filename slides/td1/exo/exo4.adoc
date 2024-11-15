@@ -1,0 +1,28 @@
+=== Validation
+
+Ajouter de la validation :
+
+- le nom doit faire entre 2 et 30 caractères,
+- le prénom ne doit pas être vide,
+- l'âge doit être supérieur à 15,
+- l'email doit avoir un format valide.
+
+=== Gestion des erreurs
+
+Ajouter une class ControllerAdvice dans le package monpackage.config
+
+Ce ControllerAdvice doit prendre les erreurs de validation et retourner une réponse avec dans le body:
+
+- le message d'erreur
+- le code http
+- le timestamp (date.now)
+
+=== Gestion des erreurs
+
+Dans le cas où le repository ne trouve pas l'utilisateur, lancer une exception UserNotFound.
+
+Traiter l'exception dans le controllerAdvice
+
+=== Tests
+
+Faire une couverture des cas nominaux et des cas d'erreurs de UserController en utilisant WebMvcTest.
