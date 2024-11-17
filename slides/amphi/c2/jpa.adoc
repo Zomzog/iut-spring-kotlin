@@ -1,0 +1,87 @@
+== Accès à la base de données SQL
+
+[fragment]#Spring Data JPA#
+
+[fragment]#jOOQ#
+
+[fragment]#MyBatis#
+
+== JPA - Pourquoi?
+
+Spring est basé sur des POJO
+
+Pour les controleur on représente les JSON sous forme de class
+
+C'est pareil pour les bases de données
+
+[.columns]
+== Base relationnel
+
+[.column]
+[cols="1,1,1"]
+|===
+|Id
+|Name
+|Kind
+
+|1
+|Discord
+|Draconequus
+
+|2
+|Rainbow Dash
+|Pegasus
+
+|3
+|Pinkie Pie
+|Earth
+|===
+
+[.column]
+--
+--
+
+[.column]
+[cols="1,2"]
+|===
+|PonyId
+|Occupation
+
+|1
+|Honorary
+
+|1
+|Ruler of Equestria
+
+|3
+|Baker
+|===
+
+== Kotlin Version
+
+[source, kotlin]
+----
+class Pony(
+    val id: Long?,
+    val name: String,
+    val kind: String,
+    val occupations: List<Occupation>,
+)
+
+class Occupation(
+    val name: String,
+)
+----
+
+== Entity
+
+[source, kotlin]
+----
+@Entity
+class Pony(
+    @Id @GeneratedValue
+    val id: Long?,
+    val name: String,
+    val kind: String,
+)
+----

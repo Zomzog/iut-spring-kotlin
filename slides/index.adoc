@@ -1,5 +1,5 @@
 :source-highlighter: highlightjs
-:highlightjs-languages: kotlin, java, xml, html, bash
+:highlightjs-languages: kotlin, java, xml, html, bash, properties
 //:highlightjs-theme: node_modules/reveal.js/plugin/highlight/monokai.css
 :highlightjs-theme: css/dracula.css
 :revealjs_theme: moon

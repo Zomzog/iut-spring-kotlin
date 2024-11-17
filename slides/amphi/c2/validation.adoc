@@ -4,9 +4,49 @@
 
 Permet d'ajouter de la validation sur les paramètres des méthodes.
 
+[NOTE.speaker]
+--
+Permet d'ajouter de la validation sur les paramètres des méthodes.
+--
+
 == Activation validation
 
-[source, kotlin, highlight=1-5|1|4]
+[source, kotlin]
+----
+//
+class DemoController(val demoRepository: DemoRepository) {
+  fun list(
+     i: Int // >= 10
+  ) = ...
+----
+
+[NOTE.speaker]
+--
+Si on part de cette méthode où i doit supérieur à 10
+--
+
+== Activation validation
+
+[source, kotlin, highlight=1]
+----
+@Validated
+class DemoController(val demoRepository: DemoRepository) {
+  fun list(
+     i: Int // >= 10
+  ) = ...
+----
+
+[NOTE.speaker]
+--
+@Validated marque la class comme ayant besoin de validation
+
+Comme @Scope, on ajoute des informations pour spring.
+Il va donc rajouter des vérifications sur les appels de méthodes
+--
+
+== Activation validation
+
+[source, kotlin, highlight=4]
 ----
 @Validated
 class DemoController(val demoRepository: DemoRepository) {
@@ -15,7 +55,171 @@ class DemoController(val demoRepository: DemoRepository) {
   ) = ...
 ----
 
-== Validation globale
+[NOTE.speaker]
+--
+@Min(10) ajoute une contrainte sur la valeur
+--
+
+== Activation validation
+
+[source, kotlin, highlight=4]
+----
+@Validated
+class DemoController(val demoRepository: DemoRepository) {
+  fun list(
+     @Max(5) @Min(10) i: Int
+  ) = ...
+----
+
+[NOTE.speaker]
+--
+On peut cumuler les contraintes,
+même sans cohérence
+--
+
+== Constraint Annotation
+
+[source, java]
+----
+@Target({METHOD,FIELD,ANNOTATION_TYPE,CONSTRUCTOR,PARAMETER,TYPE_USE})
+@Retention(RUNTIME)
+@Repeatable(List.class)
+@Documented
+@Constraint(validatedBy = { })
+public @interface Min {
+ String message() default "{jakarta.validation.constraints.Min.message}";
+
+ Class<?>[] groups() default { };
+
+ Class<? extends Payload>[] payload() default { };
+
+ long value();
+}
+----
+
+[NOTE.speaker]
+--
+@Target: là où on peut utiliser l'annotation
+
+@Retention: Elle doit rester lors de l'éxecution,
+contrairement à d'autres qui sont là pour changer la compilation (ex lombok)
+
+@Repeatable On peut l'utiliser plusieurs fois sur un élément
+
+@Constraint validatedBy: La class qui valide,
+spring/hibernate fourni ceux par default
+
+Il faut pour qu'elle soit valide:
+
+- message
+- groups
+- payload
+
+--
+
+== Meta annotation
+
+[source, kotlin]
+----
+@Target(allowedTargets = AnnotationTarget.VALUE_PARAMETER])
+@Retention(RUNTIME)
+@Constraint(validatedBy = [])
+@Min(value = 0)
+@Max(value = 10)
+annotation class MinMax(
+    val message: String = "Value must be between min and max",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<out Payload>> = [],
+)
+----
+
+[NOTE.speaker]
+--
+Je réutilise Min et Max en les groupant dans une meta annotation
+
+Avantage: c'est rapide
+
+Inconvénient: Les valeurs sont en dur
+
+Les valeurs annotations doivent être des constantes
+--
+
+== Meta annotation
+
+[source, kotlin]
+----
+@Validated
+class DemoController(val demoRepository: DemoRepository) {
+  fun list(
+     @MinMax i: Int
+  ) = ...
+----
+
+== Custom annotation
+
+[source, kotlin]
+----
+@Target(allowedTargets = [AnnotationTarget.VALUE_PARAMETER])
+@Retention(RUNTIME)
+@Constraint(validatedBy = [MinMaxValidator::class])
+annotation class MinMax(
+  val min: Int,
+  val max: Int,
+  val message: String = "Value must be between min and max",
+  val groups: Array<KClass<*>> = [],
+  val payload: Array<KClass<out Payload>> = [],
+)
+----
+
+[NOTE.speaker]
+--
+Ajout de deux valeurs variables min et max
+
+Ajout d'un validateur
+--
+
+== Custom annotation
+
+[source, kotlin]
+----
+class MinMaxValidator: ConstraintValidator<MinMax, Int> {
+  private var min: Int = 0
+  private var max: Int = 0
+
+  override fun initialize(annotation: MinMax) {
+    min = annotation.min
+    max = annotation.max
+  }
+
+  override fun isValid(value: Int?, 
+                       context: ConstraintValidatorContext?): Boolean {
+    return value != null &&
+           value in min..max
+  }
+}
+----
+
+[NOTE.speaker]
+--
+Un validateur étend l'interface ConstraintValidator
+
+Il y a deux phases à la validation,
+la création du validateur (initialize)
+puis l'utilisation sur une valeur (isValid)
+--
+
+== Custom annotation
+
+[source, kotlin]
+----
+@Validated
+class DemoController(val demoRepository: DemoRepository) {
+  fun list(
+     @MinMax(0, 10) i: Int
+  ) = ...
+----
+
+== API Validation
 
 [source, kotlin]
 ----
@@ -27,13 +231,51 @@ class DemoController(val demoRepository: DemoRepository) {
       = if (name == null) ...
 ----
 
+[NOTE.speaker]
+--
+La validation peut s'utiliser directement sur les Controlleurs
+--
+
+== Validation du body
+
+[transition=slide-in none-out]
+[source, kotlin]
+----
+@RestController
+@Validated
+class DemoController(val demoRepository: DemoRepository) {
+  @PostMapping
+  fun save(@Demo  @RequestBody demo: DemoDTO) = ...
+----
+
+[.hideCode]
+----
+data class DemoDTO(
+        val id: UUID = UUID.randomUUID(),
+        @field:Size(min=5, max=10)
+        val name: String,
+)
+----
+
+[NOTE.speaker]
+--
+Pour valider un objet complet on peut mettre une annotation personnalisé
+avec son validateur
+--
+
+[transition=none-in, none-out]
 == Validation du body
 
 [source, kotlin]
 ----
-@Valid @RequestBody demo: DemoDTO
+@RestController
+@Validated
+class DemoController(val demoRepository: DemoRepository) {
+  @PostMapping
+  fun save(@Valid @RequestBody demo: DemoDTO) = ...
 ----
 
+[fragment, step=1]
 [source, kotlin]
 ----
 data class DemoDTO(
@@ -43,115 +285,43 @@ data class DemoDTO(
 )
 ----
 
-== Gestion des erreurs
+[NOTE.speaker]
+--
+Pour valider un objet complet on peut mettre une annotation personnalisé
+avec son validateur
+--
 
-Les erreurs de validation n'entrent pas dans le code de la fonction.
+[.columns]
+== Annotation target
 
-La gestion est externe et générique.
-
-[transition=fade-out]
-== ControllerAdvice
-
-[source, kotlin]
+[.column.is-three-fifths]
+[source, java]
 ----
-@ControllerAdvice
-class HttpErrorHandler {
+class Pony {
+  @OnName
+  private String name;
 
+  @OnGet
+  public String getName() {
+    return name;
+  }
 
-
-
-}
-----
-
-[transition=fade-out]
-== ControllerAdvice
-
-[source, kotlin]
-----
-@ControllerAdvice
-class HttpErrorHandler {
-
-
-    fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
-        ResponseEntity.badRequest().body("You're arg is invalid")
-}
-----
-
-[transition=fade-out]
-== ControllerAdvice
-
-[source, kotlin]
-----
-@ControllerAdvice
-class HttpErrorHandler {
-
-    @ExceptionHandler(MethodArgumentNotValidExceptSion::class)
-    fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
-        ResponseEntity.badRequest().body("You're arg is invalid")
-}
-----
-
-[transition=fade-out]
-== ControllerAdvice - Spring
-
-[source, kotlin]
-----
-@ControllerAdvice
-class HttpErrorHandler : ResponseEntityExceptionHandler() {
-
-  override fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException,
-                                            headers: HttpHeaders,
-                                            status: HttpStatusCode,
-                                            request: WebRequest)
-                                            : ResponseEntity<Any>? {
-      return ResponseEntity.badRequest().body("You're arg is invalid")
+  @OnSet
+  public String setName(String n) {
+    name = n;
   }
 }
 ----
 
-== Tests
 
-Spring propose des tests de couche (layer).
-
-Ces tests ne lancent qu'une partie de l'application.
-
-Pour la partie web il faut remplacer @SpringBootTest par @WebMvcTest.
-
-== WebMvcTest
-
-[source,kotlin]
+[fragment, step=1]
+[.column]
+[source, java]
 ----
-@WebMvcTest(DemoController::class)
-class DemoControllerTest {
-
-    @Autowired
-    private lateinit var mockMvc: MockMvc
-
-    @Test
-    fun get() {
-        mockMvc.get("/api/demo")
-                .andExpect {
-                    status { isOk() }
-                    content { jsonPath("$.[0].name", `is`("name")) }
-                }
-    }
-}
-----
-
-== WebMvcTest
-
-[source,kotlin]
-----
-fun post() {
-    // GIVEN
-    every { demoRepository.save(any()) } returns DemoEntity(name = "name")
-    mockMvc.post("/api/demo") {
-        contentType = MediaType.APPLICATION_JSON
-        content = ObjectMapper().writeValueAsString(DemoEntity(name = "name"))
-    }
-            .andExpect {
-                status { isOk() }
-                content { jsonPath("$.name", `is`("name")) }
-            }
-}
+class Pony(
+  @field:OnName
+  @get:OnGet
+  @set:OnGet
+  var name: String
+)
 ----
