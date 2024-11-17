@@ -39,7 +39,8 @@ bower_components
 build
 
 # Dependency directories
-_tooling/node_modules/
+_tooling/node_modules/**
+!_tooling/node_modules/.gitkeep
 node_modules/
 jspm_packages/
 
