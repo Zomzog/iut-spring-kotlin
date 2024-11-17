@@ -1,0 +1,8 @@
+== Application Configuration
+
+src/resources/application.properites
+
+[source,properites]
+----
+spring.application.name=demo
+----

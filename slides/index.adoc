@@ -1,4 +1,7 @@
 :source-highlighter: highlightjs
+:highlightjs-languages: kotlin, java, xml, html, bash
+//:highlightjs-theme: node_modules/reveal.js/plugin/highlight/monokai.css
+:highlightjs-theme: css/dracula.css
 :revealjs_theme: moon
 :revealjs_progress: true
 :revealjs_slideNumber: true
@@ -35,7 +38,7 @@ Decathlon Digital
 Lead tech Backend
 --
 
-include::amphi/c1.adoc[]
+//include::amphi/c1.adoc[]
 
-include::td1/td1.adoc[]
+include::amphi/c2.adoc[]
 

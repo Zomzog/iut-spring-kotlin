@@ -1,8 +1,19 @@
-== Hibernate x Spring
+== Spring validation
 
-spring-boot-starter-validation
+`spring-boot-starter-validation`
 
 Permet d'ajouter de la validation sur les paramètres des méthodes.
+
+== Activation validation
+
+[source, kotlin, highlight=1-5|1|4]
+----
+@Validated
+class DemoController(val demoRepository: DemoRepository) {
+  fun list(
+     @Min(10) i: Int
+  ) = ...
+----
 
 == Validation globale
 
