@@ -1,5 +1,7 @@
 == Application Configuration
 
+== Application Configuration
+
 src/resources/application.properites
 
 [source,properites]

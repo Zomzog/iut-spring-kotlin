@@ -1,5 +1,7 @@
 == Spring validation
 
+== Spring validation
+
 `spring-boot-starter-validation`
 
 Permet d'ajouter de la validation sur les paramètres des méthodes.

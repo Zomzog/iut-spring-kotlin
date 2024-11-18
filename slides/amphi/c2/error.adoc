@@ -1,5 +1,7 @@
 == Gestion des erreurs
 
+== Gestion des erreurs
+
 Les erreurs de validation n'entrent pas dans le code de la fonction.
 
 La gestion est externe et générique.
@@ -79,7 +81,7 @@ Autrement dit en pseudo code il fait ca.
 C'est une vision très très simplifié.
 --
 
-[transition=fade-out]
+[transition=fade-in fade-out]
 == ControllerAdvice
 
 [source, kotlin]
@@ -100,7 +102,7 @@ Comme RestController ou @Configuration,
 il a son propre cycle de vie.
 --
 
-[transition=slide-in none-out]
+[transition=fade-in fade-out]
 == ControllerAdvice
 
 [source, kotlin]
@@ -119,7 +121,7 @@ class HttpErrorHandler {
 On peut lui donner des methodes pour lui expliquer comment traiter une exception
 --
 
-[transition=none-in slide-out]
+[transition=fade-in fade-out]
 == ControllerAdvice
 
 [source, kotlin]
@@ -220,6 +222,7 @@ et on peut injecter MockMvc
 fun post() {
     mockMvc.post("/api/demo") // mockMvc.perform(post("/api/movies"))
 
+
  
 
  
@@ -296,15 +299,15 @@ ici le code retour
 [source,kotlin]
 ----
 fun post() {
-  mockMvc.post("/api/demo") {
-    contentType = MediaType.APPLICATION_JSON
-    content = ObjectMapper()
-        .writeValueAsString(DemoEntity(name = "name"))
-  }
-  .andExpect {
-    status { isOk() }
-    content { jsonPath("$.name", `is`("name")) }
-  }
+    mockMvc.post("/api/demo") {
+        contentType = MediaType.APPLICATION_JSON
+        content = ObjectMapper()
+            .writeValueAsString(DemoEntity(name = "name"))
+    }
+    .andExpect {
+        status { isOk() }
+        content { jsonPath("$.name", `is`("name")) }
+    }
 }
 ----
 
@@ -319,19 +322,19 @@ Ou sur le contentu, par exemple en Json path
 [source,kotlin]
 ----
 fun get() {
-  mockMvc.get("/api/demo/{id}?param=value", "theId") {
-    headers {
-      contentLanguage = Locale.FRANCE
+    mockMvc.get("/api/demo/{id}?param=value", "theId") {
+        headers {
+            contentLanguage = Locale.FRANCE
+        }
+        param("name", "value")
     }
-    param("name", "value")
+    .andDo {
+        print()
+    }
+    .andExpect {
+        status { isOk() }
+    }
   }
-  .andDo {
-    print()
-  }
-  .andExpect {
-    status { isOk() }
-  }
-}
 ----
 
 [NOTE.speaker]
