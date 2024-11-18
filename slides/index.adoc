@@ -16,6 +16,8 @@
 :kroki-default-format: png
 :icons: font
 
+:revealjs_totalTime: 4300
+
 == Programmation avancée
 
 Slides:
@@ -38,7 +40,7 @@ Decathlon Digital
 Lead tech Backend
 --
 
-//include::amphi/c1.adoc[]
+include::amphi/c1.adoc[]
 
 include::amphi/c2.adoc[]
 

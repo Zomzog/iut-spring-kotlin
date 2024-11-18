@@ -80,7 +80,7 @@ class AService() {
 
 [NOTE.speaker]
 --
-Si j'ai deux implémentation de la base de donnée ça donne ça
+Avec deux implémentations de la base de donnée ça donne ça
 --
 
 [.columns]

@@ -135,11 +135,11 @@ annotation class MinMax(
 
 [NOTE.speaker]
 --
-Je réutilise Min et Max en les groupant dans une meta annotation
+On peut réutiliser Min et Max en les groupant dans une meta annotation
 
 Avantage: c'est rapide
 
-Inconvénient: Les valeurs sont en dur
+Inconvénient: les valeurs sont en dur
 
 Les valeurs annotations doivent être des constantes
 --
@@ -175,7 +175,7 @@ annotation class MinMax(
 --
 Ajout de deux valeurs variables min et max
 
-Ajout d'un validateur
+Ajout d'une classe de validation
 --
 
 == Custom annotation
@@ -259,7 +259,7 @@ data class DemoDTO(
 
 [NOTE.speaker]
 --
-Pour valider un objet complet on peut mettre une annotation personnalisé
+Pour valider un objet complet on peut mettre une annotation personnalisée
 avec son validateur
 --
 
@@ -287,7 +287,7 @@ data class DemoDTO(
 
 [NOTE.speaker]
 --
-Pour valider un objet complet on peut mettre une annotation personnalisé
+Pour valider un objet complet on peut mettre une annotation personnalisée
 avec son validateur
 --
 
@@ -313,7 +313,6 @@ class Pony {
 }
 ----
 
-
 [fragment, step=1]
 [.column]
 [source, java]
@@ -325,3 +324,9 @@ class Pony(
   var name: String
 )
 ----
+
+[NOTE.speaker]
+--
+La notion de getter/setter étant caché par Kotlin,
+on doit fournir la cible des annotations
+--

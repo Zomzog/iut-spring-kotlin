@@ -159,7 +159,8 @@ class HttpErrorHandler {
 
 [NOTE.speaker]
 --
-La gestion des exceptions est en entonnoir, 
+La gestion, des exceptions, est en entonnoir
+
 On peut traiter les erreurs spécialisées et avoir des couches de traitement de plus en plus génériques
 --
 
@@ -202,7 +203,7 @@ class MovieControllerTest {
 
 [NOTE.speaker]
 --
-Spring fournit une outils pour faire des tests d'appels API
+Spring fournit un outil pour faire des tests d'appels API
 
 Le but est de simuler des appels externes, 
 sans avoir à faire toute la Configuration d'un client HTTP
@@ -217,8 +218,7 @@ et on peut injecter MockMvc
 [source,kotlin]
 ----
 fun post() {
-    mockMvc.post("/api/demo")
-
+    mockMvc.post("/api/demo") // mockMvc.perform(post("/api/movies"))
 
  
 
@@ -228,6 +228,15 @@ fun post() {
 
 }
 ----
+
+[NOTE.speaker]
+--
+On peut le faire à la manière de Java ou utiliser le DSL Kotlin
+
+Le DSL Kotlin est moins verbeux, donc souvant plus lisible
+
+Ici on donne le verbe http, le endpoint
+--
 
 [transition=fade-in, fade-out]
 == MockMvc
@@ -246,6 +255,16 @@ fun post() {
 
 }
 ----
+
+[NOTE.speaker]
+--
+Pour un POST on va souvent donner un contentType et un content
+
+Le content est une String, 
+ObjectMapper est un serializer qui transforme l'objet en json
+
+De base c'est aussi jackson qui est utilisé pour la serialization spring
+--
 
 [transition=fade-in, fade-out]
 == MockMvc
@@ -265,6 +284,66 @@ fun post() {
 }
 ----
 
+[NOTE.speaker]
+--
+On peut faire des assertions sur le résultat,
+ici le code retour
+--
+
+[transition=fade-in, fade-out]
+== MockMvc
+
+[source,kotlin]
+----
+fun post() {
+  mockMvc.post("/api/demo") {
+    contentType = MediaType.APPLICATION_JSON
+    content = ObjectMapper()
+        .writeValueAsString(DemoEntity(name = "name"))
+  }
+  .andExpect {
+    status { isOk() }
+    content { jsonPath("$.name", `is`("name")) }
+  }
+}
+----
+
+[NOTE.speaker]
+--
+Ou sur le contentu, par exemple en Json path
+--
+
+[transition=fade-in, fade-out]
+== MockMvc
+
+[source,kotlin]
+----
+fun get() {
+  mockMvc.get("/api/demo/{id}?param=value", "theId") {
+    headers {
+      contentLanguage = Locale.FRANCE
+    }
+    param("name", "value")
+  }
+  .andDo {
+    print()
+  }
+  .andExpect {
+    status { isOk() }
+  }
+}
+----
+
+[NOTE.speaker]
+--
+Le DSL permet d'exprimer la requête
+
+Les params dans l'url ou dans le DSL
+
+On peut donner des headers
+
+On peut print le résultat, ça peut-être utile en cas d'échec d'un test sur la CI
+--
 
 [.columns]
 == Layers

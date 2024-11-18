@@ -16,7 +16,7 @@ c'est le plus commun
 
 Spring est basé sur des POJO
 
-Pour les controleur on représente les JSON sous forme de class
+Pour les contrôleurs on représente les JSON sous forme de classes
 
 C'est pareil pour les bases de données
 
