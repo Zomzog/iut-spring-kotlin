@@ -1,0 +1,410 @@
+== Application Configuration
+
+src/resources/application.properites
+
+[source,properites]
+----
+spring.application.name=demo
+spring.main.lazy-initialization=true
+
+----
+
+[fragment, step=1]
+--
+src/resources/application.y(a?)ml
+
+[source,yaml]
+----
+spring:
+    application.name: demo
+    main.lazyInitialization: true
+----
+--
+
+[fragment, step=2]
+lazyInitialization équivalent à lazy-initialization
+
+[NOTE.speaker]
+--
+Trois moyens de fournir des properites,
+avec un fichier properties,
+un yml,
+un yaml
+--
+
+== properties > yml > yaml
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart LR
+    application.properties --> |\>| application.yml
+    application.yml --> |\>| application.yaml
+----
+
+[NOTE.speaker]
+--
+Les fichiers properties passent avant les yml qui passent avant les yaml
+--
+
+== Profiles
+
+Les profils son un moyen de séparer des parties de la configuration 
+
+Exemple:
+
+un profile MySql 
+
+un profile MongoDb
+
+[NOTE.speaker]
+--
+
+--
+
+== Activer un profile
+
+Dans les fichiers application.*
+
+----
+spring.profiles.active=dev,mysql
+----
+
+[fragment, step=1]
+--
+En variable d'environnement
+
+----
+export spring_profiles_active=dev
+----
+
+--
+
+[fragment, step=2]
+--
+JVM parameter
+
+----
+java -jar app.jar -Dspring.profiles.active=prod,mongo
+----
+--
+
+[NOTE.speaker]
+--
+Par fichier de properties, uniquement dans le fichier racine
+--
+
+== Ordre
+
+----
+-Dspring.profiles.active=prod,mongo
+----
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart LR
+    application-mongo.yml --> |\>| application-prod.yml
+    application-prod.yml --> |\>| application.yaml
+----
+
+[NOTE.speaker]
+--
+Les profiles sont dans l'ordre inverse
+--
+
+== Ordre
+
+----
+-Dspring.profiles.active=prod,mongo
+----
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart LR
+    application-mongo.properties --> |\>| application-mongo.yml
+    application-mongo.yml --> |\>| application-prod.properties
+    application-prod.properties --> |\>| application-prod.yml
+    application-prod.yml --> |\>| application.properties
+    application.properties --> |\>| application.yml
+----
+
+[NOTE.speaker]
+--
+Au complet si on joue avec les extensions
+
+/!\ pas une bonne pratique
+--
+
+== Accès aux propriétés - Injection
+
+[source, kotlin]
+----
+class Demo {
+  @Value("\${custom.path.value}")
+  private lateinit var value: String
+}
+----
+
+[NOTE.speaker]
+--
+Injection comme une champs, 
+une sorte d'autowired de la valeur
+--
+
+== Accès aux propriétés - Injection
+
+[source, kotlin]
+----
+class Demo {
+  @Value("\${custom.path.value:defaultValue}")
+  private lateinit var value: String
+}
+----
+
+[NOTE.speaker]
+--
+Avec une valeur par défaut
+--
+
+[.columns]
+== Accès aux propriétés
+
+[.column]
+[source, yaml]
+----
+path:
+  custom-prop:
+    demo: val1
+    anotherDemo: val2
+----
+
+[.column.is-two-thirds]
+--
+[fragment, step=1]
+[source, kotlin]
+----
+@ConfigurationProperties("path.custom-prop")
+data class CustomProperties(
+    val demo: String, 
+    val anotherDemo: String,
+)
+----
+
+[fragment, step=2]
+[source, kotlin]
+----
+@Configuration
+@EnableConfigurationProperties(
+    CustomProperties::class)
+class PropertiesConfig
+----
+--
+
+[NOTE.speaker]
+--
+On peut transformer les properties en instance de class
+
+@ConfigurationProperties donne la base du nom
+
+@EnableConfigurationProperties active la lécture
+--
+
+== Utilisation
+
+EnableConfigurationProperties = Création de bean
+
+[source, kotlin]
+----
+@Service
+class Demo(val properties: CustomProperties) {
+}
+----
+
+[source, kotlin]
+----
+@Configuration
+class Demo {
+    @Bean
+    fun aBean(val properties: CustomProperties) =...
+}
+----
+
+[NOTE.speaker]
+--
+On inject la classe comme un bean
+--
+
+== Validation
+
+[source, kotlin]
+----
+@ConfigurationProperties("path.custom-prop")
+data class CustomProperties(
+    @NotBlank val demo: String, 
+    @Min(10) val anotherDemo: Int,
+)
+----
+
+[NOTE.speaker]
+--
+C'est un bean, donc on peut réutiliser la validation
+--
+
+[transition=fade-out]
+== Conditional Bean
+
+[source, kotlin]
+----
+@Configuration
+class DatabaseConfig {
+    @ConditionalOnProperty("db.external",
+                           havingValue = "true")
+    @Bean
+    fun mongo(): Database = UserMongoRepository()
+
+
+
+
+
+
+}
+----
+
+[NOTE.speaker]
+--
+ConditionalOnProperty permet de créer le bean si la condition est validé
+--
+
+[transition=fade-out]
+== Conditional Bean
+
+[source, kotlin]
+----
+@Configuration
+class DatabaseConfig {
+    @ConditionalOnProperty("db.external",
+                           havingValue = "true")
+    @Bean
+    fun mongo(): Database = UserMongoRepository()
+
+    @ConditionalOnProperty("db.external",
+                           havingValue = "false")
+
+    @Bean
+    fun inMemory(): Database = UserInMemoryRepository()
+}
+----
+
+[NOTE.speaker]
+--
+Donc on peut avoir donc un bean suivant le contenu de la variable
+--
+
+
+[transition=fade-out]
+== Conditional Bean
+
+[source, kotlin]
+----
+@Configuration
+class DatabaseConfig {
+    @ConditionalOnProperty("db.external",
+                           havingValue = "true")
+    @Bean
+    fun mongo(): Database = UserMongoRepository()
+
+    @ConditionalOnProperty("db.external",
+                           havingValue = "false",
+                           matchIfMissing = true)
+    @Bean
+    fun inMemory(): Database = UserInMemoryRepository()
+}
+----
+
+[NOTE.speaker]
+--
+matchIfMissing permet d'avoir un comportement par défaut
+--
+
+[transition=fade-out]
+== Conditional Bean on Profile
+
+[source, kotlin]
+----
+@Configuration
+class DatabaseConfig {
+
+    @Bean
+    @Profile("mongo")
+    fun mongo(): Database = UserMongoRepository()
+
+    @Bean
+    @Profile("!mongo")
+    fun inMemory(): Database = UserInMemoryRepository()
+}
+----
+
+[NOTE.speaker]
+--
+On peut aussi conditionner des beans sur des profiles
+--
+
+[%notitle]
+[.columns]
+== ConditionalOn
+
+[.column.has-text-left]
+--
+ConditionalOnProperty
+
+ConditionalOnBean
+
+ConditionalOnMissingBean
+
+ConditionalOnClass
+
+ConditionalOnJava
+
+ConditionalOnResource
+
+ConditionalOnExpression
+
+ConditionalOnJndi
+
+ConditionalOnThreading
+
+
+--
+
+[.column.has-text-left]
+--
+ConditionalOnNotWarDeployment
+
+ConditionalOnNotWebApplication
+
+ConditionalOnCheckpointRestore
+
+ConditionalOnCloudPlatform
+
+ConditionalOnSingleCandidate
+
+ConditionalOnWarDeployment
+
+ConditionalOnWebApplication
+
+ConditionalOnMissingClass
+--
+
+[NOTE.speaker]
+--
+Il y a beaucoup de ConditionalOn*
+
+ConditionalOnBean sur l'existance d'un bean
+
+ConditionalOnClass sur l'existance d'une class dans le classpath
+
+ConditionalOnJava sur la version de java
+
+--

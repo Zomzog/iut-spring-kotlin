@@ -1,0 +1,439 @@
+== Gestion des erreurs
+
+Les erreurs de validation n'entrent pas dans le code de la fonction.
+
+La gestion est externe et générique.
+
+== Current schema
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart TD
+    Client --> |deserialization| MyController
+    MyController <--> MyService
+    MyController --> |serialization| Client
+----
+
+[NOTE.speaker]
+--
+Vision simple d'une application
+--
+
+== DispatcherServlet
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart TD
+    Client --> |deserialization| DispatcherServlet
+    DispatcherServlet <--> MyController
+    MyController <--> MyService
+    DispatcherServlet --> |serialization| Client
+----
+
+[NOTE.speaker]
+--
+En rentrant un peu dans spring,
+il y a une couche pour passer de la servlet au controlleur
+--
+
+== DispatcherServlet
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart TD
+    Client --> |deserialization| DispatcherServlet
+    DispatcherServlet <--> MyController
+    MyController <--> MyService
+    DispatcherServlet --> |serialization| Client
+    DispatcherServlet --> |translateError| ControllerAdvice
+----
+
+[NOTE.speaker]
+--
+Ce dispatcher va gérer les erreurs en s'appuyant sur un ControllerAdvice
+--
+
+== DispatcherServlet - PSEUDO-code
+
+[source, kotlin]
+----
+fun dispatch(request: HttpServletRequest) {
+    try {
+        val parameters = deserialize(request)
+        val handler = getHandler(request)
+        val response = handler.handle(parameters)
+        return serialize(response)
+    } catch (e: Exception) {
+        val response = errorHandler.handle(e)
+        return serialize(response)
+    }
+}
+----
+
+[NOTE.speaker]
+--
+Autrement dit en pseudo code il fait ca.
+C'est une vision très très simplifié.
+--
+
+[transition=fade-out]
+== ControllerAdvice
+
+[source, kotlin]
+----
+@ControllerAdvice
+class HttpErrorHandler {
+
+
+
+
+}
+----
+
+[NOTE.speaker]
+--
+Un ControllerAdvice est un Bean particulier.
+Comme RestController ou @Configuration,
+il a son propre cycle de vie.
+--
+
+[transition=slide-in none-out]
+== ControllerAdvice
+
+[source, kotlin]
+----
+@ControllerAdvice
+class HttpErrorHandler {
+
+
+    fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
+        ResponseEntity.badRequest().body("You're arg is invalid")
+}
+----
+
+[NOTE.speaker]
+--
+On peut lui donner des methodes pour lui expliquer comment traiter une exception
+--
+
+[transition=none-in slide-out]
+== ControllerAdvice
+
+[source, kotlin]
+----
+@ControllerAdvice
+class HttpErrorHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
+        ResponseEntity.badRequest().body("You're arg is invalid")
+}
+----
+
+[NOTE.speaker]
+--
+Comme le RestController, 
+il faut une annotation pour que Spring puisse faire le lien
+--
+
+[transition=none-in slide-out]
+== ControllerAdvice
+
+[source, kotlin]
+----
+@ControllerAdvice
+class HttpErrorHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
+        ResponseEntity.badRequest().body("You're arg is invalid")
+
+    @ExceptionHandler(Exception::class)
+    fun fallback(e: Exception) =
+        ResponseEntity.internalServerError().body("Unhandled error")
+}
+----
+
+[NOTE.speaker]
+--
+La gestion, des exceptions, est en entonnoir
+
+On peut traiter les erreurs spécialisées et avoir des couches de traitement de plus en plus génériques
+--
+
+[transition=fade-out]
+== ControllerAdvice - Spring
+
+[source, kotlin]
+----
+@ControllerAdvice
+class HttpErrorHandler : ResponseEntityExceptionHandler() {
+
+  override fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException,
+                                            headers: HttpHeaders,
+                                            status: HttpStatusCode,
+                                            request: WebRequest)
+                                            : ResponseEntity<Any>? {
+      return ResponseEntity.badRequest().body("You're arg is invalid")
+  }
+}
+----
+
+[NOTE.speaker]
+--
+Il est aussi possible d'étendre la gestion par défaut de Spring
+
+Pour ça il faut étendre ResponseEntityExceptionHandler et surcharger les handlers
+--
+
+== Tests
+
+[source,kotlin]
+----
+@AutoConfigureMockMvc
+@SpringBootTest
+class MovieControllerTest {
+
+    @Autowired
+    lateinit var mockMvc: MockMvc
+----
+
+[NOTE.speaker]
+--
+Spring fournit un outil pour faire des tests d'appels API
+
+Le but est de simuler des appels externes, 
+sans avoir à faire toute la Configuration d'un client HTTP
+
+L'activation se fait par l'ajout de @AutoConfigureMockMvc,
+et on peut injecter MockMvc
+--
+
+[transition=fade-in, fade-out]
+== MockMvc
+
+[source,kotlin]
+----
+fun post() {
+    mockMvc.post("/api/demo") // mockMvc.perform(post("/api/movies"))
+
+ 
+
+ 
+
+
+
+}
+----
+
+[NOTE.speaker]
+--
+On peut le faire à la manière de Java ou utiliser le DSL Kotlin
+
+Le DSL Kotlin est moins verbeux, donc souvant plus lisible
+
+Ici on donne le verbe http, le endpoint
+--
+
+[transition=fade-in, fade-out]
+== MockMvc
+
+[source,kotlin]
+----
+fun post() {
+    mockMvc.post("/api/demo") {
+        contentType = MediaType.APPLICATION_JSON
+        content = ObjectMapper()
+            .writeValueAsString(DemoEntity(name = "name"))
+    }
+
+
+
+
+}
+----
+
+[NOTE.speaker]
+--
+Pour un POST on va souvent donner un contentType et un content
+
+Le content est une String, 
+ObjectMapper est un serializer qui transforme l'objet en json
+
+De base c'est aussi jackson qui est utilisé pour la serialization spring
+--
+
+[transition=fade-in, fade-out]
+== MockMvc
+
+[source,kotlin]
+----
+fun post() {
+    mockMvc.post("/api/demo") {
+        contentType = MediaType.APPLICATION_JSON
+        content = ObjectMapper()
+            .writeValueAsString(DemoEntity(name = "name"))
+    }
+    .andExpect {
+        status { isOk() }
+
+    }
+}
+----
+
+[NOTE.speaker]
+--
+On peut faire des assertions sur le résultat,
+ici le code retour
+--
+
+[transition=fade-in, fade-out]
+== MockMvc
+
+[source,kotlin]
+----
+fun post() {
+  mockMvc.post("/api/demo") {
+    contentType = MediaType.APPLICATION_JSON
+    content = ObjectMapper()
+        .writeValueAsString(DemoEntity(name = "name"))
+  }
+  .andExpect {
+    status { isOk() }
+    content { jsonPath("$.name", `is`("name")) }
+  }
+}
+----
+
+[NOTE.speaker]
+--
+Ou sur le contentu, par exemple en Json path
+--
+
+[transition=fade-in, fade-out]
+== MockMvc
+
+[source,kotlin]
+----
+fun get() {
+  mockMvc.get("/api/demo/{id}?param=value", "theId") {
+    headers {
+      contentLanguage = Locale.FRANCE
+    }
+    param("name", "value")
+  }
+  .andDo {
+    print()
+  }
+  .andExpect {
+    status { isOk() }
+  }
+}
+----
+
+[NOTE.speaker]
+--
+Le DSL permet d'exprimer la requête
+
+Les params dans l'url ou dans le DSL
+
+On peut donner des headers
+
+On peut print le résultat, ça peut-être utile en cas d'échec d'un test sur la CI
+--
+
+[.columns]
+== Layers
+
+[.column]
+--
+@SpringBootTest
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart TD
+    Controller --> Service
+    Service --> Repository
+----
+--
+
+[fragment, step=1]
+[.column]
+--
+@WebMvcTest
+
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart TD
+    Controller --> MockService
+----
+--
+
+[NOTE.speaker]
+--
+Spring propose des tests de couche (layer).
+
+Ces tests ne lancent qu'une partie de l'application.
+
+Pour la partie web il faut remplacer @SpringBootTest par @WebMvcTest.
+--
+
+== WebMvcTest
+
+[source,kotlin]
+----
+@WebMvcTest
+class DemoControllerTest {
+
+    @MockkBean
+    private lateinit var demoRepository: Repository
+    @Autowired
+    private lateinit var mockMvc: MockMvc
+
+    @Test
+    fun get() {
+        every { demoRepository.save(any()) } returns Unit
+        mockMvc.get("/api/demo")
+                .andExpect { status { isOk() } }
+    }
+}
+----
+
+[NOTE.speaker]
+--
+On peut remplacer les deux annotations par WebMvcTest
+
+Mais il faut fournir des mocks des beans
+--
+
+== WebMvcTest
+
+[source,kotlin]
+----
+@WebMvcTest(DemoController::class)
+class DemoControllerTest {
+
+    @MockkBean
+    private lateinit var demoRepository: Repository
+    @Autowired
+    private lateinit var mockMvc: MockMvc
+
+    @Test
+    fun get() {
+        every { demoRepository.save(any()) } returns Unit
+        mockMvc.get("/api/demo")
+                .andExpect { status { isOk() } }
+    }
+}
+----
+
+[NOTE.speaker]
+--
+Pour limiter encore plus,
+on peut limiter à un controlleur
+--
