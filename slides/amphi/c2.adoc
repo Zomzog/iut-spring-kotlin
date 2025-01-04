@@ -1,5 +1,30 @@
 == Cours 2
 
+== Rapel
+
+== SpringBoot
+
+[source,kotlin]
+----
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+}
+----
+
+== RestController
+
+[source,kotlin]
+----
+@RestController
+class HelloController {
+
+    @GetMapping("/hello")
+    fun hello() = "Hello World"
+}
+----
+
 include::c2/validation.adoc[]
 
 include::c2/error.adoc[]

@@ -1,0 +1,36 @@
+== Spring Security
+
+== Vocabulaire
+
+== Authentication
+
+Qui suis-je?
+
+Credentials
+
+LDAP, ActiveDirectory, Database, CSV..
+
+User
+
+== Authorization
+
+Que puis-je faire?
+
+== Filter
+
+Point d'entrée de l'application
+
+== Role
+
+Ensemble de droits sur l'application
+
+== User
+
+Information de base sur l'utilisateur connécté
+
+== UserDetail
+
+Contract ?
+
+
+
