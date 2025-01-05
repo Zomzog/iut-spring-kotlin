@@ -15,6 +15,7 @@
 :kroki-server-url: https://kroki.io
 :kroki-default-format: png
 :icons: font
+:figure-caption!:
 
 :revealjs_totalTime: 4300
 
@@ -40,7 +41,9 @@ Decathlon Digital
 Lead tech Backend
 --
 
-include::amphi/c1.adoc[]
+//include::amphi/c1.adoc[]
 
-include::amphi/c2.adoc[]
+//include::amphi/c2.adoc[]
+
+include::amphi/c3.adoc[]
 

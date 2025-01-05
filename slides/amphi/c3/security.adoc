@@ -16,9 +16,11 @@ User
 
 Que puis-je faire?
 
-== Filter
+Toujours après l'authentication
 
-Point d'entrée de l'application
+- Read
+
+- Wrtie
 
 == Role
 
@@ -32,5 +34,146 @@ Information de base sur l'utilisateur connécté
 
 Contract ?
 
+== Dépendances
 
+[source,kotlin]
+----
+implementation("org.springframework.boot:spring-boot-starter-security")
+testImplementation("org.springframework.security:spring-security-test")
+----
 
+== Attention
+
+[WARNING]
+====
+Ajouter cette dépandance active directement la sécurité
+
+De base toute requete doit etre authentifié,
+donc tout répond un 401.
+====
+
+== Configuration
+
+[source, kotlin]
+----
+import org.springframework.security.config.annotation.web.invoke
+
+@Bean
+open fun filterChain(http: HttpSecurity): SecurityFilterChain {
+  http {
+    csrf { disable() }
+    authorizeHttpRequests {
+      authorize("/ponies", permitAll)
+      authorize(anyRequest, authenticated)
+    }
+    httpBasic { }
+    formLogin { }
+  }
+  return http.build()
+}
+----
+
+[NOTE.speaker]
+--
+Ce bean permet de configurer le fonctionnement de spring security
+--
+
+== authorizeHttpRequests
+
+[source, kotlin]
+----
+  http {
+    authorizeHttpRequests {
+      authorize("/ponies", permitAll)
+      authorize("/admin", hasRole("ADMIN"))
+      authorize(anyRequest, authenticated)
+    }
+  }
+}
+----
+
+[source, kotlin]
+----
+fun authorize(pattern: String,
+              access: AuthorizationManager<RequestAuthorizationContext>)
+----
+
+[NOTE.speaker]
+--
+Cette partie de la configuration permet de definir les droits d'accès.
+On peut les donner par pattern ou pour toutes les requetes.
+
+On peut enlever la sécurité pour certaines requetes (permitAll),
+juste etre authentifié (authenticated),
+ou définir des droits spécifiques par role, ip...)
+--
+
+== Form Login
+
+formLogin { }
+
+image:login.png[]
+
+`/login` && `/logout`
+
+[NOTE.speaker]
+--
+FormLogin permet de se connecter via un formulaire,
+de base un formulaire est généré par spring security a l'adresse `/login`.
+Spring fournir aussi un endpoint `/logout`.
+
+La session est gére par un cookie `JSESSIONID`.
+--
+
+== Http Basic
+
+httpBasic { }
+
+[source, bash]
+----
+BASE=$(echo -ne "login:password" | base64 --wrap 0)
+----
+
+[source, bash]
+----
+curl \
+ -H "Authorization: Basic $BASE" \
+ http://localhost:8080
+----
+
+[NOTE.speaker]
+--
+Basic Auth comme d'autres (Bearer...) sont des moyens d'authentification pour des APIs
+
+Pour Basic on fournit un login et un mot de passe encodé en base64 dans le header Authorization.
+--
+
+== Autres
+
+Cross Site Request Forgery
+
+[source, kotlin]
+----
+csrf { disable() }
+----
+
+Cross-Origin Resource Sharing
+
+[source, kotlin]
+----
+cors { disable() }
+----
+
+[NOTE.speaker]
+--
+On peut configuer ou supprimer des sécurités comme le CSRF ou le CORS
+--
+
+== Attention
+
+[WARNING]
+====
+Bien ajouter cet import qui ne s'ajoute pas toujours automatiquement
+
+import org.springframework.security.config.annotation.web.invoke
+====

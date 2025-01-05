@@ -1,0 +1,189 @@
+== Filter
+
+Filtre un point d'entrée de l'application
+
+== Filter HTTP
+
+.Schema simplifié d'une requète (cours 1)
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart TD
+    Client --> DispatcherServlet
+    DispatcherServlet --> MyController
+----
+
+[NOTE.speaker]
+--
+Si on se se place dans le cas d'une requète HTTP.
+
+Si on reprend une version simplifié du traitement d'une requète.
+
+Le client passe par le DispatcherServlet pour aller sur mon controlleur
+--
+
+== Filter HTTP
+
+.Ajout d'étapes avec la pattern Intercepting filter
+[mermaid]
+----
+%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+flowchart TD
+    Client --> FilterA
+    FilterA --> FilterB
+    FilterB --> DispatcherServlet
+    DispatcherServlet --> MyController
+----
+
+[NOTE.speaker]
+--
+On va pouvoir injecter les filtres avant d'arriver au DispatcherServlet.
+
+On peut enchainer des filtres. 
+--
+
+[transition=fade-in fade-out]
+== Filter
+
+[source, kotlin]
+----
+class FilterA : jakarta.servlet.Filter {
+
+
+
+
+
+
+
+
+}
+----
+
+[NOTE.speaker]
+--
+Pour créer un filtre il suffit d'étendre l'interface Filter de jakarta.servlet
+--
+
+[transition=fade-in fade-out]
+== Filter
+
+[source, kotlin]
+----
+class FilterA : Filter {
+
+  override fun doFilter(request: ServletRequest, 
+                        response: ServletResponse, 
+                        chain: FilterChain) {
+
+
+
+  }
+}
+----
+
+[NOTE.speaker]
+--
+Cette interface va imposer d'implémenter cette méthode
+
+Il y a la requète originale
+
+Un wrapper qui contient la réponse
+
+FilterChain qui contient la liste des filtres et permet d'appeler le suivant.
+--
+
+[transition=fade-in fade-out]
+== Filter
+
+[source, kotlin]
+----
+class FilterA : Filter {
+
+  override fun doFilter(request: ServletRequest, 
+                        response: ServletResponse, 
+                        chain: FilterChain) {
+
+      chain.doFilter(request, response)
+
+  }
+}
+----
+
+[NOTE.speaker]
+--
+On appel le suivant en appelant le doFilter où on donne la requète et la réponse
+--
+
+[transition=fade-in fade-out]
+== Filter
+
+[source, kotlin]
+----
+class FilterA : Filter {
+
+  override fun doFilter(request: ServletRequest, 
+                        response: ServletResponse, 
+                        chain: FilterChain) {
+      // do before on request
+      chain.doFilter(request, response)
+      // do after on response
+  }
+}
+----
+
+[NOTE.speaker]
+--
+Donc il est possible de modifier la requète avant 
+et modifier la réponse après.
+
+Si on modifie la réponse avant, 
+les modifications peuvent etre écrasés par les filtres suivants.
+--
+
+== Ajouter le filtre
+
+[source, kotlin]
+----
+@Bean
+fun filterA(filter: FilterA): FilterRegistrationBean<FilterA> {
+  val registrationBean = FilterRegistrationBean(filter)
+  registrationBean.addUrlPatterns("/api/*")
+  registrationBean.order = 1
+  return registrationBean
+}
+----
+
+[NOTE.speaker]
+--
+Il faut créer un bean FilterRegistrationBean pour l'ajouter
+
+On peut ajouter des conditions au filtre,
+ici je le limtes aux URL /api et je lui met un ordre.
+
+L'ordre n'est pas stict, il sera après les 0, avant les 2.
+Mais sans priorité particulière sur les autres 1.
+--
+
+== HttpFilter
+
+[source, kotlin]
+----
+class LoggerHttpFilter : HttpFilter() {
+  private val logger = KotlinLogging.logger {}
+  override fun doFilter(request: HttpServletRequest, 
+                        response: HttpServletResponse, 
+                        chain: FilterChain) {
+    logger.debug { "Request: ${request.method} ${request.requestURI}" }
+    chain.doFilter(request, response)
+    logger.debug { "Response: ${response.status}" }
+  }
+}
+----
+
+[NOTE.speaker]
+--
+Il existe des filtres plus spécialisés, 
+par example le HttpFilter,
+derrière c'est un filtre classique,
+mais il fait pour vous la validation  et le cast en HttpServlet*
+--
