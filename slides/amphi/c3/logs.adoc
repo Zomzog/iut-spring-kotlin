@@ -1,0 +1,219 @@
+== Logs
+
+== Niveaux de log
+
+- ERROR
+
+- WARN
+
+- INFO
+
+- DEBUG
+
+- TRACE
+
+[NOTE.speaker]
+--
+ERROR > WARN > INFO > DEBUG > TRACE
+--
+
+== logback.
+
+Système de gestion des journaux d'évenements (logs)
+
+Il gère la destination et le niveau de log.
+
+== logback.xml
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>
+        %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
+      </Pattern>
+    </layout>
+  </appender>
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+  <logger name="org.springframework.web" level="DEBUG"/>
+</configuration>
+----
+
+[NOTE.speaker]
+--
+CONSOLE est un appender sur la sortie standard
+
+root est l'appender de base
+--
+
+== logback.xml
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="CONSOLE"...</appender>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>/tmp/tests.log</file>
+    <append>true</append>
+    <encoder>
+      <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+  </root>
+</configuration>
+----
+
+[NOTE.speaker]
+--
+On peut avoir deux appender sur les logs
+--
+
+== logback.xml
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">...</appender>
+  <logger name="iut.nantes" level="debug" additivity="false">
+      <appender-ref ref="FILE"/>
+      <appender-ref ref="CONSOLE"/>
+  </logger>
+  <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>
+----
+
+[NOTE.speaker]
+--
+On peut avoir des appender pour seulement certains packages
+
+/!\ si je ne met pas CONSOLE root ne prend plus le log
+--
+
+== Jansi
+
+[source,xml]
+----
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  <withJansi>true</withJansi>
+  <encoder>
+    <pattern>[%thread] %highlight(%-5level) %cyan(%logger{15}) -%kvp -%msg %n</pattern>
+  </encoder>
+</appender>
+<root level="DEBUG">
+  <appender-ref ref="STDOUT" />
+</root>
+----
+
+[NOTE.speaker]
+--
+On peut mettre de la couleur (pratique en dev)
+--
+
+== Logs dans Spring
+
+De base dans Spring :
+
+slf4j -> logback
+
+Simple Logging Facade for Java
+
+SLF4J sert d'abstraction pour divers frameworks de journalisation (java.util.logging, logback, log4j...)
+permettant à l'utilisateur final de brancher le framework de journalisation souhaité au moment du déploiement.
+
+== logger
+
+[source,kotlin]
+----
+private val logger = LoggerFactory.getLogger(javaClass)
+----
+
+[source,kotlin]
+----
+logger.trace("trace of ${name}")
+logger.warn("warning with exception", Exception())
+----
+
+
+== Kotlin
+
+Optionel :
+
+oshai:kotlin-logging.
+
+Lightweight Multiplatform logging framework for Kotlin
+
+== logger kotlin
+
+[source,kotlin]
+----
+private val logger = KotlinLogging.logger {}
+----
+
+[source,kotlin]
+----
+logger.debug(Exception("Demo")) { "Protocol: ${request.protocol}" }
+----
+
+
+== logback spring
+
+logback.xml
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
+  <logger name="org.springframework.web" level="DEBUG"/>
+</configuration>
+----
+
+== logback-spring.xml
+
+[source,xml]
+----
+<configuration>
+  <springProfile name="dev">
+    <appender name="MY_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        ....
+    </appender>
+  </springProfile>
+  <springProfile name="default">
+    <appender name="MY_APPENDER" class="ch.qos.logback.core.FileAppender">
+        ....
+    </appender>
+  </springProfile>
+  <root level="INFO">
+    <appender-ref ref="MY_APPENDER"/>
+  </root>
+</configuration>
+----
+
+== Alternative au logback.xml
+
+application.yml
+
+[source,yaml]
+----
+logging:
+  level:
+    org.springframework.web: DEBUG
+    bzh.zomzog.prez: WARN
+----

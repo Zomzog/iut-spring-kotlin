@@ -3,3 +3,9 @@
 include::c3/filters.adoc[]
 
 include::c3/security.adoc[]
+
+include::c3/logs.adoc[]
+
+include::c3/actuators.adoc[]
+
+include::c3/oas3.adoc[]
