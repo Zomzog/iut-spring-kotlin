@@ -41,9 +41,9 @@ Decathlon Digital
 Lead tech Backend
 --
 
-//include::amphi/c1.adoc[]
+include::amphi/c1.adoc[]
 
-//include::amphi/c2.adoc[]
+include::amphi/c2.adoc[]
 
 include::amphi/c3.adoc[]
 
