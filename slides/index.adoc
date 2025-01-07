@@ -34,7 +34,7 @@ image:bigM.png[]
 --
 [.column.is-three-quarters]
 --
-Decathlon Digital
+Decathlon Digital Nantes
 
 ~100 personnes
 
