@@ -25,6 +25,10 @@ Slides:
 
 https://zomzog.fr/iut-spring-kotlin
 
+Sujet projet:
+
+https://github.com/Zomzog/2024-iut-projet/
+
 [.columns]
 == Thibault Duperron
 
