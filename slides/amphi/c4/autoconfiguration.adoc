@@ -1,0 +1,51 @@
+== Auto-configuration
+
+Avec `@SpringBootApplication`, 
+l'application scan son package et ses sous packages à la recherche de configurations Spring (ie d'annotations)
+
+L'application cherche aussi les starters dans les dépendances.
+
+== Starter ?
+
+Un starter est un jar qui va correspondre à un projet avec cette structure:
+
+[source]
+----
+my-spring-boot-starter/
+├── src/
+│   └── main/
+│       ├── kotlin/
+│       │   └── bzh/
+│       │       └── zomzog/
+│       │           └── MyLittleStarter.java
+│       └── resources/
+│           └── META-INF/
+│               └── spring/
+│                   └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+----
+
+== META-INF
+
+
+Le répertoire META-INF contient les fichiers et répertoires suivants, 
+qui sont reconnus et interprétés par la plateforme Java 2 pour configurer les applications,
+extensions, chargeurs de classes et services
+
+== AutoConfiguration.imports
+
+[source]
+----
+bzh.zomzog.MyLittleStarter
+----
+
+[source,kotlin]
+----
+@AutoConfiguration
+class MyLittleStarter {
+
+  @ConditionalOnMissingBean
+  @Bean
+  fun monBean() = MonService()
+}
+----
+

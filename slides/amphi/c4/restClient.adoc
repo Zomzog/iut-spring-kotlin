@@ -1,0 +1,351 @@
+
+== Http-Client
+
+Client récent JDK 11 (2018)
+
+Remplace `java.net.URLConnection`
+
+== Http-Client
+
+[source,kotlin]
+----
+val client = HttpClient.newBuilder()
+  .version(HttpClient.Version.HTTP_2) .build()
+val request = HttpRequest.newBuilder(URI("http://localhost:8080/users"))
+  .version(HttpClient.Version.HTTP_2)
+  .header("Content-Type", "application/json")
+  .POST(
+    BodyPublishers.ofString(
+      """
+    { "id": 1, "name": "John Doe" }
+  """.trimIndent()
+  )).build()
+val response: HttpResponse<String> = client
+              .send(request, BodyHandlers.ofString())
+val responseBody = response.body()
+----
+
+[NOTE.speaker]
+--
+Bien que récente, 
+cette API reste très bas niveau. 
+
+Elle reste complexe à utiliser.
+--
+
+== Http clients
+
+[fragment]#RestTemplate (2009)#
+
+[fragment]#WebClient (2017)#
+
+[fragment]#RestClient (2023)#
+
+[NOTE.speaker]
+--
+Spring propose 3 clients HTTP
+
+Ce sont des abstractions qui simplifient l'utilisation.
+
+Un peut comme JPA simplifie l'utilisation de JDBC
+--
+
+== RestTemplate
+
+Client historique pour API synchrone
+
+Très bien intégré à l'echo-système
+
+== RestTemplate Example
+
+[source,kotlin]
+----
+val client = RestTemplateBuilder()
+    .rootUri("http://localhost:8080")
+  .build()
+val result = client.postForEntity("/api/v1/ponies",
+                                  pony,
+                                  PonyDto::class.java)
+----
+
+== RestTemplate Creation
+
+[source,kotlin]
+----
+val restTemplate = RestTemplate()
+----
+
+[CAUTION.is-vcentered]
+.Mauvaise pratique
+====
+
+pas de bean = pas de traces
+
+appel direct du constructeur = pas de metrics
+====
+
+== RestTemplate Creation
+
+[source,kotlin]
+----
+@Configuration
+class RestTemplateConfig {
+  @Bean
+  fun restTemplate(builder: RestTemplateBuilder) =
+     builder.build()
+}
+----
+
+== RestTemplate Error handling
+
+[source,kotlin]
+----
+class MyResponseErrorHandler : ResponseErrorHandler {
+  override fun hasError(httpResponse: ClientHttpResponse): Boolean {
+    return httpResponse.statusCode.is5xxServerError ||
+        httpResponse.statusCode.is4xxClientError
+  }
+
+  override fun handleError(httpResponse: ClientHttpResponse) {
+    if (httpResponse.statusCode.is5xxServerError) {
+      throw HttpClientErrorException(httpResponse.statusCode)
+    } else if (httpResponse.statusCode.is4xxClientError) {
+      if (httpResponse.statusCode === HttpStatus.NOT_FOUND)
+        throw NotFoundException()
+    }
+  }
+}
+----
+
+== RestTemplate Error handling
+
+[source,kotlin]
+----
+@Configuration
+class RestTemplateConfig {
+  @Bean
+  fun restTemplate(builder: RestTemplateBuilder) =
+     builder.errorHandler(MyResponseErrorHandler())
+            .build()
+}
+----
+
+== WebClient
+
+  implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+== WebFlux ?
+
+[NOTE.speaker]
+--
+Dessin Req -> BDD -> ApiExterne -> Response
+1 thread vs reactive
+--
+
+=== Hide
+
+image:reactive.png[]
+
+[NOTE.speaker]
+--
+RestTemplate ne répond pas aux besoins de la stack reactive.
+
+Spring a donc dû refaire un client,
+et au passage en a profité pour moderniser l'API.
+--
+
+== WebClient Creation
+
+[source,kotlin]
+----
+@Configuration
+class WebClientConfig {
+  @Bean
+  fun webCleint(builder: WebClient.Builder) =
+     builder.baseUrl("http://localhost:8080")
+            .build()
+}
+----
+
+== WebClient Example
+
+[source,kotlin]
+----
+val result: Mono<PonyDto> = client.post()
+  .uri("/api/v1/ponies")
+  .bodyValue(pony)
+  .retrieve()
+  .bodyToMono(PonyDto::class.java)
+----
+
+== WebClient Example - MVC
+
+[source,kotlin]
+----
+val result: Mono<PonyDto> = client.post()
+  .uri("/api/v1/ponies")
+  .bodyValue(pony)
+  .retrieve()
+  .bodyToMono(PonyDto::class.java)
+  .block()
+----
+
+== WebClient Error handling
+
+[source,kotlin]
+----
+val result: PonyDto = client.post()
+  .uri("/api/v1/ponies")
+  .bodyValue(pony)
+  .retrieve()
+  .onStatus({ it.isError }, { Mono.error(RuntimeException("Error")) })
+  .onStatus({ it.value() == 404 }, { Mono.error(NotFoundException()) })
+  .bodyToMono(PonyDto::class.java)
+  .block()
+----
+
+== WebClient Retry
+
+[source,kotlin]
+----
+val result: Mono<PonyDto> = client.post()
+  .uri("/api/v1/ponies")
+  .bodyValue(pony)
+  .retrieve()
+  .bodyToMono(PonyDto::class.java)
+  .retryWhen(Retry.backoff(3, Duration.ofSeconds(1))
+    .filter {
+      when (it) {
+        is ResponseStatusException -> it.statusCode.is5xxServerError
+        else -> false
+      }
+    })
+----
+
+== WebClient Timeout
+
+[source,kotlin]
+----
+val result: Mono<PonyDto> = client.post()
+  .uri("/api/v1/ponies")
+  .bodyValue(pony)
+  .retrieve()
+  .bodyToMono(PonyDto::class.java)
+  .timeout(Duration.ofSeconds(5))
+----
+
+== RestClient
+
+[source,kotlin]
+----
+val client = RestClient.builder()
+  .baseUrl("http://localhost:8080")
+  .build()
+val result = client.post()
+  .body(pony)
+  .retrieve()
+  .body<ponyDto>()
+----
+
+== RestClient Error handling
+
+[source,kotlin]
+----
+val client = RestClient.builder()
+  .baseUrl("http://localhost:8080")
+  .build()
+val result = client.post()
+  .uri("/api/v1/ponies")
+  .body(pony)
+  .retrieve()
+  .onStatus({ it.isError },
+          { req, res -> throw MyException("${req.uri} -> ${res.statusCode}") })
+  .body<ponyDto>()
+----
+
+== Http Interface
+
+[source, kotlin]
+----
+interface MyService {
+    @GetExchange("/api/v1/ponies")
+    fun findAll(): List<PonyDto>
+}
+----
+
+== Interface -> Bean
+
+[source, kotlin]
+----
+@Bean
+fun myBean(): MyService {
+  val adapter = RestClientAdapter.create(client)
+  val factory = HttpServiceProxyFactory.builderFor(adapter).build()
+  return factory.createClient(MyService::class.java)
+}
+----
+
+== Http Interface
+
+[fragment, step=0]
+[source,kotlin]
+----
+@GetExchange("/hello")
+fun queryParam(@RequestParam name: String): Something
+----
+
+[fragment, step=1]
+[source,kotlin]
+----
+@GetExchange("/hello/{name}")
+fun path(@PathVariable name: String): Something
+----
+
+[fragment, step=2]
+[source,kotlin]
+----
+@PostExchange("/hello")
+fun body(@RequestBody name: String): Something
+----
+
+[fragment, step=3]
+[source,kotlin]
+----
+@GetExchange("/hello")
+fun header(@RequestHeader name: String): Something
+----
+
+== Http Interface
+
+[fragment, step=0]
+[source,kotlin]
+----
+@GetExchange("/hello")
+fun findAll(): List<Pony>
+----
+
+[fragment, step=1]
+[source,kotlin]
+----
+@GetExchange("/hello")
+fun findAll(): ResponseEntity<List<Pony>>
+----
+
+[fragment, step=2]
+[WARNING]
+====
+En cas d'erreur (4xx, 5xx) l'appel ne renvoi pas une ResponseEntity mais une erreur
+====
+
+
+[%notitle]
+== HttpVersus
+
+image:httpVs.png[]
+
+
+[NOTE.speaker]
+--
+La gestion d'erreur est au niveau du restTemplate,
+si on ne veut pas traiter les 404 pareil pour deux endpoint il faut plusieurs restTemplate
+--

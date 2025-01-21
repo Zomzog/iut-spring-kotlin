@@ -100,7 +100,7 @@ class CustomInfo(val delegate: InfoEndpoint) {
 
 == Metrics
 
-micrometer-registry-prometheus
+  runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 
 == /actuator/prometheus
 
@@ -123,3 +123,22 @@ class MetricsConfig(meterRegistry: MeterRegistry) {
         myCount.increment()
     }
 ----
+
+== Traces
+
+  implementation("io.micrometer:micrometer-tracing-bridge-brave")
+
+== TraceIds
+
+----
+INFO [678c233e1008f59fd685db096863b99c-17138239dbfafafa] bzh.zomzog.sandbox.Controller : GET Request
+
+INFO [678c2513bc84da3276ad1dcc2d898ba3-9b5479c78326e029] bzh.zomzog.sandbox.Cron       : Run cron
+
+INFO [678c233e1008f59fd685db096863b99c-17138239dbfafafa] bzh.zomzog.sandbox.Service    : Handle Request
+----
+
+== Traces & Span
+
+image:traces-spans.png[]
+

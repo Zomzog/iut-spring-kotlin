@@ -1,0 +1,89 @@
+== Flyway
+
+Outil de gestion des migrations de base de données.
+
+L'intégration avec Spring Boot permet une gestion fluide des migrations au démarrage de l'application.
+
+== Concepts clés
+
+* **Base SQL** : Chaque étape d'une migration flyway est un script SQL
+* **Version** : Chaque script de migration a un identifiant unique
+* **Compatibilité** Prise en charge de nombreux SGBD (H2, PostgreSQL...)
+* **Immutable** : Une modification d'un script empêchera la migration s'il avait déjà été appliqué
+* **Réparation** : Flyway permet de réparer l’historique des migrations si besoin
+
+== Pourquoi Flyway dans Spring Boot ?
+
+* **Automatisation** des migrations au démarrage de l'application.
+* **Cohérence** du schéma de base de données à travers tous les environnements (développement, test, production).
+* **Maitrise** du schéma de base de données, contrairement a une approche "code first" comme hibrernate DDL
+
+== Dépendance
+
+  implementation("org.flywaydb:flyway-core")
+
+  implementation("org.flywaydb:flyway-database-postgresql")
+
+  implementation("org.flywaydb:flyway-mysql")
+
+[INFO]
+----
+Il faut le flyway-myDb pour la majeur partie des bases, 
+mais pas pour h2
+----
+
+== Spring configuration
+
+[source,yaml]
+----
+spring:
+  flyway:
+    enabled: true
+    url: jdbc:h2:mem:testdb
+    user: sa
+    password: password
+----
+
+== Spring configuration astuce
+
+[source,yaml]
+----
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  flyway:
+    enabled: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+----
+
+== Emplacement Fichier de migration
+
+Par défaut, Flyway recherche les fichiers dans `src/main/resources/db/migration`.
+
+Le nom des fichiers suit la convention `V<version>__<description>.sql`, par exemple :
+
+* `V1__create_users_table.sql`
+* `V2__add_email_to_users.sql`
+
+== Contenu Fichier de migration
+
+Le fichier contient du pur SQL
+
+[source,sql]
+.V1__create_users_table.sql
+----
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL
+);
+----
+
+== Flyway history
+
+image:flywaymigration.png[]
