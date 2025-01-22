@@ -7,9 +7,3 @@ include::c4/transactional.adoc[]
 include::c4/flyway.adoc[]
 
 include::c4/autoconfiguration.adoc[]
-
-== NEXT
-
-Cache
-
-Customisation Json (snake case)
