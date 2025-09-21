@@ -28,7 +28,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
-          cache: "pnpm"
 
       - name: Setup @antfu/ni
         run: npm i -g @antfu/ni
