@@ -1,1 +1,2 @@
-../prez-framework/_tooling/pnpm-workspace.yaml
+onlyBuiltDependencies:
+  - playwright-chromium
