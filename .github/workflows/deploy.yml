@@ -38,7 +38,7 @@ jobs:
 
       - name: Build
         working-directory: ./slides
-        run: nr build --base ${{github.event.repository.name}}
+        run: nr build --base /${{github.event.repository.name}}/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
