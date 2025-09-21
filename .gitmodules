@@ -1,3 +1,4 @@
 [submodule "prez-framework"]
 	path = prez-framework
 	url = git@github.com:Zomzog/prez-framework.git
+	branch = main
