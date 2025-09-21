@@ -31,7 +31,7 @@ Spring - Kotlin
 <div class="flex justify-center items-center gap-4 mt-6">
   <div>
     <a href="https://zomzog.fr/iut-spring-kotlin" target="_blank">
-      https://zomzog.fr/iut-spring-kotlin
+      zomzog.fr/iut-spring-kotlin
     </a>
   </div>
   <div>
