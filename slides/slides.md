@@ -22,7 +22,6 @@ mdc: true
 defaults:
   layout: center
   class: text-center
-download: true
 ---
 
 # Programmation avancée
