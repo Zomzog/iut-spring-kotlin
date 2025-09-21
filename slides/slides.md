@@ -1,9 +1,8 @@
 ---
 # You can also start simply with 'default'
-theme: seriph
+theme: default
 # random image from a curated Unsplash collection by Anthony
 # like them? see https://unsplash.com/collections/94734566/slidev
-background: https://cover.sli.dev
 # some information about your slides (markdown enabled)
 title: spring-kotlin
 info: |
@@ -24,7 +23,31 @@ seoMeta:
   # By default, Slidev will use ./og-image.png if it exists,
   # or generate one from the first slide if not found.
   ogImage: auto
-  # ogImage: https://cover.sli.dev
+defaults:
+  layout: center
+  class: text-center
+---
 ---
 
-# spring-kotlin
+# Programmation avancée
+
+Spring - Kotlin
+
+<div class="flex justify-center items-center gap-4 mt-6">
+  <div>
+    <a href="https://zomzog.fr/iut-spring-kotlin" target="_blank">
+      https://zomzog.fr/iut-spring-kotlin
+    </a>
+  </div>
+  <div>
+    <img src="./qrcode.png" alt="qrcode" class="w-40 h-40 inline-block" />
+  </div>
+</div>
+
+---
+src: /pages/intro.md
+---
+
+---
+src: /pages/c1.md
+---
