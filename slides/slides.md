@@ -40,7 +40,7 @@ Spring - Kotlin
     </a>
   </div>
   <div>
-    <img src="./qrcode.png" alt="qrcode" class="w-40 h-40 inline-block" />
+    <img src="/qrcode.png" alt="qrcode" class="w-40 h-40 inline-block" />
   </div>
 </div>
 
