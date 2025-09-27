@@ -22,6 +22,8 @@ mdc: true
 defaults:
   layout: center
   class: text-center
+  fonts:
+    mono: JetBrains Mono
 ---
 
 # Programmation avancée

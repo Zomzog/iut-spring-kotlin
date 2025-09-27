@@ -4,11 +4,8 @@
 ---
 layout: TwoColumns
 class: text-left
+transition: fade
 ---
-
-::title::
-
-# Injection de dépendances
 
 ::left::
 
@@ -36,20 +33,11 @@ class AService() {
 }
 ```
 
-<!--
-
-Exemple d'application simple,
-un service doit appeler un autre service de base de donnée
--->
-
 ---
 layout: TwoColumns
 class: text-left
+transition: fade
 ---
-
-::title::
-
-# Injection de dépendances
 
 ::left::
 
@@ -64,11 +52,6 @@ classDiagram
         <<class>>
         +findAllInDb()
     }
-    class PostgresDb {
-        <<class>>
-        +findAllInDb()
-    }
-    AService ..> PostgresDb
     AService ..> MySqlDb
 ```
 
@@ -76,16 +59,93 @@ classDiagram
 
 ```kotlin {*}{class:'!children:text-xl'}
 class AService() {
-  val pg = PostgresDb()
-  val my = MySqlDb()
+    val db = MySqlDb()
 
-  fun findAll(pg: Boolean) = if(pg) {
-    db.findAllInDb()
-  } else {
-    my.findAllInDb()
-  }
+    fun findAll() = db.findAllInDb()
 }
 ```
+
+<!--
+
+Exemple d'application simple,
+un service doit appeler un autre service de base de donnée
+-->
+
+---
+layout: TwoColumns
+class: text-left
+transition: fade
+---
+
+::left::
+
+```mermaid
+classDiagram
+    direction TD
+    class AService {
+        <<class>>
+        +findAll()
+    }
+    class Database {
+        <<Interface>>
+        +findAllInDb()
+    }
+    class MySqlDb {
+        <<class>>
+    }
+    class PostgresDb {
+        <<class>>
+    }
+    AService ..> Database
+    Database <|-- MySqlDb
+    Database <|-- PostgresDb
+```
+
+::right::
+
+````md magic-move
+```kotlin
+class AService(val db: Database) {
+  fun findAll() = db.findAllInDb()
+}
+
+interface Database {
+  fun findAllInDb(): List<All>
+}
+```
+
+```kotlin
+class AService(val db: Database) {
+  fun findAll() = db.findAllInDb()
+}
+
+interface Database {
+  fun findAllInDb(): List<All>
+}
+
+class PostgresDb: Database {
+  override fun findAllInDb() = TODO()
+}
+```
+
+```kotlin
+class AService(val db: Database) {
+  fun findAll() = db.findAllInDb()
+}
+
+interface Database {
+  fun findAllInDb(): List<All>
+}
+
+class PostgresDb: Database {
+  override fun findAllInDb() = TODO()
+}
+
+class MySqlDb: Database {
+  override fun findAllInDb() = TODO()
+}
+```
+````
 
 <!--
 
@@ -95,6 +155,7 @@ Avec deux implémentations de la base de donnée ça donne ça
 ---
 layout: two-cols
 class: text-left
+transition: fade
 ---
 
 ```mermaid

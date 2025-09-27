@@ -152,7 +152,7 @@ Debug direct comme si c'était un projet simple
 -->
 
 ---
-layout: TwoColumns
+layout: TwoColumnsTitle
 clicks: 2
 ---
 

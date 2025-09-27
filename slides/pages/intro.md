@@ -1,5 +1,5 @@
 ---
-layout: TwoColumns
+layout: TwoColumnsTitle
 ---
 
 ::title::
