@@ -195,7 +195,6 @@ class: text-left
 ````md magic-move
 
 ```kotlin {*}{class:'!children:text-xl'}
-@Configuration
 class MyConfig {
 
 
@@ -209,9 +208,8 @@ class MyConfig {
 ```
 
 ```kotlin {*}{class:'!children:text-xl'}
-@Configuration
 class MyConfig {
-    @Bean
+
     fun myDb() = PostgresDb()
 
 
@@ -223,12 +221,11 @@ class MyConfig {
 ```
 
 ```kotlin {*}{class:'!children:text-xl'}
-@Configuration
 class MyConfig {
-    @Bean
+
     fun myDb() = PostgresDb()
 
-    @Bean
+
     fun aService() = AService(myDb())
 
 
@@ -237,6 +234,33 @@ class MyConfig {
 ```
 
 ```kotlin {*}{class:'!children:text-xl'}
+class MyConfig {
+
+    fun myDb() = PostgresDb()
+
+
+    fun aService() = AService(myDb())
+
+
+    fun another() = Other(myDb())
+}
+```
+
+```kotlin
+@Configuration
+class MyConfig {
+
+    fun myDb() = PostgresDb()
+
+
+    fun aService() = AService(myDb())
+
+
+    fun another() = Other(myDb())
+}
+```
+
+```kotlin
 @Configuration
 class MyConfig {
     @Bean
@@ -316,6 +340,35 @@ val myDb = PostgresDB()
 val aService = AService(myDb)
 
 val another = Other(myDb)
+```
+````
+
+---
+layout: two-cols
+class: text-left
+---
+
+````md magic-move
+```kotlin
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+
+    @Bean
+    fun another() = Other(myDb())
+}
+```
+
+```kotlin
+@Configuration
+class MyDatabaseConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+}
 ```
 ````
 
@@ -515,7 +568,7 @@ class MyConfig {
 Stack du breakpoint
 [source]
 
-```
+```txt
 myDb:4, MyConfig (bzh.zomzog)
 CGLIB$myDb$2:-1, MyConfig$$SpringCGLIB$$0 (bzh.zomzog)
 Invoke-1, MyConfig$$SpringCGLIB$$FastClass$$1 (bzh.zomzog)
