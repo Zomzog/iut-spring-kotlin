@@ -22,8 +22,9 @@ mdc: true
 defaults:
   layout: center
   class: text-center
-  fonts:
-    mono: JetBrains Mono
+fonts:
+  mono: JetBrains Mono
+  weights: '300,600,800'
 ---
 
 # Programmation avancée
