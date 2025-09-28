@@ -1,21 +1,8 @@
 ---
-layout: full
-class: text-left
+layout: cover
 ---
 
-# Hello World Rest
-
-Requête
-
-```
-curl -XGET localhost:8080/hello
-```
-
-Réponse:
-
-```
-Hello World
-```
+# Spring MVC
 
 ---
 layout: full
@@ -23,16 +10,42 @@ class: text-left
 ---
 
 # spring-boot-starter-web
-[source,xml]
 
+:: code-group
+
+```kotlin [gradle]
+
+ implementation("org.springframework.boot:spring-boot-starter-web")
 ```
+
+```xml [maven]
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
 </dependency>
 ```
 
-[transition#fade-out]
+::
+
+Build web, including RESTful, applications using Spring MVC.
+
+Uses Apache Tomcat as the default embedded container.
+
+<div v-click>
+
+<br/>
+
+## @RestController
+
+@RestController -> @Controller -> @Component
+
+</div>
+
+---
+layout: full
+class: text-left
+---
+
 ---
 layout: full
 class: text-left
@@ -40,156 +53,69 @@ class: text-left
 
 # RestController
 
-RestController -> Controller -> Component
-
-[transition#fade-out]
----
-layout: full
-class: text-left
----
-
-# RestController
+````md magic-move
+```kotlin
+@RestController
+class HelloController {
+}
+```
 
 ```kotlin
 @RestController
 class HelloController {
 
-
+  @GetMapping("/hello")
+  fun getCall() = "Hello World"
 }
 ```
-
-[transition#fade-in]
----
-layout: full
-class: text-left
----
-
-# RestController
 
 ```kotlin
 @RestController
 class HelloController {
 
-    @GetMapping("/hello")
-    fun hello() = "Hello World"
+  @GetMapping("/hello")
+  fun getCall() = "Hello World"
+
+  @PostMapping("/hello")
+  fun postCall() = "Hello World"
+
+  @PutMapping("/hello")
+  fun putCall() = "Hello World"
+
+  @DeleteMapping("/hello")
+  fun deleteCall() = "Hello World"
 }
 ```
 
-[.columns.is-vcentered]
----
-layout: full
-class: text-left
----
+```kotlin
+@RestController
+class HelloController {
 
-# Mappings
+  //@GetMapping("/hello")
+  @RequestMapping(method = [RequestMethod.GET], path = ["/hello"])
+  fun getCall() = "Hello World"
 
-[.column]
---
-GetMapping
+  @PostMapping("/hello")
+  fun postCall() = "Hello World"
 
-PostMapping
+  @PutMapping("/hello")
+  fun putCall() = "Hello World"
 
-PutMapping
+  @DeleteMapping("/hello")
+  fun deleteCall() = "Hello World"
+}
+```
+````
 
-DeleteMapping
---
+<div v-if="1 == $clicks">
+curl -X GET http://localhost:8080/hello
 
-[.column]
---
-alias ->
---
+Hello World
+</div>
 
-[.column]
---
-RequestMapping
---
-
-[NOTE.speaker]
---
+<!--
 Tous les verbes peuvent être gérés par RequestMapping
---
-
----
-layout: full
-class: text-left
----
-
-# API Rest
-
-[.highlight-current-red.step]#GET# [.highlight-current-red.step]#/ponies#/[.highlight-current-red.step]#{name}#/[.highlight-current-red.step]#type#
-
----
-layout: full
-class: text-left
----
-
-# API Rest
-
-GET /ponies/{name}/[.highlight-red.step]#?type#earth#
-
----
-layout: full
-class: text-left
----
-
-# Lister
-
-[source]
-
-```
-GET /ponies?age#42
-```
-
----
-layout: full
-class: text-left
----
-
-# Créer
-
-[source]
-
-```
-POST /ponies
-```
-
----
-layout: full
-class: text-left
----
-
-# Obtenir un élément
-
-[source]
-
-```
-GET /ponies/{name}
-```
-
----
-layout: full
-class: text-left
----
-
-# Mettre à jour un élément
-
-[source]
-
-```
-PUT /ponies/{name}
-```
-
----
-layout: full
-class: text-left
----
-
-# Supprimer un élément
-[source]
-
-```
-POST /ponies/{name}
-```
+-->
 
 ---
 layout: full
@@ -198,33 +124,65 @@ class: text-left
 
 # Paramètres
 
-[fragment, step#0]
+<div v-click>
+
+## Query param
+
+```bash
+curl -XGET <http://localhost:8080/hello?name=me>
+```
 
 ```kotlin
 @GetMapping("/hello")
-fun queryParam(@RequestParam name: String) = "world of $name"
+fun queryParam(@RequestParam name: String) = "Hello $name"
 ```
 
-[fragment, step#1]
+</div>
+<div v-click>
+
+## Path param
+
+```bash
+curl -XGET http://localhost:8080/hello/world
+```
 
 ```kotlin
 @GetMapping("/hello/{name}")
-fun path(@PathVariable name: String) = "world of $name"
+fun path(@PathVariable name: String) = "Hello $name"
 ```
 
-[fragment, step#2]
+</div>
+
+---
+layout: full
+class: text-left
+---
+
+## Body param
+
+```bash
+curl -XPOST 'http://localhost:8080/hello' -d 'world'
+```
 
 ```kotlin
 @PostMapping("/hello")
-fun body(@RequestBody name: String) = "world of $name"
+fun body(@RequestBody name: String) = "Hello $name"
 ```
 
-[fragment, step#3]
+<div v-click>
+
+## Header param
+
+```bash
+curl -XGET 'http://localhost:8080/hello' -H 'name: world'
+```
 
 ```kotlin
 @GetMapping("/hello")
-fun header(@RequestHeader name: String) = "world of $name"
+fun header(@RequestHeader name: String) = "Hello $name"
 ```
+
+</div>
 
 ---
 layout: full
@@ -234,52 +192,49 @@ class: text-left
 # Code retour
 
 ```kotlin
-    @GetMapping("/hello/{name}")
-    fun path(@PathVariable name: String) = "world of $name"
-
-    @GetMapping("/hello/{name}")
-    fun helloPath(@PathVariable name: String) #
-        ResponseEntity.status(HttpStatus.OK).body("world of $name")
+@GetMapping("/hello/{name}")
+fun path(@PathVariable name: String) = "Hello $name"
 ```
 
----
-layout: full
-class: text-left
----
-
-# Code retour
+<div v-click>
 
 ```kotlin
-    @GetMapping("/hello/{name}")
-    fun path(@PathVariable name: String) = "world of $name"
-
-    @GetMapping("/hello/{name}")
-    fun helloPath(@PathVariable name: String) #
-        ResponseEntity.ok("world of $name")
+@GetMapping("/hello/{name}")
+fun helloPath(@PathVariable name: String) =
+    ResponseEntity.status(HttpStatus.OK).body("Hello $name")
 ```
 
----
-layout: full
-class: text-left
----
+</div>
 
-# Code retour
+<div v-click>
 
 ```kotlin
-    @GetMapping("/hello/{name}")
-    fun helloPath(@PathVariable name: String) = if (name.length <# 2) {
-        ResponseEntity.badRequest().body("Name size must be > 2")
-    } else {
-        ResponseEntity.ok("world of $name")
-    }
+@GetMapping("/hello/{name}")
+fun helloPath(@PathVariable name: String) =
+    ResponseEntity.ok("Hello $name")
 ```
+
+</div>
+
+<div v-click>
+
+```kotlin
+@GetMapping("/hello/{name}")
+fun helloPath(@PathVariable name: String) = if (name.length <= 2) {
+    ResponseEntity.badRequest().body("Name size must be > 2")
+} else {
+    ResponseEntity.ok("Hello $name")
+}
+```
+
+</div>
 
 ---
 layout: full
 class: text-left
 ---
 
-# DTO
+# DTO & serialization
 
 Desing Pattern - Data Transfert Object
 
@@ -292,13 +247,29 @@ layout: full
 class: text-left
 ---
 
-# DTO
+# DTO & serialization
 
 ```kotlin
 data class PersonDTO(val name: String, val age: Int)
 ```
 
+<div v-click>
+
+## Serialization des réponses de base en JSON
+
 ```kotlin
 @GetMapping("/hello")
 fun hello() = ResponseEntity.ok(PersonDTO("John", 42))
 ```
+
+</div>
+<div v-click>
+
+## Deserialization des body suivant le content-type
+
+```kotlin
+@PostMapping("/hello")
+fun body(@RequestBody person: PersonDTO) = "Hello $person.name"
+```
+
+</div>

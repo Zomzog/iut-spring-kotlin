@@ -326,7 +326,7 @@ JBoss
 </div>
 
 <!--
-Glassfish # Implementation de référence par JakartaEE
+Glassfish = Implementation de référence par JakartaEE
 
 Serveurs complets qui couvrent tout (Servlet, EJB, JPA..)
 -->
