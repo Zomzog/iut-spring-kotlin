@@ -23,7 +23,7 @@ class MyConfig {
 ```
 ```kotlin
 fun main() {
-  val context: ApplicationContext #
+  val context: ApplicationContext =
      AnnotationConfigApplicationContext(MyConfig::class.java)
   val service = context.getBean(AService::class.java)
 }
@@ -46,16 +46,22 @@ class: text-left
 # runApplication
 
 <div v-click>
+
 Choix du type d'application (servlet, cli...)
+</div>
+
+<div v-click>
 
 Démarre le serveur web si besoin
 </div>
 
 <div v-click>
+
 Chargemement des configurations (variables d'environement...)
 </div>
 
 <div v-click>
+
 Création du ApplicationContext / Scan des beans
 </div>
 

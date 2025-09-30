@@ -6,7 +6,7 @@ layout: cover
 
 ---
 
-# Spring != Jakarta
+## Spring != Jakarta
 
 Spring a été créé en 2003
 
@@ -28,7 +28,7 @@ layout: full
 transition: fade
 ---
 
-# Spring - Histoire
+## Spring - Histoire
 
 ```mermaid
 %%{init: { 'gitGraph': {'showBranches': false, 'showCommitLabel':true,'mainBranchName': 'Spring'}} }%%
@@ -40,6 +40,7 @@ gitGraph
     commit id:"2013" tag:"4.0"
     commit id:"2017" tag:"5.0"
     commit id:"2022" tag:"6.0"
+    commit id:"2025" tag:"7.0"
 ```
 
 <!--
@@ -53,7 +54,7 @@ Les deux sont liés
 layout: full
 ---
 
-# Spring - Histoire
+## Spring - Histoire
 
 ```mermaid
 %%{init: {'gitGraph': {'showBranches': true, 'showCommitLabel':true,'mainBranchName': 'Spring'}} }%%
@@ -73,6 +74,10 @@ gitGraph
     commit id:"2022" tag:"6.0"
     checkout SpringBoot
     merge Spring id:"2022-11" tag:"3.0.0"
+    checkout Spring
+    commit id:"2025" tag:"7.0"
+    checkout SpringBoot
+    merge Spring id:"2025-11" tag:"4.0.0"
 ```
 
 <!--
@@ -84,7 +89,7 @@ Les deux sont liés
 
 ---
 
-# Spring
+## Spring
 
 Spring est en premier lieu un système d'injection de dépendances
 
@@ -108,7 +113,7 @@ spring-kafka
 layout: full
 ---
 
-# Spring
+## Spring
 
 ```mermaid
 
@@ -131,7 +136,7 @@ Remote debug pour travailler
 layout: full
 ---
 
-# Spring Boot
+## Spring Boot
 
 ```mermaid
 flowchart TD
@@ -158,7 +163,7 @@ clicks: 2
 
 ::title::
 
-# Spring vs Spring Boot
+## Spring vs Spring Boot
 
 ::left::
 

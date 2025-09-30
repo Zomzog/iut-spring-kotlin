@@ -9,7 +9,7 @@ layout: full
 class: text-left
 ---
 
-# spring-boot-starter-web
+## spring-boot-starter-web
 
 :: code-group
 
@@ -46,12 +46,7 @@ layout: full
 class: text-left
 ---
 
----
-layout: full
-class: text-left
----
-
-# RestController
+## RestController
 
 ````md magic-move
 ```kotlin
@@ -122,7 +117,7 @@ layout: full
 class: text-left
 ---
 
-# Paramètres
+## Paramètres
 
 <div v-click>
 
@@ -189,7 +184,7 @@ layout: full
 class: text-left
 ---
 
-# Code retour
+## Code retour
 
 ```kotlin
 @GetMapping("/hello/{name}")
@@ -234,7 +229,7 @@ layout: full
 class: text-left
 ---
 
-# DTO & serialization
+## DTO & serialization
 
 Desing Pattern - Data Transfert Object
 
@@ -247,7 +242,7 @@ layout: full
 class: text-left
 ---
 
-# DTO & serialization
+## DTO & serialization
 
 ```kotlin
 data class PersonDTO(val name: String, val age: Int)

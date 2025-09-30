@@ -7,7 +7,7 @@ background: /snow-white-blow.gif
 
 ---
 
-# Java SE - Java Standard Edition
+## Java SE - Java Standard Edition
 
 <v-click>
 
@@ -36,7 +36,7 @@ Ca permet de faire des applications java "brut"
 
 ---
 
-# Jakarta EE
+## Jakarta EE
 
 Historique des noms
 
@@ -66,7 +66,7 @@ Changement de nom en jakarta suite au transfert de Oracle vers Eclipse
 
 ---
 
-# Jakarta EE
+## Jakarta EE
 
 Ensemble de spécifications pour faire des applications pour les entreprises
 
@@ -245,35 +245,35 @@ JAX.RS - Java API for RESTful Web Service
 
 ---
 
-# JPA - Java Persistence API
+## JPA - Java Persistence API
 
 Par exemple la communication avec une base de données
 
 ---
 
-# JTA - Java Transaction API
+## JTA - Java Transaction API
 
 Par exemple une transaction SQL
 
 ---
 
-# JMS - Java Message Service
+## JMS - Java Message Service
 
 Par exemple la communication avec ActiveMq
 
 ---
 
-# CDI - Contexts and Dependency Injection
+## CDI - Contexts and Dependency Injection
 
 ---
 
-# EJB - Entreprise Java Bean
+## EJB - Entreprise Java Bean
 
 Composant logiciel pouvant être appelé par le serveur
 
 ---
 
-# Servlet - Point entrée application
+## Servlet - Point entrée application
 
 Classe Java de génération de contenu dynamique
 
@@ -281,13 +281,13 @@ Non limité au HTTP (JDBC...)
 
 ---
 
-# JSP - Java Server page
+## JSP - Java Server page
 
 Génération de contenu statique (html...)
 
 ---
 
-# JSF - Java server faces
+## JSF - Java server faces
 
 EL - Expressions Languages
 
@@ -299,7 +299,7 @@ AJAX
 
 ---
 
-# JAX
+## JAX
 
 JAX.WS - Java Api for XML Web Service
 
@@ -309,7 +309,7 @@ Communication http moderne
 
 ---
 
-# Serveur Application
+## Serveur Application
 
 Implementation des spécifications JakartaEE
 
@@ -333,22 +333,28 @@ Serveurs complets qui couvrent tout (Servlet, EJB, JPA..)
 
 ---
 
-# Fonctionnement
+## Fonctionnement
 
 Création de l'appication java et packaging en .WAR
 
 <div v-click>
+
 Installation et lancement du serveur
+
 </div>
 
 <div v-click>
+
 Ajout du WAR dans le serveur
 </div>
 
 <div v-click>
+
 Déploiement du code et mapping des servlets
 </div>
 
+---
+transition: fade
 ---
 
 <div
@@ -389,6 +395,8 @@ Déploiement du code et mapping des servlets
        class="p-4 border rounded-lg shadow-lg">JMS</div>
 </div>
 
+---
+transition: fade
 ---
 
 <div
@@ -435,7 +443,7 @@ Faut-il tout même pour un micro serivce?
 
 ---
 
-# Conteneur Web / Servlet
+## Conteneur Web / Servlet
 
 Serveurs léger qui ne font "que" les parties servlet et jsp
 
