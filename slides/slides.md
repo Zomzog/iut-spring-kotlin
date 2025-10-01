@@ -25,6 +25,7 @@ defaults:
 fonts:
   mono: JetBrains Mono
   weights: '300,600,800'
+download: true
 ---
 
 # Programmation avancée
