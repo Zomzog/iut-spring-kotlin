@@ -1,4 +1,10 @@
 ---
+layout: full
+---
+
+<Toc />
+
+---
 layout: TwoColumnsTitle
 ---
 

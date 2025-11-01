@@ -36,38 +36,31 @@ Permet d'ajouter de la validation sur les paramètres des méthodes.
 ---
 layout: full
 class: text-left
+transition: fade
 ---
 
-## Activation validation
+## Validation simples
 
 ````md magic-move
 ```kotlin
-class DemoController(val demoRepository: DemoRepository) {
-  fun list(
-     i: Int // >= 10
-  ) = ...
+class DemoController {
+  fun list( i: Int) = ...
 ```
 
 ```kotlin
 @Validated
-class DemoController(val demoRepository: DemoRepository) {
-  fun list(
-     i: Int // >= 10
-  ) = ...
+class DemoController {
+  fun list(i: Int) = ...
 ```
 ```kotlin
 @Validated
-class DemoController(val demoRepository: DemoRepository) {
-  fun list(
-     @Min(10) i: Int
-  ) = ...
+class DemoController {
+  fun list(@Min(10) i: Int) = ...
 ```
 ```kotlin
 @Validated
-class DemoController(val demoRepository: DemoRepository) {
-  fun list(
-     @Max(5) @Min(10) i: Int
-  ) = ...
+class DemoController {
+  fun list(@Max(5) @Min(10) i: Int) = ...
 ```
 ````
 
@@ -92,6 +85,75 @@ layout: full
 class: text-left
 ---
 
+## Validation d'objets
+
+````md magic-move
+```kotlin
+@Validated
+class DemoController {
+  fun list(@Max(5) @Min(10) i: Int) = ...
+```
+```kotlin
+@Validated
+class DemoController {
+  fun list(@Max(5) @Min(10) i: Int) = ...
+
+  fun create(@RequestBody dto: DemoDto) = ...
+}
+
+data class DemoDto(
+    val i: Int,
+    val s: String
+)
+```
+```kotlin
+@Validated
+class DemoController {
+  fun list(@Max(5) @Min(10) i: Int) = ...
+
+  fun create(@RequestBody @Valid dto: DemoDto) = ...
+}
+
+data class DemoDto(
+    val i: Int,
+    val s: String
+)
+```
+```kotlin
+@Validated
+class DemoController {
+  fun list(@Max(5) @Min(10) i: Int) = ...
+
+  fun create(@RequestBody @Valid dto: DemoDto) = ...
+}
+
+data class DemoDto(
+    @field:Min(5)
+    val i: Int,
+    @field:NotBlank
+    val s: String
+)
+```
+````
+
+---
+layout: full
+class: text-left
+transition: fade
+---
+
+## Activation validation
+
+```kotlin
+@Validated
+class DemoController {
+  fun list(
+     @Max(5) @Min(10) i: Int
+  ) = ...
+```
+
+<div v-click>
+
 ## Constraint Annotation
 
 ```java
@@ -110,6 +172,8 @@ public @interface Min {
  long value();
 }
 ```
+
+</div>
 
 <!--
 @Target: là où on peut utiliser l'annotation
@@ -137,6 +201,34 @@ class: text-left
 
 ## Meta annotation
 
+````md magic-move
+```kotlin
+@Target(allowedTargets = [AnnotationTarget.VALUE_PARAMETER])
+@Retention(RUNTIME)
+annotation class MinMax(
+)
+```
+```kotlin
+@Target(allowedTargets = [AnnotationTarget.VALUE_PARAMETER])
+@Retention(RUNTIME)
+@Constraint(validatedBy = [])
+annotation class MinMax(
+    val message: String = "Value must be between min and max",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<out Payload>> = [],
+)
+```
+```kotlin
+@Target(allowedTargets = [AnnotationTarget.VALUE_PARAMETER])
+@Retention(RUNTIME)
+@Constraint(validatedBy = [])
+@Min(value = 0)
+annotation class MinMax(
+    val message: String = "Value must be between min and max",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<out Payload>> = [],
+)
+```
 ```kotlin
 @Target(allowedTargets = [AnnotationTarget.VALUE_PARAMETER])
 @Retention(RUNTIME)
@@ -149,12 +241,13 @@ annotation class MinMax(
     val payload: Array<KClass<out Payload>> = [],
 )
 ```
+````
 
 <div v-click>
 
 ```kotlin
 @Validated
-class DemoController(val demoRepository: DemoRepository) {
+class DemoController {
   fun list(
      @MinMax i: Int
   ) = ...
@@ -175,6 +268,84 @@ Les valeurs annotations doivent être des constantes
 ---
 layout: full
 class: text-left
+transition: fade
+---
+
+## Custom annotation
+
+````md magic-move
+```kotlin
+@Target(allowedTargets = [AnnotationTarget.VALUE_PARAMETER])
+@Retention(RUNTIME)
+@Constraint(validatedBy = [])
+@Min(value = 0)
+@Max(value = 10)
+annotation class MinMax(
+    val message: String = "Value must be between min and max",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<out Payload>> = [],
+)
+```
+```kotlin
+@Target(allowedTargets = [AnnotationTarget.VALUE_PARAMETER])
+@Retention(RUNTIME)
+@Constraint(validatedBy = [])
+@Min(value = 0)
+@Max(value = 10)
+annotation class MinMax(
+  val min: Int,
+  val max: Int,
+  val message: String = "Value must be between min and max",
+  val groups: Array<KClass<*>> = [],
+  val payload: Array<KClass<out Payload>> = [],
+)
+```
+```kotlin
+@Target(allowedTargets = [AnnotationTarget.VALUE_PARAMETER])
+@Retention(RUNTIME)
+@Constraint(validatedBy = [])
+@Min(value = min)
+@Max(value = max)
+annotation class MinMax(
+  val min: Int,
+  val max: Int,
+  val message: String = "Value must be between min and max",
+  val groups: Array<KClass<*>> = [],
+  val payload: Array<KClass<out Payload>> = [],
+)
+```
+```kotlin
+@Target(allowedTargets = [AnnotationTarget.VALUE_PARAMETER])
+@Retention(RUNTIME)
+@Constraint(validatedBy = [])
+🚫 @Min(value = min)
+🚫 @Max(value = max)
+annotation class MinMax(
+  val min: Int,
+  val max: Int,
+  val message: String = "Value must be between min and max",
+  val groups: Array<KClass<*>> = [],
+  val payload: Array<KClass<out Payload>> = [],
+)
+```
+```kotlin
+@Target(allowedTargets = [AnnotationTarget.VALUE_PARAMETER])
+@Retention(RUNTIME)
+@Constraint(validatedBy = [MinMaxValidator::class])
+annotation class MinMax(
+  val min: Int,
+  val max: Int,
+  val message: String = "Value must be between min and max",
+  val groups: Array<KClass<*>> = [],
+  val payload: Array<KClass<out Payload>> = [],
+)
+```
+````
+
+---
+layout: full
+class: text-left
+transition: fade
 ---
 
 ## Custom annotation
@@ -192,8 +363,28 @@ annotation class MinMax(
 )
 ```
 
-<div v-click>
+````md magic-move
+```kotlin
+class MinMaxValidator: ConstraintValidator<MinMax, Int> {
+}
+```
+```kotlin
+class MinMaxValidator: ConstraintValidator<MinMax, Int> {
+  private var min: Int = 0
+  private var max: Int = 0
+}
+```
+```kotlin
+class MinMaxValidator: ConstraintValidator<MinMax, Int> {
+  private var min: Int = 0
+  private var max: Int = 0
 
+  override fun initialize(annotation: MinMax) {
+    min = annotation.min
+    max = annotation.max
+  }
+}
+```
 ```kotlin
 class MinMaxValidator: ConstraintValidator<MinMax, Int> {
   private var min: Int = 0
@@ -210,8 +401,7 @@ class MinMaxValidator: ConstraintValidator<MinMax, Int> {
   }
 }
 ```
-
-</div>
+````
 
 <!--
 Ajout de deux valeurs variables min et max
@@ -234,105 +424,25 @@ class: text-left
 
 ```kotlin
 @Validated
-class DemoController(val demoRepository: DemoRepository) {
+@Component
+class DemoController {
   fun list(
      @MinMax(0, 10) i: Int
   ) = ...
 ```
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
 
-## API Validation
-
-```kotlin
-@RestController
-@Validated
-class DemoController(val demoRepository: DemoRepository) {
-  @GetMapping
-  fun list(@RequestParam(required = false) @Size(min=2, max=20) name: String?)
-      = if (name == null) { TODO() }
-```
-
-<!--
-La validation peut s'utiliser directement sur les Controlleurs
--->
-
----
-layout: full
-class: text-left
----
-
-## Validation du body
-
-```kotlin
-@RestController
-@Validated
-class DemoController(val demoRepository: DemoRepository) {
-  @PostMapping
-  fun save(@Demo  @RequestBody demo: DemoDTO) = ...
-```
-
-[.hideCode]
-
-```
-data class DemoDTO(
-        val id: UUID = UUID.randomUUID(),
-        @field:Size(min#5, max#10)
-        val name: String,
-)
-```
-
-<!--
-Pour valider un objet complet on peut mettre une annotation personnalisée
-avec son validateur
--->
-
-[transition#none-in, none-out]
----
-layout: full
-class: text-left
----
-
-## Validation du body
-
-```kotlin
-@RestController
-@Validated
-class DemoController(val demoRepository: DemoRepository) {
-  @PostMapping
-  fun save(@Valid @RequestBody demo: DemoDTO) = ...
-```
-
-[fragment, step#1]
-
-```kotlin
-data class DemoDTO(
-        val id: UUID = UUID.randomUUID(),
-        @field:Size(min#5, max#10)
-        val name: String,
-)
-```
-
-<!--
-Pour valider un objet complet on peut mettre une annotation personnalisée
-avec son validateur
--->
-
-[.columns]
----
-layout: full
-class: text-left
----
+::title::
 
 ## Annotation target
 
-[.column.is-three-fifths]
-[source, java]
+::left::
 
-```
+```java
 class Pony {
   @OnName
   private String name;
@@ -349,18 +459,25 @@ class Pony {
 }
 ```
 
-[fragment, step#1]
-[.column]
-[source, java]
+::right::
 
-```
+<div v-click>
+
+```kotlin
 class Pony(
   @field:OnName
+
+
   @get:OnGet
+
+
+
   @set:OnGet
   var name: String
 )
 ```
+
+</div>
 
 <!--
 La notion de getter/setter étant caché par Kotlin,
