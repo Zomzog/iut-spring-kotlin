@@ -7,16 +7,24 @@ hideInToc: false
 
 ---
 layout: full
-class: text-left
 ---
 
 ## Accès à la base de données SQL
 
-<v-click>Spring Data JPA</v-click>
+<div v-click>
 
-<v-click>jOOQ</v-click>
+Spring Data JPA
+</div>
 
-<v-click>MyBatis</v-click>
+<div v-click>
+
+jOOQ
+</div>
+
+<div v-click>
+
+MyBatis
+</div>
 
 <!--
 Plusieurs choix, on va parler Spring Data
