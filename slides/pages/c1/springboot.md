@@ -1,5 +1,6 @@
 ---
 layout: cover
+hideInToc: false
 ---
 
 # SpringBoot

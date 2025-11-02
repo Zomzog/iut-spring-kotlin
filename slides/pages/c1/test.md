@@ -1,11 +1,15 @@
 ---
-layout: full
-class: text-left
+layout: cover
+hideInToc: false
 ---
 
-## Tests
+# Tests
 
-![code_coverage](/code_coverage.jpg)
+---
+layout: image
+image: /code_coverage.jpg
+backgroundSize: contain
+---
 
 ---
 layout: full
@@ -559,7 +563,6 @@ On peut print le résultat, ça peut-être utile en cas d'échec d'un test sur l
 
 ---
 layout: TwoColumnsTitle
-class: text-left
 ---
 
 ::title::

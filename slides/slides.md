@@ -22,6 +22,7 @@ mdc: true
 defaults:
   layout: center
   class: text-center
+  hideInToc: true
 fonts:
   mono: JetBrains Mono
   weights: '300,600,800'
@@ -49,4 +50,8 @@ src: /pages/intro.md
 
 ---
 src: /pages/c1.md
+---
+
+---
+src: /pages/c2.md
 ---

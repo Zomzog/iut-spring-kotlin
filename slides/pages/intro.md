@@ -1,4 +1,11 @@
 ---
+layout: full
+class: text-left
+---
+
+<Toc />
+
+---
 layout: TwoColumnsTitle
 ---
 
