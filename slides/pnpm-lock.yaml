@@ -17,9 +17,19 @@ importers:
       '@slidev/theme-seriph':
         specifier: latest
         version: 0.25.0
+      '@types/seedrandom':
+        specifier: ^3.0.8
+        version: 3.0.8
+      seedrandom:
+        specifier: ^3.0.5
+        version: 3.0.5
       vue:
         specifier: ^3.5.18
         version: 3.5.21(typescript@5.9.2)
+    devDependencies:
+      playwright-chromium:
+        specifier: ^1.55.1
+        version: 1.55.1
 
 packages:
 
@@ -746,6 +756,9 @@ packages:
 
   '@types/node@22.18.3':
     resolution: {integrity: sha512-gTVM8js2twdtqM+AE2PdGEe9zGQY4UvmFjan9rZcVb6FGdStfjWoWejdmy4CfWVO9rh5MiYQGZloKAGkJt8lMw==}
+
+  '@types/seedrandom@3.0.8':
+    resolution: {integrity: sha512-TY1eezMU2zH2ozQoAFAQFOPpvP15g+ZgSfTZt31AUUH/Rxtnz3H+A/Sv1Snw2/amp//omibc+AEkTaA8KUeOLQ==}
 
   '@types/trusted-types@1.0.6':
     resolution: {integrity: sha512-230RC8sFeHoT6sSUlRO6a8cAnclO06eeiq1QDfiv2FGCLWFvvERWgwIQD4FWqD9A69BN7Lzee4OXwoMVnnsWDw==}
@@ -2247,6 +2260,9 @@ packages:
     resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
     engines: {node: '>=4'}
 
+  seedrandom@3.0.5:
+    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
+
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
@@ -3660,6 +3676,8 @@ snapshots:
   '@types/node@22.18.3':
     dependencies:
       undici-types: 6.21.0
+
+  '@types/seedrandom@3.0.8': {}
 
   '@types/trusted-types@1.0.6': {}
 
@@ -5283,10 +5301,8 @@ snapshots:
   playwright-chromium@1.55.1:
     dependencies:
       playwright-core: 1.55.1
-    optional: true
 
-  playwright-core@1.55.1:
-    optional: true
+  playwright-core@1.55.1: {}
 
   points-on-curve@0.2.0: {}
 
@@ -5459,6 +5475,8 @@ snapshots:
     dependencies:
       extend-shallow: 2.0.1
       kind-of: 6.0.3
+
+  seedrandom@3.0.5: {}
 
   semver@6.3.1: {}
 

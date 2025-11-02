@@ -13,17 +13,19 @@ layout: full
 
 <div v-click>
 
-Spring Data JPA
+<span v-mark.box.red="1"> Spring Data JPA</span>
 </div>
 
 <div v-click>
 
 jOOQ
+
 </div>
 
 <div v-click>
 
 MyBatis
+
 </div>
 
 <!--
