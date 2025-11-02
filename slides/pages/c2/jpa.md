@@ -13,7 +13,8 @@ layout: full
 
 <div v-click>
 
-<span v-mark.box.red="1"> Spring Data JPA</span>
+<span v-mark.box.red="4"> Spring Data JPA</span>
+
 </div>
 
 <div v-click>
@@ -46,37 +47,24 @@ Pour les contrôleurs on représente les JSON sous forme de classes
 
 C'est pareil pour les bases de données
 
-[.columns]
 ---
-layout: full
+layout: TwoColumnsWithTitle
 class: text-left
 ---
 
+::title::
+
 ## Base relationnel
 
-[.column]
-[cols="1,1,1"]
-|===
-|Id
-|Name
-|Kind
+::left::
 
-|1
-|Discord
-|Draconequus
+| id  | name         | kind        |
+| --- | ------------ | ----------- |
+| 1   | discord      | draconequus |
+| 2   | rainbow dash | pegasus     |
+| 3   | pinkie pie   | earth       |
 
-|2
-|Rainbow Dash
-|Pegasus
-
-|3
-|Pinkie Pie
-|Earth
-|===
-
-[.column]
--->
--->
+::right::
 
 [.column]
 [cols="1,2"]
@@ -148,6 +136,7 @@ class Pony(
 -->
 
 [transition=fade-in, fade-out]
+
 ---
 layout: full
 class: text-left
@@ -159,7 +148,7 @@ class: text-left
 class Repository {
   @PersistenceUnit
   private lateinit var factory: EntityManagerFactory
-  
+
   fun save(pony: Pony) = factory.createEntityManager().use { em ->
       em.transaction.begin()
       em.persist(pony)
@@ -175,6 +164,7 @@ qui permet de sortir de Spring pour obtenir l'EMF de Jakarta-JPA
 -->
 
 [transition=fade-in, fade-out]
+
 ---
 layout: full
 class: text-left
@@ -281,7 +271,7 @@ class: text-left
 
 ```kotlin
 class Repository {
-  
+
   @PersistenceContext
   private lateinit var entityManager: EntityManager
 
@@ -295,7 +285,6 @@ fun findAll() = entityManager.createQuery("SELECT pony from Pony pony",
 ```
 
 <!--
-
 1. Passage à PersistenceContext
 2. Passage à EntityManager directement
 3. Utilisation de @Transaction pour gérer la transaction (car on ne peut plus utilisé celle de jakarta)
@@ -526,6 +515,7 @@ class Pony(
     val kind: String,
 )
 ```
+
 <!--
 On peut spécifier et renommer les colonnes
 
@@ -668,10 +658,6 @@ class PhoneEntity(
         val number: String,
 )
 ```
-
-<!--
-
--->
 
 ---
 layout: full
