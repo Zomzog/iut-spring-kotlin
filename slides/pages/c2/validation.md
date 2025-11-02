@@ -44,7 +44,7 @@ transition: fade
 ````md magic-move
 ```kotlin
 class DemoController {
-  fun list( i: Int) = ...
+  fun list(i: Int) = ...
 ```
 
 ```kotlin
@@ -137,6 +137,59 @@ data class DemoDto(
 ````
 
 ---
+layout: TwoColumnsTitle
+class: text-left
+---
+
+::title::
+
+## Annotation target
+
+::left::
+
+```java
+class Pony {
+  @OnName
+  private String name;
+
+  @OnGet
+  public String getName() {
+    return name;
+  }
+
+  @OnSet
+  public String setName(String n) {
+    name = n;
+  }
+}
+```
+
+::right::
+
+<div v-click>
+
+```kotlin
+class Pony(
+  @field:OnName
+
+
+  @get:OnGet
+
+
+
+  @set:OnGet
+  var name: String
+)
+```
+
+</div>
+
+<!--
+La notion de getter/setter étant caché par Kotlin,
+on doit fournir la cible des annotations
+-->
+
+---
 layout: full
 class: text-left
 transition: fade
@@ -152,11 +205,11 @@ class DemoController {
   ) = ...
 ```
 
-<div v-click>
+<div v-click.at='1'>
 
 ## Constraint Annotation
 
-```java
+```java {all|all|2|1,3|5|7|9-11|13|all}
 @Target({METHOD,FIELD,ANNOTATION_TYPE,CONSTRUCTOR,PARAMETER,TYPE_USE})
 @Retention(RUNTIME)
 @Repeatable(List.class)
@@ -430,56 +483,3 @@ class DemoController {
      @MinMax(0, 10) i: Int
   ) = ...
 ```
-
----
-layout: TwoColumnsTitle
-class: text-left
----
-
-::title::
-
-## Annotation target
-
-::left::
-
-```java
-class Pony {
-  @OnName
-  private String name;
-
-  @OnGet
-  public String getName() {
-    return name;
-  }
-
-  @OnSet
-  public String setName(String n) {
-    name = n;
-  }
-}
-```
-
-::right::
-
-<div v-click>
-
-```kotlin
-class Pony(
-  @field:OnName
-
-
-  @get:OnGet
-
-
-
-  @set:OnGet
-  var name: String
-)
-```
-
-</div>
-
-<!--
-La notion de getter/setter étant caché par Kotlin,
-on doit fournir la cible des annotations
--->

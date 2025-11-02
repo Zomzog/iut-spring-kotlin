@@ -528,7 +528,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllByIdDesc(): List<DemoEntity>
+    fun findAllOrderByIdDesc(): List<DemoEntity>
 }
 ```
 ```kotlin
@@ -536,7 +536,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllByIdDesc(): List<DemoEntity>
+    fun findAllOrderByIdDesc(): List<DemoEntity>
 
     fun findAllByAgeLessThanEqual(age: Int): List<DemoEntity>
 }
@@ -546,7 +546,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllByIdDesc(): List<DemoEntity>
+    fun findAllOrderByIdDesc(): List<DemoEntity>
 
     fun findAllByAgeLessThanEqual(age: Int): List<DemoEntity>
 
@@ -558,7 +558,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllByIdDesc(): List<DemoEntity>
+    fun findAllOrderByIdDesc(): List<DemoEntity>
 
     fun findAllByAgeLessThanEqual(age: Int): List<DemoEntity>
 
