@@ -1,0 +1,256 @@
+---
+layout: full
+class: text-left
+---
+
+## Jointures
+
+En SQL pour gérer des données hiérarchiques on utilise des jointures.
+
+En JPA elles sont représenté par quatres annotations:
+
+- @OneToOne
+- @OneToMany
+- @ManyToOne
+- @ManyToMany
+
+---
+layout: full
+class: text-left
+---
+
+## Cascades
+
+La cascade est la propagation d'une modification aux enfants de l'entité.
+
+Si l'objet A contient l'objet B,
+lors d'un "update" de A en base, je peux vouloir
+modifier/ajouter/supprimer l'objet B ou ignorer toutes les modifications de B
+
+---
+layout: full
+class: text-left
+---
+
+## Direction
+
+Une relation peut être uni-directionnel ie je ne peux aller que de l'objet A vers l'objet B
+
+ou bi-directionnel ie je peux aller de A à B et de B à A.
+
+---
+layout: full
+class: text-left
+---
+
+## Join-Column
+
+L'annotation @JoinColumn permet de fournir à hibernate des informations sur la manière de lier les entités.
+
+name: nom de la foreign key
+
+referencedColumnName : le nom de la colonne de l'autre entité utilisé pour la jointure.
+
+```kotlin
+@JoinColumn(referencedColumnName = "email")
+```
+
+---
+layout: full
+class: text-left
+---
+
+## One-To-One uni-directionnel
+
+```kotlin
+@Entity
+@Table(name = "users")
+class UserEntity(
+        @Id val email: String,
+        @OneToOne(cascade = [CascadeType.ALL])
+        @JoinColumn(referencedColumnName = "email")
+        val phone: PhoneEntity,
+) {
+@Entity
+@Table(name = "phone")
+class PhoneEntity(
+        @Id // Doit être unique, peut aussi être un @Column(unique = true)
+        val email: String,
+        val number: String,
+)
+```
+
+<!--
+Reference par nom de colonnes, la plus simple mais uni-directionnel
+-->
+
+---
+layout: full
+class: text-left
+---
+
+## One-To-One
+
+```kotlin
+class UserEntity(
+        @Id val email: String,
+        @OneToOne(cascade = [CascadeType.ALL])
+        @JoinColumn(name = "fk_email")
+        var phone: PhoneEntity?,
+)
+
+class PhoneEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
+        @OneToOne(mappedBy = "phone")
+        val user: UserEntity,
+        val number: String,
+)
+```
+
+<!--
+L'usage de var et du nullable permet de créer les objets puis les imbriquer
+
+Le mapping devient bi-directionnel
+-->
+
+---
+layout: full
+class: text-left
+---
+
+## One-To-One
+
+```kotlin
+class UserEntity(
+        @Id val email: String,
+        @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL])
+        var phone: PhoneEntity?,
+)
+
+class PhoneEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
+        @OneToOne
+        val user: UserEntity,
+        val number: String,
+)
+```
+
+---
+layout: full
+class: text-left
+---
+
+## One-To-Many uni-directionnel
+
+```kotlin
+class UserEntity(
+        @Id val email: String,
+        @OneToMany(cascade = [CascadeType.ALL])
+        @JoinColumn(referencedColumnName = "email")
+        val phones: List<PhoneEntity> = emptyList(),
+)
+
+class PhoneEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
+        val email: String,
+        val number: String,
+)
+```
+
+<!--
+One-to-many uni-directionnel
+-->
+
+---
+layout: full
+class: text-left
+---
+
+## Many-To-One
+
+```kotlin
+class UserEntity(
+        @Id val email: String,
+        @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
+        var phones: List<PhoneEntity> = emptyList(),
+)
+
+class PhoneEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
+        @ManyToOne
+        @JoinColumn(name="fk_email")
+        val user: UserEntity?,
+        val number: String,
+)
+```
+
+<!--
+ManyToOne pour le rendre bi-directionnel
+-->
+
+---
+layout: full
+class: text-left
+---
+
+## Many-To-Many
+
+```kotlin
+class UserEntity(
+        @Id val email: String,
+        @ManyToMany(cascade = [CascadeType.ALL])
+        @JoinTable(
+                name = "user_phone",
+                joinColumns = [JoinColumn(name = "email")],
+                inverseJoinColumns = [JoinColumn(name = "id")])
+        var phones: List<PhoneEntity> = emptyList(),
+)
+class PhoneEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
+        @ManyToMany
+        val user: List<UserEntity>,
+        val number: String,
+)
+```
+
+<!--
+ManyToMany, il faut une table de jointure
+-->
+
+---
+layout: full
+class: text-left
+---
+
+## Test Jpa
+
+Spring propose des tests de "Layer".
+
+Ces tests ne lancent qu'une partie de l'application.
+
+Pour JPA, il faut remplacer @SpringBootTest par @DataJpaTest.
+
+---
+layout: full
+class: text-left
+---
+
+## Test Jpa
+
+```kotlin
+@DataJpaTest
+class DemoRepositoryTest {
+    @Autowired
+    private lateinit var jpaRepository: DemoRepository
+
+    @Test
+    fun `find one existing`() {
+       // GIVEN
+        jpaRepository.save(DemoEntity(randomUUID(), "name"))
+        // WHEN
+        val result = jpaRepository.findAllByName("name")
+        // THEN
+        assertThat(result).hasSize(1)
+    }
+}
+```
