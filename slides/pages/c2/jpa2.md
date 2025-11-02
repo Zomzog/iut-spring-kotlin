@@ -7,12 +7,189 @@ class: text-left
 
 En SQL pour gérer des données hiérarchiques on utilise des jointures.
 
-En JPA elles sont représenté par quatres annotations:
+```sql
+SELECT * FROM pony p
+LEFT JOIN occupation o ON p.id = o.pony_id
+WHERE o.name = 'Spirit of Chaos';
+```
 
-- @OneToOne
-- @OneToMany
-- @ManyToOne
-- @ManyToMany
+---
+layout: TwoColumnsTitle
+class: text-left
+---
+
+::title::
+
+## Jointures - @OneToOne
+
+::left::
+
+| id  | name         | kind        |
+| --- | ------------ | ----------- |
+| 1   | Discord      | DRACONEQUUS |
+| 2   | Rainbow Dash | PEGASUS     |
+| 3   | Pinkie Pie   | EARTH       |
+
+| PonyId | Occupation |
+| -- | -- |
+| 1 | Spirit of Chaos|
+| 2 | Ruler of Equestria|
+| 3 | Baker|
+
+::right::
+
+<div v-click>
+
+```kotlin
+class Pony(
+    val id: Long?,
+    val name: String,
+    val kind: String,
+    val occupations: Occupation,
+)
+
+class Occupation(
+    val name: String,
+)
+```
+
+</div>
+
+---
+layout: TwoColumnsTitle
+class: text-left
+---
+
+::title::
+
+## Jointures - @OneToMany
+
+::left::
+
+| id  | name         | kind        |
+| --- | ------------ | ----------- |
+| 1   | Discord      | DRACONEQUUS |
+| 2   | Rainbow Dash | PEGASUS     |
+| 3   | Pinkie Pie   | EARTH       |
+
+|id| PonyId | Occupation |
+|--| -- | -- |
+| 1 | 1 | Spirit of Chaos|
+| 2 | 1 | Ruler of Equestria|
+| 3 | 3 | Baker|
+
+::right::
+
+<div v-click>
+
+```kotlin
+class Pony(
+    val id: Long?,
+    val name: String,
+    val kind: String,
+    val occupations: List<Occupation>,
+)
+
+class Occupation(
+    val id: Long?,
+    val ponyId: Long,
+    val name: String,
+)
+```
+
+</div>
+
+---
+layout: TwoColumnsTitle
+class: text-left
+---
+
+::title::
+
+## Jointures - @ManyToOne
+
+::left::
+
+| id  | name         | kind        | occupation_id |
+| --- | ------------ | ----------- | ------------- |
+| 1   | Discord      | DRACONEQUUS | 1             |
+| 2   | Rainbow Dash | PEGASUS     | 2             |
+| 3   | Pinkie Pie   | EARTH       | 3             |
+
+|id| Occupation |
+|--| -- |
+| 1 | Spirit of Chaos|
+| 2 | Ruler of Equestria|
+| 3 | Baker|
+
+::right::
+
+<div v-click>
+
+```kotlin
+class Pony(
+    val id: Long?,
+    val name: String,
+    val kind: String,
+    val occupations: Occupation,
+)
+
+class Occupation(
+    val id: Long?,
+    val name: String,
+)
+```
+
+</div>
+
+---
+layout: TwoColumnsTitle
+class: text-left
+---
+
+::title::
+
+## Jointures - @ManyToMany
+
+::left::
+
+| id  | name         | kind        | occupation_id |
+| --- | ------------ | ----------- | ------------- |
+| 1   | Discord      | DRACONEQUUS | 1             |
+| 2   | Rainbow Dash | PEGASUS     | 2             |
+| 3   | Pinkie Pie   | EARTH       | 3             |
+
+|id| Occupation |
+|--| -- |
+| 1 | Spirit of Chaos|
+| 2 | Ruler of Equestria|
+| 3 | Baker|
+
+::right::
+
+<div v-click>
+
+```kotlin
+class Pony(
+    val id: Long?,
+    val name: String,
+    val kind: String,
+    val occupations: List<Occupation>,
+)
+
+class Occupation(
+    val id: Long?,
+    val name: String,
+    val ponies: List<Pony>,
+)
+```
+
+</div>
+
+---
+layout: full
+class: text-left
+---
 
 ---
 layout: full
