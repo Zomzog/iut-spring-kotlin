@@ -1,4 +1,18 @@
 ---
+layout: cover
+hideInToc: false
+---
+
+## JPA
+
+---
+layout: cover
+hideInToc: false
+---
+
+### One-to-One
+
+---
 layout: TwoColumnsTitle
 class: text-left
 ---
@@ -12,7 +26,7 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val email: String,
     val name: String,
     @OneToOne(cascade = [CascadeType.ALL])
@@ -22,7 +36,7 @@ class UserEntity(
 
 @Entity
 @Table(name = "phone")
-class PhoneEntity(
+data class PhoneEntity(
     @Id val email: String,
     val phoneNumber: String,
 )
@@ -31,6 +45,21 @@ class PhoneEntity(
 ::right::
 
 ```sql
+CREATE TABLE users (
+ email varchar(255) NOT NULL,
+ "name" varchar(255) NULL,
+ phone_email varchar(255) NULL,
+ CONSTRAINT users_phone_email_key UNIQUE (phone_email),
+ CONSTRAINT users_pkey PRIMARY KEY (email),
+ CONSTRAINT fk1qj2mfat2o9nn5mp097e50otl 
+    FOREIGN KEY (phone_email) REFERENCES phone(email)
+);
+
+CREATE TABLE phone (
+ email varchar(255) NOT NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (email)
+);
 ```
 
 <!--
@@ -49,24 +78,41 @@ class: text-left
 
 ```kotlin
 @Entity
-@Table(name = "phone")
-class PhoneEntity(
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    val number: String,
-    val phoneNumber: String,
+@Table(name = "users")
+data class UserEntity(
+    @Id val id: Long,
+    val name: String,
 )
 
-@Table(name = "users")
-class UserEntity(
+@Entity
+@Table(name = "phone")
+data class PhoneEntity(
     @Id val id: Long,
-    val name: String
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 ```
 
 ::right::
 
 ```sql
+CREATE TABLE users (
+ id int8 NOT NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE phone (
+ id int8 NOT NULL,
+ user_id int8 NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (id),
+ CONSTRAINT phone_user_id_key UNIQUE (user_id),
+ CONSTRAINT fkik7a2etdorybvoolvchfcvgkx 
+        FOREIGN KEY (user_id) REFERENCES users(id)
+);
 ```
 
 <!--
@@ -87,7 +133,8 @@ class: text-left
 
 ```kotlin
 @Entity
-class UserEntity(
+@Table(name = "users")
+data class UserEntity(
     @Id val id: Long,
     val name: String,
     @JoinColumn(name = "phone_id")
@@ -95,7 +142,8 @@ class UserEntity(
 )
 @Entity
 @Table(name = "phone")
-class PhoneEntity(
+data class PhoneEntity(
+    @Id val id: Long,
     @OneToOne(mappedBy = "phone")
     val user: UserEntity,
     val phoneNumber: String,
@@ -105,6 +153,21 @@ class PhoneEntity(
 ::right::
 
 ```sql
+CREATE TABLE users (
+ id int8 NOT NULL,
+ phone_id int8 NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_phone_id_key UNIQUE (phone_id),
+ CONSTRAINT users_pkey PRIMARY KEY (id),
+ CONSTRAINT fklq0cckks2hmmyc1mk9g30h44 
+  FOREIGN KEY (phone_id) REFERENCES phone(id)
+);
+
+CREATE TABLE phone (
+ id int8 NOT NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (id)
+);
 ```
 
 <!-- 
@@ -124,18 +187,17 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "phone")
-class PhoneEntity(
+data class PhoneEntity(
     @Id val id: Long,
     @OneToOne
     @JoinColumn(name = "user_id")
     val user: UserEntity,
-    val number: String,
     val phoneNumber: String,
 )
 
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val id: Long,
     val name: String,
     @OneToOne(mappedBy = "user")
@@ -146,6 +208,21 @@ class UserEntity(
 ::right::
 
 ```sql
+CREATE TABLE users (
+ id int8 NOT NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE phone (
+ id int8 NOT NULL,
+ user_id int8 NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (id),
+ CONSTRAINT phone_user_id_key UNIQUE (user_id),
+ CONSTRAINT fkik7a2etdorybvoolvchfcvgkx 
+   FOREIGN KEY (user_id) REFERENCES users(id)
+);
 ```
 
 <!--
@@ -166,23 +243,22 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val id: Long,
     val name: String,
     @OneToOne
     @JoinTable(
         name = "user_phone",
         joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "phone_id")]
+        inverseJoinColumns = [JoinColumn(name = "phone_id")],
     )
     val phone: PhoneEntity,
 )
 
 @Entity
 @Table(name = "phone")
-class PhoneEntity(
+data class PhoneEntity(
     @Id val id: Long,
-    val number: String,
     val phoneNumber: String,
 )
 ```
@@ -190,6 +266,28 @@ class PhoneEntity(
 ::right::
 
 ```sql
+CREATE TABLE users (
+ id int8 NOT NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE phone (
+ id int8 NOT NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE user_phone (
+ phone_id int8 NULL,
+ user_id int8 NOT NULL,
+ CONSTRAINT user_phone_phone_id_key UNIQUE (phone_id),
+ CONSTRAINT user_phone_pkey PRIMARY KEY (user_id),
+ CONSTRAINT fk85cnan0dinwj6imy3gkhgikq 
+  FOREIGN KEY (phone_id) REFERENCES phone(id),
+ CONSTRAINT fklxcdtyyvlfok8uka5tax0u1sm 
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
 ```
 
 <!--
@@ -210,21 +308,20 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val id: Long,
     val name: String,
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
-    val phones: List<PhoneEntity>
+    val phones: List<PhoneEntity>,
 )
 
 @Entity
 @Table(name = "phone")
-class PhoneEntity(
+data class PhoneEntity(
     @Id val id: Long,
     @ManyToOne
     @JoinColumn(name = "user_id")
     val user: UserEntity,
-    val number: String,
     val phoneNumber: String,
 )
 ```
@@ -232,6 +329,20 @@ class PhoneEntity(
 ::right::
 
 ```sql
+CREATE TABLE users (
+ id int8 NOT NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE phone (
+ id int8 NOT NULL,
+ user_id int8 NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (id),
+ CONSTRAINT fkik7a2etdorybvoolvchfcvgkx 
+   FOREIGN KEY (user_id) REFERENCES users(id)
+);
 ```
 
 <!--
@@ -252,26 +363,39 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "phone")
-class PhoneEntity(
+data class PhoneEntity(
     @Id val id: Long,
     @ManyToOne
     @JoinColumn(name = "user_id")
     val user: UserEntity,
-    val number: String,
     val phoneNumber: String,
 )
 
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val id: Long,
-    val name: String
+    val name: String,
 )
 ```
 
 ::right::
 
 ```sql
+CREATE TABLE users (
+ id int8 NOT NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE phone (
+ id int8 NOT NULL,
+ user_id int8 NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (id),
+ CONSTRAINT fkik7a2etdorybvoolvchfcvgkx 
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
 ```
 
 <!--
@@ -292,30 +416,49 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val id: Long,
     val name: String,
     @ManyToMany
     @JoinTable(
         name = "user_group",
         joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "group_id")]
+        inverseJoinColumns = [JoinColumn(name = "group_id")],
     )
-    val groups: List<GroupEntity>
+    val groups: List<GroupEntity>,
 )
 
 @Entity
 @Table(name = "groups")
-class GroupEntity(
+data class GroupEntity(
     @Id val id: Long,
     @ManyToMany(mappedBy = "groups")
-    val users: List<UserEntity>
+    val users: List<UserEntity>,
 )
 ```
 
 ::right::
 
 ```sql
+CREATE TABLE "groups" (
+ id int8 NOT NULL,
+ CONSTRAINT groups_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE users (
+ id int8 NOT NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE user_group (
+ group_id int8 NOT NULL,
+ user_id int8 NOT NULL,
+ CONSTRAINT fk7k9ade3lqbo483u9vuryxmm34 
+  FOREIGN KEY (user_id) REFERENCES users(id),
+ CONSTRAINT fkbegtgnl3oq004958pisko4fu4 
+  FOREIGN KEY (group_id) REFERENCES "groups"(id)
+);
 ```
 
 <!--
@@ -336,19 +479,18 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val id: Long,
     val name: String,
     @OneToMany
     @JoinColumn(name = "user_id") // la FK est sur phone
-    val phones: List<PhoneEntity>
+    val phones: List<PhoneEntity>,
 )
 
 @Entity
 @Table(name = "phone")
-class PhoneEntity(
+data class PhoneEntity(
     @Id val id: Long,
-    val number: String,
     val phoneNumber: String,
 )
 ```
@@ -356,6 +498,20 @@ class PhoneEntity(
 ::right::
 
 ```sql
+CREATE TABLE users (
+ id int8 NOT NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE phone (
+ id int8 NOT NULL,
+ user_id int8 NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (id),
+ CONSTRAINT fkik7a2etdorybvoolvchfcvgkx
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
 ```
 
 <!--
@@ -376,21 +532,20 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val id: Long,
     val name: String,
     @OneToMany(mappedBy = "user")
-    val phones: List<PhoneEntity>
+    val phones: List<PhoneEntity>,
 )
 
 @Entity
 @Table(name = "phone")
-class PhoneEntity(
+data class PhoneEntity(
     @Id val id: Long,
     @ManyToOne
     @JoinColumn(name = "user_id")
     val user: UserEntity,
-    val number: String,
     val phoneNumber: String,
 )
 ```
@@ -398,6 +553,20 @@ class PhoneEntity(
 ::right::
 
 ```sql
+CREATE TABLE users (
+ id int8 NOT NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE phone (
+ id int8 NOT NULL,
+ user_id int8 NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (id),
+ CONSTRAINT fkik7a2etdorybvoolvchfcvgkx 
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
 ```
 
 <!--
@@ -418,29 +587,48 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val id: Long,
     @ManyToMany(cascade = [CascadeType.ALL])
     @JoinTable(
         name = "user_group",
         joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "group_id")]
+        inverseJoinColumns = [JoinColumn(name = "group_id")],
     )
-    val groups: List<GroupEntity>
+    val groups: List<GroupEntity>,
 )
 
 @Entity
 @Table(name = "groups")
-class GroupEntity(
+data class GroupEntity(
     @Id val id: Long,
     @ManyToMany(mappedBy = "groups")
-    val users: List<UserEntity>
+    val users: List<UserEntity>,
 )
 ```
 
 ::right::
 
 ```sql
+CREATE TABLE "groups" (
+ id int8 NOT NULL,
+ CONSTRAINT groups_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE users (
+ id int8 NOT NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+
+CREATE TABLE user_group (
+ group_id int8 NOT NULL,
+ user_id int8 NOT NULL,
+ CONSTRAINT fk7k9ade3lqbo483u9vuryxmm34 
+  FOREIGN KEY (user_id) REFERENCES users(id),
+ CONSTRAINT fkbegtgnl3oq004958pisko4fu4 
+  FOREIGN KEY (group_id) REFERENCES "groups"(id)
+);
 ```
 
 <!--
@@ -461,27 +649,41 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val id: Long,
     val name: String,
     @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
-    val phones: List<PhoneEntity>
+    val phones: List<PhoneEntity>,
 )
 
 @Entity
 @Table(name = "phone")
-class PhoneEntity(
+data class PhoneEntity(
     @Id val id: Long,
     @ManyToOne
     @JoinColumn(name = "user_id")
     val user: UserEntity,
-    val number: String,
+    val phoneNumber: String,
 )
 ```
 
 ::right::
 
 ```sql
+CREATE TABLE users (
+ id int8 NOT NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE phone (
+ id int8 NOT NULL,
+ user_id int8 NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (id),
+ CONSTRAINT fkik7a2etdorybvoolvchfcvgkx 
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
 ```
 
 <!--
@@ -502,26 +704,39 @@ class: text-left
 ```kotlin
 @Entity
 @Table(name = "phone")
-class PhoneEntity(
+data class PhoneEntity(
     @Id val id: Long,
     @ManyToOne(cascade = [CascadeType.PERSIST])
     @JoinColumn(name = "user_id")
     val user: UserEntity,
-    val number: String,
     val phoneNumber: String,
 )
 
 @Entity
 @Table(name = "users")
-class UserEntity(
+data class UserEntity(
     @Id val id: Long,
-    val name: String
+    val name: String,
 )
 ```
 
 ::right::
 
 ```sql
+CREATE TABLE users (
+ id int8 NOT NULL,
+ "name" varchar(255) NULL,
+ CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE phone (
+ id int8 NOT NULL,
+ user_id int8 NULL,
+ phone_number varchar(255) NULL,
+ CONSTRAINT phone_pkey PRIMARY KEY (id),
+ CONSTRAINT fkik7a2etdorybvoolvchfcvgkx 
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
 ```
 
 <!--

@@ -4,19 +4,23 @@ import jakarta.persistence.*
 import org.springframework.data.jpa.repository.JpaRepository
 
 @Entity
-@Table(name = "users")
-class UserEntity(
-    @Id val email: String,
-    @OneToOne(cascade = [CascadeType.ALL])
-    @JoinColumn(referencedColumnName = "email")
-    val phone: PhoneEntity,
+@Table(name = "phone")
+data class PhoneEntity(
+    @Id val id: Long,
+    @ManyToOne(cascade = [CascadeType.PERSIST])
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 
 @Entity
-@Table(name = "phone")
-class PhoneEntity(
-    @Id val email: String,
-    val number: String,
+@Table(name = "users")
+data class UserEntity(
+    @Id val id: Long,
+    val name: String,
 )
+
+
+
 
 interface UserRepository : JpaRepository<UserEntity, String>
