@@ -20,6 +20,15 @@ data class UserEntity(
     val name: String,
 )
 
+fun pony() = try {
+    val x = 1 / 0
+    "Pony"
+} catch (e: Exception) {
+    "Caught Exception: ${e.message}"
+} finally {
+    println("Finally block executed")
+}
+
 
 
 
