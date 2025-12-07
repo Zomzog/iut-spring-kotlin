@@ -125,13 +125,13 @@ Le transactionalManager est un bean créé par la dépendance Spring Data JPA
 
 <div v-click.at="4">
 
-## /!\ RunetimeException
+⚠️ **RuntimeException**
 
 ```kotlin
 catch (e: RuntimeException)
 ```
 
-Sur une exception "simple" pas de rollback
+Par défaut, Spring effectue un rollback sur les exceptions non vérifiées (unchecked exceptions) comme `RuntimeException` ou `Error`.
 
 </div>
 
@@ -411,6 +411,10 @@ class: text-left
 ### @Transactional
 
 Permet de gérer les transactions de manière déclarative et de grantir le rollback en cas d'erreur.
+
+
+Spring garantit le rollback par défaut pour les exceptions non vérifiées.
+Utilisez `rollbackFor` pour les exceptions vérifiées.
 
 ### Spring jpa transaction
 
