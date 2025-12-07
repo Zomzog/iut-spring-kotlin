@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:18
+    container_name: postgres-demo-iut
+    environment:
+      POSTGRES_USER: iut
+      POSTGRES_PASSWORD: iut
+      POSTGRES_DB: demo-iut
+    ports:
+      - "5432:5432"

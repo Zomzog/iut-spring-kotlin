@@ -1,5 +1,7 @@
 package bzh.zomzog.iut.amphi
 
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -34,8 +36,8 @@ class ServiceB {
 }
 interface MyJpa : JpaRepository<MyEntity, Long>
 
-class MyEntity {
+@Entity
 
-}
+class MyEntity(@Id val id:Long)
 
 class Something(val myProp: MyProperties)

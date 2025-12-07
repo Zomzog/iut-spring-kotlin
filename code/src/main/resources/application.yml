@@ -1,12 +1,14 @@
 spring:
   application.name: amphi
   datasource:
-    url: jdbc:h2:mem:app;DB_CLOSE_DELAY=-1
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:postgresql://localhost:5432/demo-iut
+    driverClassName: org.postgresql.Driver
+    username: iut
+    password: iut
   jpa:
     hibernate.ddl-auto: create-drop
     open-in-view: true
+app.name: yolo
 my:
   enabled: true
+
