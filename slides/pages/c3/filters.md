@@ -1,67 +1,89 @@
-== Filter
+---
+layout: full
+class: text-left
+---
+
+## Filter
 
 Filtre un point d'entrée de l'application
 
-== Filter HTTP
+---
+layout: full
+class: text-left
+---
+
+## Filter HTTP
 
 .Schema simplifié d'une requète (cours 1)
 [mermaid]
-----
+
+```
 %%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
 flowchart TD
     Client --> DispatcherServlet
     DispatcherServlet --> MyController
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Si on se se place dans le cas d'une requète HTTP.
 
 Si on reprend une version simplifié du traitement d'une requète.
 
 Le client passe par le DispatcherServlet pour aller sur mon controlleur
---
+-->
 
-== Filter HTTP
+---
+layout: full
+class: text-left
+---
+
+## Filter HTTP
 
 .Ajout d'étapes avec la pattern Intercepting filter
 [mermaid]
-----
+
+```
 %%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
 flowchart TD
     Client --> FilterA
     FilterA --> FilterB
     FilterB --> DispatcherServlet
     DispatcherServlet --> MyController
-----
+```
 
-[NOTE.speaker]
---
+<!--
 On va pouvoir injecter les filtres avant d'arriver au DispatcherServlet.
 
 On peut enchainer des filtres.
---
+-->
 
 [transition=fade-in fade-out]
-== Filter
+---
+layout: full
+class: text-left
+---
 
-[source, kotlin]
-----
+## Filter
+
+```kotlin
 class FilterA : jakarta.servlet.Filter {
 
 }
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Pour créer un filtre il suffit d'étendre l'interface Filter de jakarta.servlet
---
+-->
 
 [transition=fade-in fade-out]
-== Filter
+---
+layout: full
+class: text-left
+---
 
-[source, kotlin]
-----
+## Filter
+
+```kotlin
 class FilterA : Filter {
 
   override fun doFilter(request: ServletRequest,
@@ -70,10 +92,9 @@ class FilterA : Filter {
 
 }
 }
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Cette interface va imposer d'implémenter cette méthode
 
 Il y a la requète originale
@@ -81,13 +102,17 @@ Il y a la requète originale
 Un wrapper qui contient la réponse
 
 FilterChain qui contient la liste des filtres et permet d'appeler le suivant.
---
+-->
 
 [transition=fade-in fade-out]
-== Filter
+---
+layout: full
+class: text-left
+---
 
-[source, kotlin]
-----
+## Filter
+
+```kotlin
 class FilterA : Filter {
 
   override fun doFilter(request: ServletRequest,
@@ -98,18 +123,21 @@ class FilterA : Filter {
 
 }
 }
-----
+```
 
-[NOTE.speaker]
---
+<!--
 On appel le suivant en appelant le doFilter où on donne la requète et la réponse
---
+-->
 
 [transition=fade-in fade-out]
-== Filter
+---
+layout: full
+class: text-left
+---
 
-[source, kotlin]
-----
+## Filter
+
+```kotlin
 class FilterA : Filter {
 
 override fun doFilter(request: ServletRequest,
@@ -120,21 +148,24 @@ override fun doFilter(request: ServletRequest,
       // do after on response
   }
 }
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Donc il est possible de modifier la requète avant
 et modifier la réponse après.
 
 Si on modifie la réponse avant,
 les modifications peuvent etre écrasés par les filtres suivants.
---
+-->
 
-== Ajouter le filtre
+---
+layout: full
+class: text-left
+---
 
-[source, kotlin]
-----
+## Ajouter le filtre
+
+```kotlin
 @Bean
 fun filterA(filter: FilterA): FilterRegistrationBean<FilterA> {
   val registrationBean = FilterRegistrationBean(filter)
@@ -142,10 +173,9 @@ fun filterA(filter: FilterA): FilterRegistrationBean<FilterA> {
   registrationBean.order = 1
   return registrationBean
 }
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Il faut créer un bean FilterRegistrationBean pour l'ajouter
 
 On peut ajouter des conditions au filtre,
@@ -153,12 +183,16 @@ ici je le limtes aux URL /api et je lui met un ordre.
 
 L'ordre n'est pas stict, il sera après les 0, avant les 2.
 Mais sans priorité particulière sur les autres 1.
---
+-->
 
-== HttpFilter
+---
+layout: full
+class: text-left
+---
 
-[source, kotlin]
-----
+## HttpFilter
+
+```kotlin
 class LoggerHttpFilter : HttpFilter() {
   private val logger = KotlinLogging.logger {}
   override fun doFilter(request: HttpServletRequest,
@@ -169,12 +203,11 @@ class LoggerHttpFilter : HttpFilter() {
     logger.debug { "Response: ${response.status}" }
   }
 }
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Il existe des filtres plus spécialisés,
 par example le HttpFilter,
 derrière c'est un filtre classique,
 mais il fait pour vous la validation  et le cast en HttpServlet*
---
+-->

@@ -1,25 +1,46 @@
-== Spring Security
+---
+layout: full
+class: text-left
+---
 
-[NOTE.speaker]
---
+## Spring Security
+
+<!--
 C'est un sujet vaste et on va discuter d'une petite partie
---
+-->
 
-== Vocabulaire
+---
+layout: full
+class: text-left
+---
 
-== Authentication
+## Vocabulaire
+
+---
+layout: full
+class: text-left
+---
+
+## Authentication
 
 Qui suis-je?
 
 [mermaid]
-----
+
+```
 %%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
 flowchart TD
     Credentials["Credentials (login / password)"] --> auth["LDAP, ActiveDirectory, Database, CSV..."]
     auth --> User
-----
 
-== Authorization
+```
+
+---
+layout: full
+class: text-left
+---
+
+## Authorization
 
 Que puis-je faire?
 
@@ -27,29 +48,53 @@ Toujours après l'authentication
 
 Read ? Write ? Admin ? Publish?
 
-== Role
+---
+layout: full
+class: text-left
+---
+
+## Role
 
 Ensemble de droits sur l'application
 
-== User
+---
+layout: full
+class: text-left
+---
+
+## User
 
 Information de base sur l'utilisateur connécté
 
 login, role...
 
-== UserDetail
+---
+layout: full
+class: text-left
+---
+
+## UserDetail
 
 API Spring pour faire la phase d'authentification
 
-== Dépendances
+---
+layout: full
+class: text-left
+---
 
-[source,kotlin]
-----
+## Dépendances
+
+```kotlin
 implementation("org.springframework.boot:spring-boot-starter-security")
 testImplementation("org.springframework.security:spring-security-test")
-----
+```
 
-== Attention
+---
+layout: full
+class: text-left
+---
+
+## Attention
 
 [WARNING]
 ====
@@ -59,24 +104,31 @@ De base toute requete doit etre authentifié,
 donc tout répond un 401.
 ====
 
-== Enable Web Security
+---
+layout: full
+class: text-left
+---
 
-[source,kotlin]
-----
+## Enable Web Security
+
+```kotlin
 @Configuration
 @EnableWebSecurity
 class MySecurityConfig {
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Ajouter l'annotation EnableWebSecurity va signaler à Spring qu'il doit chercher des beans de configuration de spring-security pour du MVC
---
+-->
 
-== Security Filter
+---
+layout: full
+class: text-left
+---
 
-[source, kotlin]
-----
+## Security Filter
+
+```kotlin
 import org.springframework.security.config.annotation.web.invoke
 
 @Bean
@@ -92,14 +144,18 @@ open fun filterChain(http: HttpSecurity): SecurityFilterChain {
   }
   return http.build()
 }
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Ce bean permet de configurer le fonctionnement de spring security
---
+-->
 
-== Attention
+---
+layout: full
+class: text-left
+---
+
+## Attention
 
 [WARNING]
 ====
@@ -108,7 +164,12 @@ Bien ajouter cet import qui ne s'ajoute pas toujours automatiquement
 import org.springframework.security.config.annotation.web.invoke
 ====
 
-== Form Login
+---
+layout: full
+class: text-left
+---
+
+## Form Login
 
 formLogin { }
 
@@ -116,63 +177,74 @@ image:login.png[]
 
 `/login` && `/logout`
 
-[NOTE.speaker]
---
+<!--
 FormLogin permet de se connecter via un formulaire,
 de base un formulaire est généré par spring security a l'adresse `/login`.
 Spring fournir aussi un endpoint `/logout`.
 
 La session est gére par un cookie `JSESSIONID`.
---
+-->
 
-== Http Basic
+---
+layout: full
+class: text-left
+---
+
+## Http Basic
 
 httpBasic { }
 
 [source, bash]
-----
+
+```
 BASE=$(echo -ne "login:password" | base64 --wrap 0)
-----
+```
 
 [source, bash]
-----
+
+```
 curl \
  -H "Authorization: Basic $BASE" \
  http://localhost:8080
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Basic Auth comme d'autres (Bearer...) sont des moyens d'authentification pour des APIs
 
 Pour Basic on fournit un login et un mot de passe encodé en base64 dans le header Authorization.
---
+-->
 
-== Autres
+---
+layout: full
+class: text-left
+---
+
+## Autres
 
 Cross Site Request Forgery
 
-[source, kotlin]
-----
+```kotlin
 csrf { disable() }
-----
+```
 
 Cross-Origin Resource Sharing
 
-[source, kotlin]
-----
+```kotlin
 cors { disable() }
-----
+```
 
-[NOTE.speaker]
---
+<!--
 On peut configuer ou supprimer des sécurités comme le CSRF ou le CORS
---
+-->
 
-== authorizeHttpRequests
+---
+layout: full
+class: text-left
+---
 
-[source, kotlin]
-----
+## authorizeHttpRequests
+
+```kotlin
   http {
     authorizeHttpRequests {
       authorize("/ponies", permitAll)
@@ -181,64 +253,71 @@ On peut configuer ou supprimer des sécurités comme le CSRF ou le CORS
     }
   }
 }
-----
+```
 
-[source, kotlin]
-----
+```kotlin
 fun authorize(pattern: String,
               access: AuthorizationManager<RequestAuthorizationContext>)
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Cette partie de la configuration permet de definir les droits d'accès.
 On peut les donner par pattern ou pour toutes les requetes.
 
 On peut enlever la sécurité pour certaines requetes (permitAll),
 juste etre authentifié (authenticated),
 ou définir des droits spécifiques par role, ip...)
---
+-->
 
-== Alternative pour les droits
+---
+layout: full
+class: text-left
+---
 
-[source,kotlin]
-----
+## Alternative pour les droits
+
+```kotlin
 @Configuration
 @EnableMethodSecurity
-----
+```
 
-[source,kotlin]
-----
+```kotlin
 @PreAuthorize("hasRole('ADMIN')")
 fun myMethod() ...
-----
+```
 
-[NOTE.speaker]
---
-Une alternative à la gestion MVC par path, 
+<!--
+Une alternative à la gestion MVC par path,
 la gestion par PreAuthorize sur les methodes
---
+-->
 
-== authentification
+---
+layout: full
+class: text-left
+---
 
-[source,kotlin]
-----
+## authentification
+
+```kotlin
 @Bean
 fun passwordEncoder(): PasswordEncoder {
     return BCryptPasswordEncoder()
 }
-----
+```
 
-[NOTE.speaker]
---
-Avant de parler gestion authentification, 
+<!--
+Avant de parler gestion authentification,
 on ne stock jamais un mot de passe en claire.
---
+-->
 
-== In Memory User Detail Manager
+---
+layout: full
+class: text-left
+---
 
-[source,kotlin]
-----
+## In Memory User Detail Manager
+
+```kotlin
 @Bean
 fun userDetailService(passwordEncoder: PasswordEncoder): UserDetailsManager {
     val admin = User.withUsername("admin")
@@ -251,22 +330,25 @@ fun userDetailService(passwordEncoder: PasswordEncoder): UserDetailsManager {
         .build()
     return InMemoryUserDetailsManager(admin, demo)
 }
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Le plus rapide et le plus simple,
 tout est en mémoire, donc à chaque redémarrage c'est perdu.
 
 Avec ce bean, Spring a son contrat pour transformer un user/password en User.
 
 C'est l'authentification.
---
+-->
 
-== Jdbc User Detail
+---
+layout: full
+class: text-left
+---
 
-[source,kotlin]
-----
+## Jdbc User Detail
+
+```kotlin
 @Bean
 fun userDetailService(dataSource: DataSource,
                       passwordEncoder: PasswordEncoder): UserDetailsManager {
@@ -277,18 +359,23 @@ fun userDetailService(dataSource: DataSource,
   return JdbcUserDetailsManager(dataSource).apply {
       createUser(user1)
   }
-----
+```
 
-[NOTE.speaker]
---
-Un autre moyen très similaire, 
+<!--
+Un autre moyen très similaire,
 avec un stockage en base de donnée
---
+-->
 
-== Jdbc User Detail
+---
+layout: full
+class: text-left
+---
+
+## Jdbc User Detail
 
 [source,sql]
-----
+
+```
 CREATE TABLE USERS (
   username VARCHAR(50) NOT NULL PRIMARY KEY,
   password VARCHAR(500) NOT NULL,
@@ -302,43 +389,53 @@ CREATE TABLE AUTHORITIES (
 );
 
 CREATE UNIQUE INDEX ix_auth_username ON AUTHORITIES (username, authority);
-----
+```
 
-== Récupération du User
+---
+layout: full
+class: text-left
+---
+
+## Récupération du User
 
 Par "injection", on demande le Principal à Spring
 
-[source,kotlin]
-----
+```kotlin
 @GetMapping
 fun admin(principal: Principal): ResponseEntity<String> {
   println("Login: ${principal.name}")
 }
-----
+```
 
+---
+layout: full
+class: text-left
+---
 
-== Récupération du User
+## Récupération du User
 
 Pour du MVC, sur le Thread, par appel au SecurityContextHolder
 
-[source,kotlin]
-----
+```kotlin
 SecurityContextHolder.getContext().authentication.principal.let {
   println("Login: ${principal.name}")
 }
-----
+```
 
-[NOTE.speaker]
---
+<!--
 Dans le cadre de SpringMVC le contexte de sécurité est lié au Thread.
 
 Il est donc important si on veut multi-threader une requete de prendre soin de copier ce contexte.
---
+-->
 
-== TEST !
+---
+layout: full
+class: text-left
+---
 
-[source,kotlin]
-----
+## TEST !
+
+```kotlin
 @WebMvcTest
 @Import(MySecurityFilterConfig::class)
 class HelloControllerTest {
@@ -354,19 +451,22 @@ class HelloControllerTest {
             }
     }
 }
-----
+```
 
-[NOTE.speaker]
---
-@Import du security filter 
+<!--
+@Import du security filter
 
 /!\ il faut qu'il n'y ai aucune dependance autre (bdd...)
---
+-->
 
-== WithAnonymousUser
+---
+layout: full
+class: text-left
+---
 
-[source,kotlin]
-----
+## WithAnonymousUser
+
+```kotlin
 @WithAnonymousUser
 @Test
 fun `admin without auth`() {
@@ -375,12 +475,16 @@ fun `admin without auth`() {
             status { isUnauthorized() }
         }
 }
-----
+```
 
-== WithMockUser
+---
+layout: full
+class: text-left
+---
 
-[source,kotlin]
-----
+## WithMockUser
+
+```kotlin
 @WithMockUser
 @Test
 fun `admin without admin`() {
@@ -389,12 +493,16 @@ fun `admin without admin`() {
             status { isForbidden() }
         }
 }
-----
+```
 
-== WithMockUser
+---
+layout: full
+class: text-left
+---
 
-[source,kotlin]
-----
+## WithMockUser
+
+```kotlin
 @WithMockUser(roles =[ "ADMIN"])
 @Test
 fun `admin with admin`() {
@@ -403,4 +511,4 @@ fun `admin with admin`() {
             status { isOk() }
         }
 }
-----
+```
