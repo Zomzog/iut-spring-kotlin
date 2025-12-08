@@ -23,7 +23,7 @@ class: text-left
 
 ::left::
 
-```kotlin
+```kotlin {all|4|6-8}
 @Entity
 @Table(name = "users")
 data class UserEntity(
@@ -44,7 +44,7 @@ data class PhoneEntity(
 
 ::right::
 
-```sql
+```sql {all|2,5,6|7,8}{at:'0'}
 CREATE TABLE users (
  email varchar(255) NOT NULL,
  "name" varchar(255) NULL,
@@ -76,7 +76,7 @@ class: text-left
 
 ::left::
 
-```kotlin
+```kotlin {all|12-14}
 @Entity
 @Table(name = "users")
 data class UserEntity(
@@ -97,7 +97,7 @@ data class PhoneEntity(
 
 ::right::
 
-```sql
+```sql {all|9,13,14}{at:'0'}
 CREATE TABLE users (
  id int8 NOT NULL,
  "name" varchar(255) NULL,
@@ -131,7 +131,7 @@ class: text-left
 
 ::left::
 
-```kotlin
+```kotlin {all|6-7,13-14}
 @Entity
 @Table(name = "users")
 data class UserEntity(
@@ -152,7 +152,7 @@ data class PhoneEntity(
 
 ::right::
 
-```sql
+```sql {all|3,5,7-8}{at:'0'}
 CREATE TABLE users (
  id int8 NOT NULL,
  phone_id int8 NULL,
@@ -184,7 +184,7 @@ class: text-left
 
 ::left::
 
-```kotlin
+```kotlin {all|5-7,16-17}
 @Entity
 @Table(name = "phone")
 data class PhoneEntity(
@@ -207,7 +207,7 @@ data class UserEntity(
 
 ::right::
 
-```sql
+```sql {all|9,12-14}{at:'0'}
 CREATE TABLE users (
  id int8 NOT NULL,
  "name" varchar(255) NULL,
@@ -240,7 +240,7 @@ class: text-left
 
 ::left::
 
-```kotlin
+```kotlin {all|6-12}
 @Entity
 @Table(name = "users")
 data class UserEntity(
@@ -265,7 +265,7 @@ data class PhoneEntity(
 
 ::right::
 
-```sql
+```sql {all|13-21}{at:'0'}
 CREATE TABLE users (
  id int8 NOT NULL,
  "name" varchar(255) NULL,
@@ -305,7 +305,7 @@ class: text-left
 
 ::left::
 
-```kotlin
+```kotlin {all|6-7,14-16}
 @Entity
 @Table(name = "users")
 data class UserEntity(
@@ -328,7 +328,7 @@ data class PhoneEntity(
 
 ::right::
 
-```sql
+```sql {all|9,11-131}{at:'0'}
 CREATE TABLE users (
  id int8 NOT NULL,
  "name" varchar(255) NULL,
@@ -360,7 +360,7 @@ class: text-left
 
 ::left::
 
-```kotlin
+```kotlin {all|6-7,14-16}
 @Entity
 @Table(name = "phone")
 data class PhoneEntity(
@@ -381,7 +381,7 @@ data class UserEntity(
 
 ::right::
 
-```sql
+```sql {all|9,11-13}{at:'0'}
 CREATE TABLE users (
  id int8 NOT NULL,
  "name" varchar(255) NULL,
@@ -413,13 +413,13 @@ class: text-left
 
 ::left::
 
-```kotlin
+```kotlin {all|6-12,19-20}
 @Entity
 @Table(name = "users")
 data class UserEntity(
     @Id val id: Long,
     val name: String,
-    @ManyToMany
+    @ManyToMany(cascade = [CascadeType.ALL])
     @JoinTable(
         name = "user_group",
         joinColumns = [JoinColumn(name = "user_id")],
@@ -439,7 +439,7 @@ data class GroupEntity(
 
 ::right::
 
-```sql
+```sql {all|14-18}{at:'0'}
 CREATE TABLE "groups" (
  id int8 NOT NULL,
  CONSTRAINT groups_pkey PRIMARY KEY (id)
@@ -580,79 +580,19 @@ class: text-left
 
 ::title::
 
-## Many-to-Many avec JoinTable et cascade
-
-::left::
-
-```kotlin
-@Entity
-@Table(name = "users")
-data class UserEntity(
-    @Id val id: Long,
-    @ManyToMany(cascade = [CascadeType.ALL])
-    @JoinTable(
-        name = "user_group",
-        joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "group_id")],
-    )
-    val groups: List<GroupEntity>,
-)
-
-@Entity
-@Table(name = "groups")
-data class GroupEntity(
-    @Id val id: Long,
-    @ManyToMany(mappedBy = "groups")
-    val users: List<UserEntity>,
-)
-```
-
-::right::
-
-```sql
-CREATE TABLE "groups" (
- id int8 NOT NULL,
- CONSTRAINT groups_pkey PRIMARY KEY (id)
-);
-
-CREATE TABLE users (
- id int8 NOT NULL,
- CONSTRAINT users_pkey PRIMARY KEY (id)
-);
-
-
-CREATE TABLE user_group (
- group_id int8 NOT NULL,
- user_id int8 NOT NULL,
- CONSTRAINT fk7k9ade3lqbo483u9vuryxmm34 
-  FOREIGN KEY (user_id) REFERENCES users(id),
- CONSTRAINT fkbegtgnl3oq004958pisko4fu4 
-  FOREIGN KEY (group_id) REFERENCES "groups"(id)
-);
-```
-
-<!--
-@ManyToMany avec JoinTable et cascade : suppression automatique des liens.
--->
-
----
-layout: TwoColumnsTitle
-class: text-left
----
-
-::title::
-
 ## One-to-Many avec orphanRemoval et fetch
 
 ::left::
 
-```kotlin
+```kotlin {all|6-8}
 @Entity
 @Table(name = "users")
 data class UserEntity(
     @Id val id: Long,
     val name: String,
-    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", 
+               orphanRemoval = true,
+               fetch = FetchType.LAZY)
     val phones: List<PhoneEntity>,
 )
 

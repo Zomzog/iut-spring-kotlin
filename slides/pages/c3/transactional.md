@@ -280,6 +280,7 @@ class AnotherService(val db: DBService, val kafka: KafkaService) {
   fun saveAndPublish() {
     db.save()
     kafka.publish()
+    doSomething()
   }
 }
 ```
@@ -296,6 +297,24 @@ class AnotherService(val db: DBService, val kafka: KafkaService) {
   fun saveAndPublish() {
     db.save()
     kafka.publish()
+    doSomething()
+  }
+}
+```
+```kotlin
+class KafkaService {
+  @Transactional("kafkaTransaction")
+  fun publish() = {
+    TODO() // <-- kafkaTransaction dans une dbTransaction
+  }
+}
+
+class AnotherService(val db: DBService, val kafka: KafkaService) {
+  @Transactional("dbTransaction")
+  fun saveAndPublish() {
+    db.save()
+    kafka.publish()
+    doSomething() // <-- une erreur ici ne rollback pas kafka, c'est trop tard
   }
 }
 ```
@@ -411,7 +430,6 @@ class: text-left
 ### @Transactional
 
 Permet de gérer les transactions de manière déclarative et de grantir le rollback en cas d'erreur.
-
 
 Spring garantit le rollback par défaut pour les exceptions non vérifiées.
 Utilisez `rollbackFor` pour les exceptions vérifiées.

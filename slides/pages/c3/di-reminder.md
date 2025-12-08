@@ -14,7 +14,6 @@ Comment Spring l'utilise ?
 ---
 layout: TwoColumns
 class: text-left
-clicks: 8
 ---
 
 ::left::
@@ -23,7 +22,7 @@ clicks: 8
 @ConfigurationProperties(prefix = "my")
 data class MyProperties(val enabled: Boolean)
 
-@EnableConfigurationProperties(MyProperties)
+@EnableConfigurationProperties(MyProperties::class)
 @Configuration
 class MyConfig {
   @Bean
@@ -70,6 +69,14 @@ Something --> ServiceB
 MyJpa --> ServiceA
 appName --> ServiceA
 ```
+
+</div>
+
+<div v-click.at="9">
+
+1. Spring scan pour trouver les beans
+2. Spring fait un arbre de dépendances des injections
+3. L'injection se fait
 
 </div>
 
