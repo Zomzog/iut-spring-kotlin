@@ -1,9 +1,9 @@
 ---
-layout: full
-class: text-left
+layout: cover
+hideInToc: false
 ---
 
-## Spring Security
+# Spring Security
 
 <!--
 C'est un sujet vaste et on va discuter d'une petite partie
@@ -23,12 +23,9 @@ class: text-left
 
 ## Authentication
 
-Qui suis-je?
+**Qui suis-je?**
 
-[mermaid]
-
-```
-%%{init: { 'logLevel': 'debug', 'theme': 'dark'} }%%
+```mermaid
 flowchart TD
     Credentials["Credentials (login / password)"] --> auth["LDAP, ActiveDirectory, Database, CSV..."]
     auth --> User
@@ -42,40 +39,31 @@ class: text-left
 
 ## Authorization
 
-Que puis-je faire?
-
+**Que puis-je faire?**
+Read ? Write ? Admin ? Publish?
 Toujours après l'authentication
 
-Read ? Write ? Admin ? Publish?
-
----
-layout: full
-class: text-left
----
+<v-click>
 
 ## Role
 
 Ensemble de droits sur l'application
 
----
-layout: full
-class: text-left
----
+</v-click>
+<v-click>
 
 ## User
 
-Information de base sur l'utilisateur connécté
+Information de base sur l'utilisateur connécté (login, role...)
 
-login, role...
-
----
-layout: full
-class: text-left
----
+</v-click>
+<v-click>
 
 ## UserDetail
 
 API Spring pour faire la phase d'authentification
+
+</v-click>
 
 ---
 layout: full
@@ -89,20 +77,18 @@ implementation("org.springframework.boot:spring-boot-starter-security")
 testImplementation("org.springframework.security:spring-security-test")
 ```
 
----
-layout: full
-class: text-left
----
+<v-click>
 
 ## Attention
 
-[WARNING]
-====
+⚠️ **STARTER**
+
 Ajouter cette dépandance active directement la sécurité
 
 De base toute requete doit etre authentifié,
 donc tout répond un 401.
-====
+
+</v-click>
 
 ---
 layout: full
@@ -111,42 +97,84 @@ class: text-left
 
 ## Enable Web Security
 
+````md magic-move
 ```kotlin
 @Configuration
 @EnableWebSecurity
-class MySecurityConfig {
+class MySecurityConfig { 
+}
 ```
-
-<!--
-Ajouter l'annotation EnableWebSecurity va signaler à Spring qu'il doit chercher des beans de configuration de spring-security pour du MVC
--->
-
----
-layout: full
-class: text-left
----
-
-## Security Filter
-
 ```kotlin
 import org.springframework.security.config.annotation.web.invoke
 
-@Bean
-open fun filterChain(http: HttpSecurity): SecurityFilterChain {
-  http {
-    csrf { disable() }
-    authorizeHttpRequests {
-      authorize("/ponies", permitAll)
-      authorize(anyRequest, authenticated)
-    }
-    httpBasic { }
-    formLogin { }
-  }
-  return http.build()
+@Configuration
+@EnableWebSecurity
+class MySecurityConfig { 
 }
 ```
+```kotlin
+import org.springframework.security.config.annotation.web.invoke
+
+@Configuration
+@EnableWebSecurity
+class MySecurityConfig { 
+
+    @Bean
+    open fun filterChain(http: HttpSecurity): SecurityFilterChain {
+    http {
+        csrf { disable() }
+    }
+    return http.build()
+    }
+}
+```
+```kotlin
+import org.springframework.security.config.annotation.web.invoke
+
+@Configuration
+@EnableWebSecurity
+class MySecurityConfig { 
+
+    @Bean
+    open fun filterChain(http: HttpSecurity): SecurityFilterChain {
+    http {
+        csrf { disable() }
+        authorizeHttpRequests {
+            authorize("/ponies", permitAll)
+            authorize(anyRequest, authenticated)
+        }
+    }
+    return http.build()
+    }
+}
+```
+```kotlin
+import org.springframework.security.config.annotation.web.invoke
+
+@Configuration
+@EnableWebSecurity
+class MySecurityConfig { 
+
+    @Bean
+    open fun filterChain(http: HttpSecurity): SecurityFilterChain {
+    http {
+        csrf { disable() }
+        authorizeHttpRequests {
+            authorize("/ponies", permitAll)
+            authorize(anyRequest, authenticated)
+        }
+        httpBasic { }
+        formLogin { }
+    }
+    return http.build()
+    }
+}
+```
+````
 
 <!--
+Ajouter l'annotation EnableWebSecurity va signaler à Spring qu'il doit chercher des beans de configuration de spring-security pour du MVC
+
 Ce bean permet de configurer le fonctionnement de spring security
 -->
 
@@ -155,27 +183,15 @@ layout: full
 class: text-left
 ---
 
-## Attention
-
-[WARNING]
-====
-Bien ajouter cet import qui ne s'ajoute pas toujours automatiquement
-
-import org.springframework.security.config.annotation.web.invoke
-====
-
----
-layout: full
-class: text-left
----
-
 ## Form Login
 
+```kotlin
 formLogin { }
+```
 
-image:login.png[]
+Cette partie ajoute une JSP pour pouvoir s'authentifier par formulaire `/login` && `/logout`
 
-`/login` && `/logout`
+<img src="/login.png" alt="reactive" class="full-w"/>
 
 <!--
 FormLogin permet de se connecter via un formulaire,
@@ -192,17 +208,15 @@ class: text-left
 
 ## Http Basic
 
+```kotlin
 httpBasic { }
-
-[source, bash]
-
 ```
+
+Cette partie ajoute la possibilité s'authentifier au format basic
+
+```bash
 BASE=$(echo -ne "login:password" | base64 --wrap 0)
-```
 
-[source, bash]
-
-```
 curl \
  -H "Authorization: Basic $BASE" \
  http://localhost:8080
@@ -233,6 +247,8 @@ Cross-Origin Resource Sharing
 cors { disable() }
 ```
 
+⚠️ **Ne pas faire en PROD sauf cas particuliers**
+
 <!--
 On peut configuer ou supprimer des sécurités comme le CSRF ou le CORS
 -->
@@ -243,6 +259,8 @@ class: text-left
 ---
 
 ## authorizeHttpRequests
+
+Permet de gérer les filtres par path http
 
 ```kotlin
   http {
@@ -276,16 +294,23 @@ class: text-left
 
 ## Alternative pour les droits
 
+Permet de gérer les droits par fonction
+
 ```kotlin
 @Configuration
+@EnableWebSecurity
 @EnableMethodSecurity
+class MySecurityConfig { ... }
 ```
+
+<v-click>
 
 ```kotlin
 @PreAuthorize("hasRole('ADMIN')")
 fun myMethod() ...
 ```
 
+</v-click>
 <!--
 Une alternative à la gestion MVC par path,
 la gestion par PreAuthorize sur les methodes
@@ -296,12 +321,17 @@ layout: full
 class: text-left
 ---
 
-## authentification
+## Password Encoder
+
+On encode au plus vite tout mot de passe
 
 ```kotlin
-@Bean
-fun passwordEncoder(): PasswordEncoder {
-    return BCryptPasswordEncoder()
+@Configuration
+class MySecurityConfig {
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
 }
 ```
 
@@ -317,18 +347,29 @@ class: text-left
 
 ## In Memory User Detail Manager
 
+Version utile pour les tests.
+A chaque redémarrage de l'application il faut refaire les utilisateurs.
+
 ```kotlin
-@Bean
-fun userDetailService(passwordEncoder: PasswordEncoder): UserDetailsManager {
-    val admin = User.withUsername("admin")
-        .password(passwordEncoder.encode("1234"))
-        .roles("ADMIN")
-        .build()
-    val demo = User.withUsername("login")
-        .password(passwordEncoder.encode("password"))
-        .roles("ADMIN")
-        .build()
-    return InMemoryUserDetailsManager(admin, demo)
+@Configuration
+class MySecurityConfig {
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    fun userDetailService(passwordEncoder: PasswordEncoder): UserDetailsManager {
+        val admin = User.withUsername("admin")
+            .password(passwordEncoder.encode("1234"))
+            .roles("ADMIN")
+            .build()
+        val demo = User.withUsername("login")
+            .password(passwordEncoder.encode("password"))
+            .roles("ADMIN")
+            .build()
+        return InMemoryUserDetailsManager(admin, demo)
+    }
 }
 ```
 
@@ -348,23 +389,28 @@ class: text-left
 
 ## Jdbc User Detail
 
-```kotlin
-@Bean
-fun userDetailService(dataSource: DataSource,
-                      passwordEncoder: PasswordEncoder): UserDetailsManager {
-  val user1 = User.withUsername("u1")
-      .password(passwordEncoder.encode("pw"))
-      .roles("USER")
-      .build()
-  return JdbcUserDetailsManager(dataSource).apply {
-      createUser(user1)
-  }
-```
+Version prod avec stockage en base de données
 
-<!--
-Un autre moyen très similaire,
-avec un stockage en base de donnée
--->
+```kotlin
+@Configuration
+class MySecurityConfig {
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    fun userDetailService(dataSource: DataSource,
+                        passwordEncoder: PasswordEncoder): UserDetailsManager {
+    val user1 = User.withUsername("u1")
+        .password(passwordEncoder.encode("pw"))
+        .roles("USER")
+        .build()
+    return JdbcUserDetailsManager(dataSource).apply {
+        createUser(user1)
+    }
+}
+```
 
 ---
 layout: full
@@ -373,9 +419,9 @@ class: text-left
 
 ## Jdbc User Detail
 
-[source,sql]
+Le format requis de la base par Spring
 
-```
+```sql
 CREATE TABLE USERS (
   username VARCHAR(50) NOT NULL PRIMARY KEY,
   password VARCHAR(500) NOT NULL,
@@ -390,6 +436,11 @@ CREATE TABLE AUTHORITIES (
 
 CREATE UNIQUE INDEX ix_auth_username ON AUTHORITIES (username, authority);
 ```
+
+<!--
+Un autre moyen très similaire,
+avec un stockage en base de donnée
+-->
 
 ---
 layout: full
@@ -407,10 +458,7 @@ fun admin(principal: Principal): ResponseEntity<String> {
 }
 ```
 
----
-layout: full
-class: text-left
----
+<v-click>
 
 ## Récupération du User
 
@@ -421,6 +469,8 @@ SecurityContextHolder.getContext().authentication.principal.let {
   println("Login: ${principal.name}")
 }
 ```
+
+</v-click>
 
 <!--
 Dans le cadre de SpringMVC le contexte de sécurité est lié au Thread.
