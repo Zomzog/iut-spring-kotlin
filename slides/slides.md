@@ -55,3 +55,7 @@ src: /pages/c1.md
 ---
 src: /pages/c2.md
 ---
+
+---
+src: /pages/c3.md
+---

@@ -1,0 +1,173 @@
+---
+layout: cover
+hideInToc: false
+---
+
+# Filters
+
+---
+layout: full
+class: text-left
+transition: fade
+---
+
+## Filter HTTP
+
+```mermaid
+flowchart TD
+    Client --> DispatcherServlet
+    DispatcherServlet --> MyController
+```
+
+<!--
+Si on se se place dans le cas d'une requète HTTP.
+
+Si on reprend une version simplifié du traitement d'une requète.
+
+Le client passe par le DispatcherServlet pour aller sur mon controlleur
+-->
+
+---
+layout: full
+class: text-left
+transition: fade
+---
+
+## Filter HTTP
+
+```mermaid
+flowchart TD
+    Client --> FilterA
+    FilterA --> FilterB
+    FilterB --> DispatcherServlet
+    DispatcherServlet --> MyController
+```
+
+<!--
+On va pouvoir injecter les filtres avant d'arriver au DispatcherServlet.
+
+On peut enchainer des filtres.
+-->
+
+---
+layout: full
+class: text-left
+---
+
+## Filter
+
+````md magic-move
+```kotlin
+class FilterA : jakarta.servlet.Filter {
+
+}
+```
+```kotlin
+class FilterA : Filter {
+
+  override fun doFilter(request: ServletRequest,
+                        response: ServletResponse,
+                        chain: FilterChain) {
+
+  }
+}
+```
+```kotlin
+class FilterA : Filter {
+
+  override fun doFilter(request: ServletRequest,
+                        response: ServletResponse,
+                        chain: FilterChain) {
+
+      chain.doFilter(request, response)
+
+  }
+}
+```
+```kotlin
+class FilterA : Filter {
+
+   override fun doFilter(request: ServletRequest,
+                        response: ServletResponse,
+                        chain: FilterChain) {
+      // do before on request
+      chain.doFilter(request, response)
+      // do after on response
+  }
+}
+```
+````
+
+<!--
+Cette interface va imposer d'implémenter cette méthode
+
+Il y a la requète originale
+
+Un wrapper qui contient la réponse
+
+FilterChain qui contient la liste des filtres et permet d'appeler le suivant.
+
+On appel le suivant en appelant le doFilter où on donne la requète et la réponse
+-->
+
+<!--
+Donc il est possible de modifier la requète avant
+et modifier la réponse après.
+
+Si on modifie la réponse avant,
+les modifications peuvent etre écrasés par les filtres suivants.
+-->
+
+---
+layout: full
+class: text-left
+---
+
+## HttpFilter
+
+```kotlin
+class LoggerHttpFilter : HttpFilter() {
+  private val logger = KotlinLogging.logger {}
+  override fun doFilter(request: HttpServletRequest,
+                        response: HttpServletResponse,
+                        chain: FilterChain) {
+    logger.debug { "Request: ${request.method} ${request.requestURI}" }
+    chain.doFilter(request, response)
+    logger.debug { "Response: ${response.status}" }
+  }
+}
+```
+
+<!--
+Il existe des filtres plus spécialisés,
+par example le HttpFilter,
+derrière c'est un filtre classique,
+mais il fait pour vous la validation  et le cast en HttpServlet*
+-->
+
+---
+layout: full
+class: text-left
+---
+
+## Ajouter le filtre
+
+```kotlin
+@Bean
+fun filterA(filter: FilterA): FilterRegistrationBean<FilterA> {
+  val registrationBean = FilterRegistrationBean(filter)
+  registrationBean.addUrlPatterns("/api/*")
+  registrationBean.order = 1
+  return registrationBean
+}
+```
+
+<!--
+Il faut créer un bean FilterRegistrationBean pour l'ajouter
+
+On peut ajouter des conditions au filtre,
+ici je le limtes aux URL /api et je lui met un ordre.
+
+L'ordre n'est pas stict, il sera après les 0, avant les 2.
+Mais sans priorité particulière sur les autres 1.
+-->
