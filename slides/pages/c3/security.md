@@ -266,6 +266,7 @@ Permet de gérer les filtres par path http
   http {
     authorizeHttpRequests {
       authorize("/ponies", permitAll)
+      authorize (HttpMethod.GET, "/**", permitAll)
       authorize("/admin", hasRole("ADMIN"))
       authorize(anyRequest, authenticated)
     }
