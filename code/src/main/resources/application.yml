@@ -6,8 +6,14 @@ spring:
     username: iut
     password: iut
   jpa:
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: none
     open-in-view: true
+  flyway:
+    enabled: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+
 app.name: yolo
 my:
   enabled: true

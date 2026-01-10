@@ -1,10 +1,9 @@
 spring:
   datasource:
-    url: jdbc:h2:~/test;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:testdb2
     driverClassName: org.h2.Driver
     username: sa
     password:
   h2:
     console:
       enabled: true
-
