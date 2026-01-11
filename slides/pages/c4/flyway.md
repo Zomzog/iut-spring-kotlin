@@ -87,9 +87,24 @@ dependencies {
 
 ::
 
-<div v-click.at='1'>
+<div v-click>
+
+## Remarques pratiques
+
+- Pour les demos/local : H2 est pratique (pas besoin d'ajouter un driver Flyway spécifique).
+- En production : ajoutez le driver correspondant (Postgres/MySQL) et testez les migrations
+  dans un environnement proche de la production.
+
+</div>
+
+---
+layout: full
+class: text-left
+---
 
 ## Configuration Spring Boot
+
+<div v-click.at='1'>
 
 ````md magic-move {at:'2'}
 
@@ -207,18 +222,3 @@ class: text-left
 - Si un script est modifié après application, vous devez :
   - corriger le script et incrémenter la version, ou
   - utiliser `flyway repair` pour réparer l'historique (avec prudence).
-
----
-layout: full
-class: text-left
----
-
-## Remarques pratiques
-
-- Pour les demos/local : H2 est pratique (pas besoin d'ajouter un driver Flyway spécifique).
-- En production : ajoutez le driver correspondant (Postgres/MySQL) et testez les migrations
-  dans un environnement proche de la production.
-
----
-
-Fin.

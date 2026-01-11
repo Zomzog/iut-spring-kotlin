@@ -14,9 +14,9 @@ class: text-left
 
 Pour être "production ready" une application doit être en mesure de fournir :
 
-- un health-check,
-- des metrics,
-- des logs.
+- des logs
+- un health-check
+- des metrics
 
 ---
 layout: full
@@ -28,7 +28,6 @@ class: text-left
 :: code-group
 
 ```kotlin [gradle]
-
  implementation("org.springframework.boot:spring-boot-starter-actuator")
 ```
 
@@ -62,7 +61,7 @@ class: text-left
 
 ## Configuration des actuators
 
-```yaml
+```yaml [select endpoints]
 management:
   endpoints:
     web:
@@ -84,7 +83,7 @@ management:
 
 <div v-click>
 
-```yaml [all endpoints do not use in production]
+```yaml [show all infos (database, disk...) not just UP]
 management:
   endpoint:
     health:
@@ -135,6 +134,25 @@ class: text-left
 
 ## Customisation des actuators
 
+````md magic-move
+```kotlin
+@Component
+@EndpointWebExtension(endpoint = InfoEndpoint::class)
+class CustomInfo(val delegate: InfoEndpoint) {
+}
+```
+```kotlin
+@Component
+@EndpointWebExtension(endpoint = InfoEndpoint::class)
+class CustomInfo(val delegate: InfoEndpoint) {
+
+    @ReadOperation
+    fun info(): WebEndpointResponse<Map<*, *>> {
+        val info = this.delegate.info()
+        return WebEndpointResponse(info, 200)
+    }
+}
+```
 ```kotlin
 @Component
 @EndpointWebExtension(endpoint = InfoEndpoint::class)
@@ -148,6 +166,7 @@ class CustomInfo(val delegate: InfoEndpoint) {
     }
 }
 ```
+````
 
 ---
 layout: full
@@ -156,14 +175,31 @@ class: text-left
 
 ## Metrics
 
+<v-click>
+
+- Supervision avec **Micrometer** + Prometheus
+
+</v-click>
+<v-click>
+
+- Exposer les métriques via `/actuator/prometheus`
+
+</v-click>
+
+<v-click>
+
 :: code-group
 
 ```kotlin [gradle]
-
+  implementation("org.springframework.boot:spring-boot-starter-actuator")
   runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 ```
 
 ```xml [maven]
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-registry-prometheus</artifactId>
@@ -173,12 +209,16 @@ class: text-left
 
 ::
 
----
-layout: full
-class: text-left
----
+</v-click>
 
-## /actuator/prometheus
+<v-click>
+
+- En ajoutant simplement ces dépendances, Spring Boot active automatiquement l'endpoint `/actuator/prometheus` (Cf. `@ConditionalOnClass` et les auto-configurations)
+
+</v-click>
+<v-click>
+
+GET /actuator/prometheus
 
 ```txt
 http_server_requests_seconds_count
@@ -188,6 +228,8 @@ http_server_requests_seconds_count
 117992
 ```
 
+</v-click>
+
 ---
 layout: full
 class: text-left
@@ -195,61 +237,50 @@ class: text-left
 
 ## Custom metrics
 
+````md magic-move
+
 ```kotlin
-@Component
-class MetricsConfig(meterRegistry: MeterRegistry) {
-    private val myCount = meterRegistry.counter("name.my.count",
-                                                "aDimension", "theValue")
-
-    override fun theIncrement() {
-        myCount.increment()
-    }
+@RestController
+class MetricController {
+  @GetMapping("/hello")
+  fun hello() = "ok"
+}
 ```
-
----
-layout: full
-class: text-left
----
-
-## Traces
-
-:: code-group
-
-```kotlin [gradle]
-
-  runtimeOnly("io.micrometer:micrometer-tracing-bridge-brave")
+```kotlin
+@RestController
+class MetricController(private val registry: MeterRegistry) {
+  @GetMapping("/hello")
+  fun hello() = "ok"
+}
 ```
-
-```xml [maven]
-<dependency>
-    <groupId>io.micrometer</groupId>
-    <artifactId>micrometer-tracing-bridge-brave</artifactId>
-</dependency>
+```kotlin
+@RestController
+class MetricController(private val registry: MeterRegistry) {
+  private val counter = registry.counter("demo.requests")
+  @GetMapping("/hello")
+  fun hello() = "ok"
+}
 ```
-
-::
-
----
-layout: full
-class: text-left
----
-
-## TraceIds
-
-```bash
-INFO [678c233e1008f59fd685db096863b99c-17138239dbfafafa] bzh.zomzog.sandbox.Controller : GET Request
-
-INFO [678c2513bc84da3276ad1dcc2d898ba3-9b5479c78326e029] bzh.zomzog.sandbox.Cron       : Run cron
-
-INFO [678c233e1008f59fd685db096863b99c-17138239dbfafafa] bzh.zomzog.sandbox.Service    : Handle Request
+```kotlin
+@RestController
+class MetricController(private val registry: MeterRegistry) {
+  private val counter = registry.counter("demo.requests")
+  @GetMapping("/hello")
+  fun hello(): String {
+    counter.increment()
+    return "ok"
+  }
+}
 ```
-
-<br/>
-
-<div v-click>
-
-## Traces & Span
-
-<img src="/traces-spans.png" class="h-70 object-scale-down" ></img>
-
-</div>
+```kotlin
+@RestController
+class MetricController(private val registry: MeterRegistry) {
+  private val counter = registry.counter("demo.requests", "aDimension", "theValue")
+  @GetMapping("/hello")
+  fun hello(): String {
+    counter.increment()
+    return "ok"
+  }
+}
+```
+````
