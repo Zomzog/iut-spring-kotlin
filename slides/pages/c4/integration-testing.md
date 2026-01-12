@@ -1,9 +1,15 @@
 ---
+layout: cover
+---
+
+# Tests d'intégration
+
+---
 layout: full
 class: text-left
 ---
 
-# Tests d'intégration
+## Tests d'intégration
 
 <v-click>
 
@@ -159,9 +165,9 @@ spring:
     password: test
 ```
 
-<!-- Speaker: `jdbc:tc:` permet de démarrer et d'utiliser la base via le driver Testcontainers JDBC sans gérer explicitement le container. -->
-
 </v-click>
+
+<!-- Speaker: `jdbc:tc:` permet de démarrer et d'utiliser la base via le driver Testcontainers JDBC sans gérer explicitement le container. -->
 
 ---
 layout: full
@@ -172,6 +178,7 @@ class: text-left
 
 ```kotlin
 @Testcontainers
+@SpringBootTest
 class KafkaIT {
   companion object {
     @Container

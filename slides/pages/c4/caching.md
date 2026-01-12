@@ -1,6 +1,5 @@
 ---
-layout: full
-class: text-left
+layout: cover
 ---
 
 
@@ -141,7 +140,8 @@ class: text-left
 <v-click>
 
 La génération par défaut de la clé utilise les paramètres de la méthode.
-Pour contrôler, utilisez `key` ou `keyGenerator` :
+
+Pour contrôler, utilisez `key` :
 
 </v-click>
 <v-click>
@@ -235,6 +235,20 @@ Eviction programmatique via `CacheManager` :
 fun invalidate(id: String) {
  cacheManager.getCache("users")?.evict(id)
 }
+```
+
+</v-click>
+
+<v-click>
+
+Utilisez `@CachePut` pour remplacer des entrées lorsque les données changent :
+
+</v-click>
+<v-click>
+
+```kotlin
+@CachePut(value = ["users"], key = "#id")
+fun updateUser(id: String, dto: UserDto): User { /* mettre à jour la BD puis retourner la valeur  */ }
 ```
 
 </v-click>

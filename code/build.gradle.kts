@@ -37,6 +37,10 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.kafka:spring-kafka")
 	implementation("io.lettuce:lettuce-core")
+
+	// Use Micrometer tracing bridge to OpenTelemetry + OTLP exporter
+	implementation("io.micrometer:micrometer-tracing-bridge-otel")
+	implementation("io.opentelemetry:opentelemetry-exporter-otlp")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
 	runtimeOnly("org.postgresql:postgresql")

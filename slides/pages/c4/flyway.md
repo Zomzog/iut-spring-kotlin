@@ -1,6 +1,5 @@
 ---
 layout: cover
-class: text-left
 hideInToc: false
 ---
 
@@ -30,11 +29,15 @@ class: text-left
 
 </v-click>
 
-<div v-click>
+<v-click>
 
 <br/>
 
 ## Concepts clés
+
+</v-click>
+
+<v-clicks>
 
 - **Migration SQL** : chaque étape est un script SQL.
 - **Version** : chaque script porte un identifiant
@@ -42,7 +45,7 @@ class: text-left
 - **Immutable** : une fois appliqué, modifier un script bloque la migration (sauf réparation).
 - **Réparation** : Flyway peut réparer l'historique en cas de problème.
 
-</div>
+</v-clicks>
 
 ---
 layout: full
@@ -60,7 +63,7 @@ layout: full
 class: text-left
 ---
 
-## Dépendances (Gradle / Kotlin DSL)
+## Dépendances
 
 :: code-group
 
@@ -87,12 +90,14 @@ dependencies {
 
 ::
 
+<br/>
+
 <div v-click>
 
 ## Remarques pratiques
 
-- Pour les demos/local : H2 est pratique (pas besoin d'ajouter un driver Flyway spécifique).
-- En production : ajoutez le driver correspondant (Postgres/MySQL) et testez les migrations
+- Pour les demos/**local** : H2 est pratique (pas besoin d'ajouter un driver Flyway spécifique).
+- En **production** : ajoutez le driver correspondant (Postgres/MySQL) et **testez** les migrations
   dans un environnement proche de la production.
 
 </div>
@@ -150,35 +155,38 @@ class: text-left
 
 <v-click>
 
-Par défaut : `src/main/resources/db/migration`.
+Par défaut : `src/main/resources/db/migration`
+
+</v-click>
+<v-click>
 
 Pour le changer: `spring.flyaway.locations=somewhere/else`
 
 </v-click>
 <v-click>
 
-Convention de nommage :
+## Convention de nommage
 
 </v-click>
 <v-click>
 
 Versioned Migration:
 
-`V<version>__<description>.sql` (ex : `V1__create_users_table.sql`).
+`V<version>__<description>.sql` (ex : `V1__create_users_table.sql`)
 
 </v-click>
 <v-click>
 
 Undo Migration:
 
-`U<version>__<description>.sql` (ex : `U1__create_users_table.sql`).
+`U<version>__<description>.sql` (ex : `U1__revert_users_table.sql`)
 
 </v-click>
 <v-click>
 
 Repeatable Migration:
 
-- `R__<description>.sql` (ex : `R__recreate_view.sql`).
+`R__<description>.sql` (ex : `R__recreate_view.sql`)
 
 </v-click>
 
@@ -220,5 +228,7 @@ class: text-left
 
 - Flyway stocke l'historique des migrations dans une table `flyway_schema_history`.
 - Si un script est modifié après application, vous devez :
-  - corriger le script et incrémenter la version, ou
-  - utiliser `flyway repair` pour réparer l'historique (avec prudence).
+  - corriger le script et incrémenter la version
+  - utiliser `flyway repair` pour réparer l'historique (marquer comme supprimee, corriger les checksum...)
+- Si des script ont ete appliqué a la main
+  - utiliser `flyway baseline` pour mettre a jour uniquement l'historique

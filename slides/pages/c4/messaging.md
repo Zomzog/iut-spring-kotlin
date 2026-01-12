@@ -1,6 +1,5 @@
 ---
-layout: full
-class: text-left
+layout: cover
 ---
 
 # Messaging (Kafka, RabbitMQ...)
@@ -14,11 +13,23 @@ class: text-left
 
 <v-click>
 
-- Le messaging est une alternative asynchrone aux APIs REST : on échange des messages via un broker (Kafka, RabbitMQ...).
+- Le messaging est une alternative asynchrone aux APIs REST : on échange des messages via un broker (<span v-mark.box.red="2">Kafka</span>, RabbitMQ...).
 
 - Avantages : découplage, résilience, montée en charge asynchrone.
 
 </v-click>
+
+<div v-click.at='3'>
+
+```kotlin [gradle]
+dependencies {
+  implementation("org.springframework.boot:spring-boot-starter-kafka")
+}
+```
+
+<!-- Speaker: Dépendance Spring Kafka -->
+
+</div>
 
 ---
 layout: full
@@ -27,10 +38,41 @@ class: text-left
 
 ## Configuration minimale (application.properties)
 
-<v-click>
+````md magic-move
 
 ```yaml
-# broker (Testcontainers ou votre cluster)
+spring:
+  kafka:
+```
+
+```yaml
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+```
+```yaml
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+```
+```yaml
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+```
+```yaml
 spring:
   kafka:
     bootstrap-servers: localhost:9092
@@ -44,10 +86,9 @@ spring:
       auto-offset-reset: earliest
 
 ```
+````
 
 <!-- Speaker: Conf minimale pour connecter producer/consumer -->
-
-</v-click>
 
 ---
 layout: full
@@ -58,33 +99,42 @@ class: text-left
 
 <v-click>
 
-```kotlin [gradle]
-// build.gradle.kts
-dependencies {
-  implementation("org.springframework.kafka:spring-kafka")
+````md magic-move
+```kotlin
+@Component
+class Producer(private val kafka: KafkaTemplate<String, String>) {
 }
 ```
-
-<!-- Speaker: Dépendance Spring Kafka -->
-
-</v-click>
-
-<v-click>
-
 ```kotlin
+@Component
 class Producer(private val kafka: KafkaTemplate<String, String>) {
   fun send(msg: String) = kafka.send("demo-topic", msg)
 }
 ```
-
-<!-- Speaker: Producteur simple utilisant `KafkaTemplate` -->
+````
 
 </v-click>
 
-<v-click>
+<div v-click.at="3">
 
+````md magic-move {at:'3'}
 ```kotlin
-// Consumer.kt
+```
+```kotlin
+@Component
+class Consumer {
+}
+```
+```kotlin
+@Component
+class Consumer {
+  fun listen(record: String) {
+    // Traitement idempotent ici
+    println("Reçu: $record")
+  }
+}
+```
+```kotlin
 @Component
 class Consumer {
   @KafkaListener(topics = ["demo-topic"], groupId = "demo-group")
@@ -94,10 +144,11 @@ class Consumer {
   }
 }
 ```
+````
+
+</div>
 
 <!-- Speaker: Consumer basique utilisant `@KafkaListener` -->
-
-</v-click>
 
 ---
 layout: full
@@ -108,20 +159,32 @@ class: text-left
 
 <v-click>
 
+````md magic-move
 ```kotlin
-// KafkaErrorConfig.kt
 @Configuration
 class KafkaErrorConfig {
   @Bean
-  fun recoverer(template: KafkaTemplate<String, String>) = DeadLetterPublishingRecoverer(template)
-
-  @Bean
-  fun errorHandler(recoverer: DeadLetterPublishingRecoverer): DefaultErrorHandler {
-    val backoff = FixedBackOff(1000L, 2) // 2 retries
-    return DefaultErrorHandler(recoverer, backoff)
+  fun errorHandler(): DefaultErrorHandler {
+    val backoff = FixedBackOff(1000L, 2) // 2 retries 1s
+    return DefaultErrorHandler(lbackoff)
   }
 }
 ```
+```kotlin
+@Configuration
+class KafkaErrorConfig {
+  @Bean
+  fun errorHandler(recoverer: DeadLetterPublishingRecoverer): DefaultErrorHandler {
+    val backoff = FixedBackOff(1000L, 2) // 2 retries 1s
+    return DefaultErrorHandler(recoverer, backoff)
+  }
+
+  @Bean
+  fun recoverer(template: KafkaTemplate<String, String>) = DeadLetterPublishingRecoverer(template)
+
+}
+```
+````
 
 <!-- Speaker: En cas d'erreur répétée, on publie dans une DLQ via `DeadLetterPublishingRecoverer` -->
 

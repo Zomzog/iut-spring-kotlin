@@ -1,4 +1,10 @@
 ---
+layout: cover
+---
+
+# Observabilité
+
+---
 layout: full
 class: text-left
 ---
@@ -46,75 +52,18 @@ class: text-left
 - Telemetry
 
 ---
-layout: full
-class: text-left
+src: telemetry.md
 ---
-
-## Ajouter les métriques
-
-<v-click>
-
-```kotlin [gradle]
-dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-actuator")
-  implementation("io.micrometer:micrometer-registry-prometheus")
-}
-```
-
-</v-click>
-
-<v-click>
-
-- En ajoutant simplement ces dépendances, Spring Boot active automatiquement l'endpoint `/actuator/prometheus` (Cf. `@ConditionalOnClass` et les auto-configurations)
-
-</v-click>
 
 ---
 layout: full
 class: text-left
 ---
 
-## Ajouter une métrique personnalise
+# Observabilité
 
-````md magic-move
+- Logs ✅
 
-```kotlin
-@RestController
-class MetricController {
-  @GetMapping("/hello")
-  fun hello() = "ok"
-}
-```
-```kotlin
-@RestController
-class MetricController(private val registry: MeterRegistry) {
-  @GetMapping("/hello")
-  fun hello() = "ok"
-}
-```
-```kotlin
-@RestController
-class MetricController(private val registry: MeterRegistry) {
-  private val counter = registry.counter("demo.requests")
-  @GetMapping("/hello")
-  fun hello() = "ok"
-}
-```
-```kotlin
-@RestController
-class MetricController(private val registry: MeterRegistry) {
-  private val counter = registry.counter("demo.requests")
-  @GetMapping("/hello")
-  fun hello(): String {
-    counter.increment()
-    return "ok"
-  }
-}
-```
-````
+- Metrics ✅
 
-<!-- Speaker: Étape 1 — contrôleur minimal -->
-
-<!-- Speaker: Étape 2 — injecter MeterRegistry et déclarer un compteur -->
-
-<!-- Speaker: Étape 3 — incrémenter le compteur à chaque appel -->
+- Telemetry ✅

@@ -5,32 +5,84 @@ class: text-left
 
 # Réactif (WebFlux + Coroutines)
 
-<v-click>
-
-- Utiliser WebFlux avec les coroutines Kotlin pour des endpoints non-bloquants
-
-</v-click>
-<v-click>
-
-- Garder le modèle de threads simple : fonctions `suspend`, éviter les appels bloquants
-
-</v-click>
+```kotlin {1|2-4|5} [build.kts]
+  implementation("org.springframework.boot:spring-boot-starter-webflux")
+  implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+  testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+  implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+```
 
 ---
 layout: full
 class: text-left
 ---
 
-## Exemple : contrôleur coroutine
+## Migration coroutines
 
-<v-click>
-
+````md magic-move
 ```kotlin
+interface ProductRepository : CrudRepository<Product, Long>
+
+interface StockRepository : CrudRepository<Stock, Long>
+
 @RestController
-class ReactiveController {
-  @GetMapping("/reactive/hello")
-  suspend fun hello(): String { delay(50); return "ok" }
+class MyController(val productRepository: ProductRepository, val stockRepository: StockRepository) {
+  @GetMapping("/products/{productId}")
+  fun getProductAndStock(@PathVariable id: ProductId): ProductStockDTO {
+    val product = productRepository.findById(id.id)
+    val stock = stockRepository.findById(id.id)
+    product?.let { ProductStockDTO(it, stock?.quantity ?: 0) }
+        ?: throw Exception("Product not found!")
+  }
 }
 ```
+```kotlin
+interface ProductRepository : CoroutineCrudRepository<Product, Long>
 
-</v-click>
+interface StockRepository : CoroutineCrudRepository<Stock, Long>
+
+@RestController
+class MyController(val productRepository: ProductRepository, val stockRepository: StockRepository) {
+  @GetMapping("/products/{productId}")
+  suspend fun getProductAndStock(@PathVariable id: ProductId): ProductStockDTO {
+    val product = productRepository.findById(id.id)
+    val stock = stockRepository.findById(id.id)
+    product?.let { ProductStockDTO(it, stock?.quantity ?: 0) }
+        ?: throw Exception("Product not found!")
+  }
+}
+```
+```kotlin
+interface ProductRepository : CoroutineCrudRepository<Product, Long>
+
+interface StockRepository : CoroutineCrudRepository<Stock, Long>
+
+@RestController
+class MyController(val productRepository: ProductRepository, val stockRepository: StockRepository) {
+  @GetMapping("/products/{productId}")
+  suspend fun getProductAndStock(@PathVariable id: ProductId): ProductStockDTO = coroutineScope {
+    val product = async { productRepository.findById(id.id) }
+    val stock = async { stockRepository.findById(id.id) }
+    product?.let { ProductStockDTO(it, stock?.quantity ?: 0) }
+        ?: throw Exception("Product not found!")
+  }
+}
+```
+```kotlin
+interface ProductRepository : CoroutineCrudRepository<Product, Long>
+
+interface StockRepository : CoroutineCrudRepository<Stock, Long>
+
+@RestController
+class MyController(val productRepository: ProductRepository, val stockRepository: StockRepository) {
+  @GetMapping("/products/{productId}")
+  suspend fun getProductAndStock(@PathVariable id: ProductId): ProductStockDTO = coroutineScope {
+    val product = async { productRepository.findById(id.id) }
+    val stock = async { stockRepository.findById(id.id) }
+    product.await()?.let { ProductStockDTO(it, stock.await()?.quantity ?: 0) }
+        ?: throw Exception("Product not found!")
+  }
+}
+```
+````

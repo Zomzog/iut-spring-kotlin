@@ -1,6 +1,5 @@
 ---
 layout: cover
-class: text-left
 hideInToc: false
 ---
 
@@ -36,11 +35,10 @@ class: text-left
 
 ## Comment fonctionne l'Auto-Configuration
 
-
 <div v-click>
 
 - **Spring Factories** :
-  - Le fichier `org.springframework.boot.autoconfigure.AutoConfiguration.imports ` dans `META-INF/spring`.
+  - Le fichier `org.springframework.boot.autoconfigure.AutoConfiguration.imports` dans `META-INF/spring`.
   - Liste les classes d'auto-configuration.
 
 </div>
@@ -63,37 +61,17 @@ layout: full
 class: text-left
 ---
 
-## Personnaliser l'Auto-Configuration
-
-<div v-click>
-
-- **Remplacer les valeurs par défaut** :
-  - Définir vos propres beans pour remplacer ceux fournis automatiquement.
-
-</div>
-
-<div v-click>
-
-- **Utiliser les annotations conditionnelles** :
-  - Contrôler la création de beans avec les annotations `@Conditional...`.
-
-</div>
-
----
-layout: full
-class: text-left
----
-
 ## Exemple pratique
+
 ````md magic-move
-```kotlin {all|1,4}
+```kotlin {all|1,3}
 package bzh.zomzog.iut.amphi.autoconfig
 
 @Configuration
-class SimpleConfig {
+class MyAutoConfiguration {
 
   @Bean
-  fun helloService(): String = "hello"
+  fun myService(): MyService = MyService()
 
 }
 ```
@@ -154,3 +132,20 @@ spring:
 ```
 
 </div>
+
+<div v-click>
+
+## Personnaliser l'Auto-Configuration
+
+- **Remplacer les valeurs par défaut** dans les properties
+    exemple: `spring.jpa.hibernate.ddl-auto`
+
+</div>
+<div v-click>
+
+- Définir vos propres beans pour remplacer ceux fournis automatiquement.
+  - **@Bean** quand ils utilisent les annotations `@Conditional...`.
+  - **@Primary** sinon
+
+</div>
+
