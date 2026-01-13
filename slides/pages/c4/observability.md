@@ -15,7 +15,7 @@ class: text-left
 
 - Metrics
 
-- Telemetry
+- Télémetry
 
 ---
 src: logs.md

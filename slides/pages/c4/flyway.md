@@ -19,7 +19,7 @@ class: text-left
 </v-click>
 <v-click>
 
-- Fournit également une **CLI**, des **plugins Gradle/Maven** et une **librairie** utilisable dans les applications.
+- Fournit également une **CLI**, des **plugins Gradle/Maven** et une **bibliothèque** utilisable dans les applications.
 
 </v-click>
 
@@ -42,7 +42,7 @@ class: text-left
 - **Migration SQL** : chaque étape est un script SQL.
 - **Version** : chaque script porte un identifiant
 - **Compatibilité** : supporte H2, PostgreSQL, MySQL, etc.
-- **Immutable** : une fois appliqué, modifier un script bloque la migration (sauf réparation).
+- **Immuable** : une fois appliqué, modifier un script bloque la migration (sauf réparation).
 - **Réparation** : Flyway peut réparer l'historique en cas de problème.
 
 </v-clicks>
@@ -160,7 +160,7 @@ Par défaut : `src/main/resources/db/migration`
 </v-click>
 <v-click>
 
-Pour le changer: `spring.flyaway.locations=somewhere/else`
+Pour le changer : `spring.flyway.locations=somewhere/else`
 
 </v-click>
 <v-click>
@@ -224,11 +224,11 @@ layout: full
 class: text-left
 ---
 
-## Historique / Repair
+## Historique / repair
 
 - Flyway stocke l'historique des migrations dans une table `flyway_schema_history`.
 - Si un script est modifié après application, vous devez :
-  - corriger le script et incrémenter la version
-  - utiliser `flyway repair` pour réparer l'historique (marquer comme supprimee, corriger les checksum...)
-- Si des script ont ete appliqué a la main
-  - utiliser `flyway baseline` pour mettre a jour uniquement l'historique
+  - corriger le script et incrémenter la version ;
+  - utiliser `flyway repair` pour réparer l'historique (marquer comme supprimée, corriger les checksums...).
+- Si des scripts ont été appliqués à la main :
+  - utiliser `flyway baseline` pour mettre à jour uniquement l'historique.

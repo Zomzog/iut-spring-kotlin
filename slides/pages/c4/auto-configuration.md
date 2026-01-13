@@ -10,7 +10,7 @@ layout: full
 class: text-left
 ---
 
-## Qu'est-ce que l'Auto-Configuration ?
+## Qu'est-ce que l'auto-configuration ?
 
 <div v-click>
 
@@ -33,7 +33,7 @@ layout: full
 class: text-left
 ---
 
-## Comment fonctionne l'Auto-Configuration
+## Comment fonctionne l'auto-configuration
 
 <div v-click>
 
@@ -119,7 +119,7 @@ layout: full
 class: text-left
 ---
 
-## Désactiver l'Auto-Configuration
+## Désactiver l'auto-configuration
 
 <div v-click>
 
@@ -135,10 +135,10 @@ spring:
 
 <div v-click>
 
-## Personnaliser l'Auto-Configuration
+## Personnaliser l'auto-configuration
 
 - **Remplacer les valeurs par défaut** dans les properties
-    exemple: `spring.jpa.hibernate.ddl-auto`
+  exemple : `spring.jpa.hibernate.ddl-auto`
 
 </div>
 <div v-click>

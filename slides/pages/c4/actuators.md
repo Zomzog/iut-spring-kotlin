@@ -12,11 +12,11 @@ class: text-left
 
 ## Monitoring
 
-Pour être "production ready" une application doit être en mesure de fournir :
+Pour être "production ready", une application doit être en mesure de fournir :
 
 - des logs
-- un health-check
-- des metrics
+- un health‑check
+- des métriques
 
 ---
 layout: full
@@ -42,15 +42,15 @@ class: text-left
 
 <div v-click>
 
-Ajouter la dépendance Spring fournit directement plusieurs endpoints sous `/actuator`.
+L'ajout de la dépendance Spring fournit directement plusieurs endpoints sous `/actuator`.
 
 |endpoints | description|
 |--|--|
-|/actuator/health |santé de l'application|
-|/actuator/info |information général sur l'application|
-|/actuator/metrics |métriques de l'application|
-|/actuator/beans |liste des beans et de leur dépendance|
-|/actuator/... |[rtfm](https://docs.spring.io/spring-boot/reference/actuator/endpoints.html)|
+|/actuator/health | santé de l'application |
+|/actuator/info | information générale sur l'application |
+|/actuator/metrics | métriques de l'application |
+|/actuator/beans | liste des beans et de leur dépendance |
+|/actuator/... | [rtfm](https://docs.spring.io/spring-boot/reference/actuator/endpoints.html) |
 
 </div>
 
@@ -213,7 +213,7 @@ class: text-left
 
 <v-click>
 
-- En ajoutant simplement ces dépendances, Spring Boot active automatiquement l'endpoint `/actuator/prometheus` (Cf. `@ConditionalOnClass` et les auto-configurations)
+En ajoutant simplement ces dépendances, Spring Boot active automatiquement l'endpoint `/actuator/prometheus` (cf. `@ConditionalOnClass` et les auto-configurations).
 
 </v-click>
 <v-click>

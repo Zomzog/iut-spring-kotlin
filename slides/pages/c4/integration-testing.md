@@ -23,7 +23,7 @@ class: text-left
 </v-click>
 <v-click>
 
-- Utiliser Testcontainers pour JPA/Kafka/Redis en CI ; garder des doubles rapides pour les unitaires
+- Utiliser Testcontainers pour JPA/Kafka/Redis en CI ; garder des doubles rapides pour les tests unitaires
 
 </v-click>
 
@@ -39,14 +39,14 @@ class: text-left
 ````md magic-move
 ```kotlin
 @DataJpaTest
-class UserRepositoryServiceConnectionTes {
+class UserRepositoryServiceConnectionTest {
 
   @Autowired
   lateinit var userRepository: UserRepository
 
   @Test
   fun `service connection should provide database and repository works`() {
-    userRepository.save(UserEntity(id = 2L, name = "Bob"))
+    val user = userRepository.save(UserEntity(id = 2L, name = "Bob"))
 
     val found = userRepository.findById(user.id.toString())
     assert(found.isPresent)
@@ -56,14 +56,14 @@ class UserRepositoryServiceConnectionTes {
 ```kotlin
 @DataJpaTest
 @Testcontainers
-class UserRepositoryServiceConnectionTes {
+class UserRepositoryServiceConnectionTest {
 
   @Autowired
   lateinit var userRepository: UserRepository
 
   @Test
   fun `service connection should provide database and repository works`() {
-    userRepository.save(UserEntity(id = 2L, name = "Bob"))
+    val user = userRepository.save(UserEntity(id = 2L, name = "Bob"))
 
     val found = userRepository.findById(user.id.toString())
     assert(found.isPresent)
@@ -73,7 +73,7 @@ class UserRepositoryServiceConnectionTes {
 ```kotlin
 @DataJpaTest
 @Testcontainers
-class UserRepositoryServiceConnectionTes {
+class UserRepositoryServiceConnectionTest {
   companion object {
     val postgres = PostgreSQLContainer("postgres:18-alpine").apply {
         withDatabaseName("testdb")
@@ -86,7 +86,7 @@ class UserRepositoryServiceConnectionTes {
 
   @Test
   fun `service connection should provide database and repository works`() {
-    userRepository.save(UserEntity(id = 2L, name = "Bob"))
+    val user = userRepository.save(UserEntity(id = 2L, name = "Bob"))
 
     val found = userRepository.findById(user.id.toString())
     assert(found.isPresent)
@@ -96,7 +96,7 @@ class UserRepositoryServiceConnectionTes {
 ```kotlin
 @DataJpaTest
 @Testcontainers
-class UserRepositoryServiceConnectionTes {
+class UserRepositoryServiceConnectionTest {
   companion object {
     @Container
     val postgres = PostgreSQLContainer("postgres:18-alpine").apply {
@@ -110,7 +110,7 @@ class UserRepositoryServiceConnectionTes {
 
   @Test
   fun `service connection should provide database and repository works`() {
-    userRepository.save(UserEntity(id = 2L, name = "Bob"))
+    val user = userRepository.save(UserEntity(id = 2L, name = "Bob"))
 
     val found = userRepository.findById(user.id.toString())
     assert(found.isPresent)
@@ -120,7 +120,7 @@ class UserRepositoryServiceConnectionTes {
 ```kotlin
 @DataJpaTest
 @Testcontainers
-class UserRepositoryServiceConnectionTes {
+class UserRepositoryServiceConnectionTest {
   companion object {
     @Container
     @ServiceConnection
@@ -135,7 +135,7 @@ class UserRepositoryServiceConnectionTes {
 
   @Test
   fun `service connection should provide database and repository works`() {
-    userRepository.save(UserEntity(id = 2L, name = "Bob"))
+    val user = userRepository.save(UserEntity(id = 2L, name = "Bob"))
 
     val found = userRepository.findById(user.id.toString())
     assert(found.isPresent)

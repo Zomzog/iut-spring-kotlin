@@ -3,7 +3,7 @@ layout: full
 class: text-left
 ---
 
-# Réactif (WebFlux + Coroutines)
+# Réactif (WebFlux + coroutines)
 
 ```kotlin {1|2-4|5} [build.kts]
   implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -18,7 +18,7 @@ layout: full
 class: text-left
 ---
 
-## Migration coroutines
+## Migration vers les coroutines
 
 ````md magic-move
 ```kotlin

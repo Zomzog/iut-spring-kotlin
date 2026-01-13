@@ -14,27 +14,27 @@ class: text-left
 
 <v-click>
 
-**ERROR** : on réveille l'astreinte (seulement les incidents critiques)
+**ERROR** : on réveille l'astreinte (seulement les incidents critiques).
 
 </v-click>
 <v-click>
 
-**WARN** : on les regarde en journée (indique des problèmes potentiels)
+**WARN** : on les regarde en journée (indique des problèmes potentiels).
 
 </v-click>
 <v-click>
 
-**INFO** : c'est plus pour du support / stats (comportement normal résumé)
+**INFO** : c'est plus pour du support / stats (comportement normal résumé).
 
 </v-click>
 <v-click>
 
-**DEBUG** : activable pour comprendre un BUG, log beaucoup de choses non-INFO mais utiles pour comprendre calculs/états
+**DEBUG** : activable pour comprendre un bug, log beaucoup de choses non-INFO mais utiles pour comprendre calculs/états.
 
 </v-click>
 <v-click>
 
-**TRACE** : On log tout ce qu'on peut, jusqu'à l'entrée dans une méthode (très verbeux)
+**TRACE** : on log tout ce qu'on peut, jusqu'à l'entrée dans une méthode (très verbeux).
 
 </v-click>
 
@@ -46,7 +46,7 @@ ERROR > WARN > INFO > DEBUG > TRACE
 
 ## Logback.
 
-Système de gestion des journaux d'évenements (logs)
+Système de gestion des journaux d'événements (logs).
 
 Il gère la destination et le niveau de log.
 
@@ -192,9 +192,9 @@ class: text-left
 
 ## Logs dans Spring
 
-Simple Logging Facade for Java
+Simple Logging Facade for Java.
 
-SLF4J sert d'<span v-mark.underline.red>abstraction pour divers frameworks</span> de journalisation (java.util.logging, logback, log4j...)
+SLF4J sert d'<span v-mark.underline.red>abstraction pour divers frameworks</span> de journalisation (java.util.logging, logback, log4j...),
 permettant à l'utilisateur final de brancher le framework de journalisation souhaité au moment du déploiement.
 
 <div v-click>
@@ -229,11 +229,11 @@ class: text-left
 
 ## Logs dans Kotlin
 
-Optionel :
+Optionnel :
 
 oshai:kotlin-logging.
 
-Lightweight Multiplatform logging framework <span v-mark.underline.red>for Kotlin</span>
+Lightweight multiplatform logging framework <span v-mark.underline.red>for Kotlin</span>
 
 <div v-click>
 
@@ -314,7 +314,7 @@ logging:
 
 <div v-click>
 
-Variable d'environement
+Variable d'environnement
 
 ```properties
 LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=DEBUG

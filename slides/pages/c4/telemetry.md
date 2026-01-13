@@ -37,8 +37,8 @@ class: text-left
 
 - Trace : ensemble d'appels distribués.
 - Span : opération individuelle (start/end, attributs).
-- Resource : `service.name`, `service.version`, host, runtime.
-- Propagation : W3C TraceContext (`traceparent`, `tracestate`) + headers custom (`X-Request-Id`).
+- Resource : `service.name`, `service.version`, hôte, runtime.
+- Propagation : W3C TraceContext (`traceparent`, `tracestate`) + en-têtes personnalisés (`X-Request-Id`).
 
 </v-clicks>
 
@@ -46,9 +46,9 @@ class: text-left
 
 ## Propagation (W3C + corr-id)
 
-- Priorité : si `traceparent` présent → l'utiliser. Sinon fallback `X-Request-Id` ou générer UUID.
+- Priorité : si `traceparent` est présent → l'utiliser. Sinon, fallback sur `X-Request-Id` ou génération d'un UUID.
 
-- Bonne pratique : propager `traceparent` dans les appels HTTP et mettre `traceId` dans le Context/Thread.
+- Bonne pratique : propager `traceparent` dans les appels HTTP.
 
 </v-click>
 
@@ -61,8 +61,8 @@ class: text-left
 
 <v-clicks>
 
-- Auto-instrumentation : starter / agent — couvre HTTP clients, JDBC, Kafka, WebFlux.
-- Manuelle : spans autour d'opérations business, ajouter attributs (userId, orderId).
+- Auto-instrumentation : starter / agent — couvre clients HTTP, JDBC, Kafka, WebFlux.
+- Manuelle : spans autour d'opérations métiers, ajouter des attributs (userId, orderId).
 
 </v-clicks>
 
@@ -118,12 +118,12 @@ layout: full
 class: text-left
 ---
 
-## Collector & Exporters
+## Collector & exporters
 
 <v-clicks>
 
 - OTLP = protocole unifié → envoyer vers `otel-collector`.
-- Collector : reçoit, transforme, relaie vers Jaeger/Tempo/Elastic/Prometheus.
+- Collector : reçoit, transforme et relaie vers Jaeger/Tempo/Elastic/Prometheus.
 
 </v-clicks>
 

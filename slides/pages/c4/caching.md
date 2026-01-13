@@ -14,17 +14,17 @@ class: text-left
 
 <v-click>
 
-Réduire la latence pour les opérations coûteuses (requêtes BD, appels distants)
+Réduire la latence pour les opérations coûteuses (requêtes BDD, appels distants).
 
 </v-click>
 <v-click>
 
-Diminuer la charge sur les systèmes en aval et réduire les coûts
+Diminuer la charge sur les systèmes en aval et réduire les coûts.
 
 </v-click>
 <v-click>
 
-Améliorer l'expérience utilisateur avec des réponses plus rapides
+Améliorer l'expérience utilisateur avec des réponses plus rapides.
 
 </v-click>
 
@@ -156,7 +156,7 @@ fun randomOnlyOnce(max: Int): Int = ..
 @Cacheable("myCache")
 fun randomOnlyOnce(max: Int): Int = ..
 @Cacheable("myCache", key = "#max")
-fun chacheWithKey(max: Int) = ...
+fun cacheWithKey(max: Int) = ...
 ```
 ```kotlin
 @Cacheable("myCache")
@@ -164,7 +164,7 @@ fun randomOnlyOnce(max: Int): Int = ..
 @Cacheable("myCache", key = "#max")
 fun chacheWithKey(max: Int) = ..
 @Cacheable("myCache", key = "#root.methodName : #max")
-fun chacheWithComplexKey(max: Int) = ..
+fun cacheWithComplexKey(max: Int) = ..
 ```
 ````
 
@@ -220,7 +220,7 @@ Utilisez `@CacheEvict` pour supprimer des entrées lorsque les données changent
 
 ```kotlin
 @CacheEvict(value = ["users"], key = "#id")
-fun updateUser(id: String, dto: UserDto) { /* mettre à jour la BD puis evict */ }
+fun updateUser(id: String, dto: UserDto) { /* mettre à jour la BDD puis evict */ }
 ```
 
 </v-click>
@@ -248,7 +248,7 @@ Utilisez `@CachePut` pour remplacer des entrées lorsque les données changent :
 
 ```kotlin
 @CachePut(value = ["users"], key = "#id")
-fun updateUser(id: String, dto: UserDto): User { /* mettre à jour la BD puis retourner la valeur  */ }
+fun updateUser(id: String, dto: UserDto): User { /* mettre à jour la BDD puis retourner la valeur */ }
 ```
 
 </v-click>
