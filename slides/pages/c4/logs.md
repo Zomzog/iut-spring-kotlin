@@ -12,30 +12,45 @@ class: text-left
 
 ## Niveaux de log
 
-- ERROR
+<v-click>
 
-- WARN
+**ERROR** : on réveille l'astreinte (seulement les incidents critiques).
 
-- INFO
+</v-click>
+<v-click>
 
-- DEBUG
+**WARN** : on les regarde en journée (indique des problèmes potentiels).
 
-- TRACE
+</v-click>
+<v-click>
+
+**INFO** : c'est plus pour du support / stats (comportement normal résumé).
+
+</v-click>
+<v-click>
+
+**DEBUG** : activable pour comprendre un bug, log beaucoup de choses non-INFO mais utiles pour comprendre calculs/états.
+
+</v-click>
+<v-click>
+
+**TRACE** : on log tout ce qu'on peut, jusqu'à l'entrée dans une méthode (très verbeux).
+
+</v-click>
 
 <!--
 ERROR > WARN > INFO > DEBUG > TRACE
 -->
 
----
-layout: full
-class: text-left
----
+<v-click>
 
 ## Logback.
 
-Système de gestion des journaux d'évenements (logs)
+Système de gestion des journaux d'événements (logs).
 
 Il gère la destination et le niveau de log.
+
+</v-click>
 
 ---
 layout: full
@@ -177,9 +192,9 @@ class: text-left
 
 ## Logs dans Spring
 
-Simple Logging Facade for Java
+Simple Logging Facade for Java.
 
-SLF4J sert d'<span v-mark.underline.red>abstraction pour divers frameworks</span> de journalisation (java.util.logging, logback, log4j...)
+SLF4J sert d'<span v-mark.underline.red>abstraction pour divers frameworks</span> de journalisation (java.util.logging, logback, log4j...),
 permettant à l'utilisateur final de brancher le framework de journalisation souhaité au moment du déploiement.
 
 <div v-click>
@@ -214,11 +229,11 @@ class: text-left
 
 ## Logs dans Kotlin
 
-Optionel :
+Optionnel :
 
 oshai:kotlin-logging.
 
-Lightweight Multiplatform logging framework <span v-mark.underline.red>for Kotlin</span>
+Lightweight multiplatform logging framework <span v-mark.underline.red>for Kotlin</span>
 
 <div v-click>
 
@@ -243,15 +258,13 @@ layout: full
 class: text-left
 ---
 
-## logback spring
+logback<span v-if="$clicks > 0">-spring</span>.xml
 
-logback.xml
+````md magic-move
+```xml{all|all}
 
-```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
   <root level="INFO">
     <appender-ref ref="CONSOLE" />
   </root>
@@ -259,14 +272,7 @@ logback.xml
 </configuration>
 ```
 
----
-layout: full
-class: text-left
----
-
-## logback-spring.xml
-
-```xml{3,8|all}
+```xml{3,8|4,9,14|all}
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <springProfile name="dev">
@@ -284,6 +290,7 @@ class: text-left
   </root>
 </configuration>
 ```
+````
 
 ---
 layout: full
@@ -292,15 +299,25 @@ class: text-left
 
 ## Alternative au logback.xml
 
-application.yml
-
 <div v-click>
+
+application.yml
 
 ```yaml
 logging:
   level:
     org.springframework.web: DEBUG
     bzh.zomzog.prez: WARN
+```
+
+</div>
+
+<div v-click>
+
+Variable d'environnement
+
+```properties
+LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=DEBUG
 ```
 
 </div>

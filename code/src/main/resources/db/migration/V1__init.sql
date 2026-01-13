@@ -1,0 +1,5 @@
+CREATE TABLE pony (
+    id UUID PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    city VARCHAR(100) NOT NULL
+);

@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  flyway:
+    enabled: false
+
+my:
+  enabled: true
+
+app:
+  name: test-app
+
+# Disable automatic testcontainers unless explicitly enabled
+testcontainers:
+  enabled: false
