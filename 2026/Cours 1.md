@@ -31,11 +31,11 @@ le plus de contenu culturel compressible. `di.md` pèse à lui seul 30 slides.
   - `base.Other(myDb())` alors que la méthode s'appelle `another()`
   - `val aService: aService? = null` : le type est écrit en minuscule (nom d'instance)
   Le `// /!\ pseudo code` excuse l'approximation, pas l'incohérence avec la slide de gauche.
-- [ ] **C1-03** · **`di.md:1200-1209`** — deux fonctions `fun nomDuBean()` dans la **même classe** :
+- [x] **C1-03** · **`di.md:1200-1209`** — deux fonctions `fun nomDuBean()` dans la **même classe** :
   *conflicting overloads*, ne compile pas. L'intention est de montrer `@Bean("autreNom")` ;
   il faut deux noms de méthode différents, sinon la slide démontre l'inverse de ce qu'elle
   veut dire (que le nom du bean est découplé du nom de la méthode).
-- [ ] **C1-04** · **`di.md:903-907`** — la note orateur affirme : « Les 4 sont équivalent, ils sont plus
+- [x] **C1-04** · **`di.md:903-907`** — la note orateur affirme : « Les 4 sont équivalent, ils sont plus
   sémantique pour de la documentation ». **C'est faux**, et c'est le genre d'affirmation qu'un
   étudiant retient :
   - `@Repository` déclenche la **traduction des exceptions de persistance**
@@ -44,7 +44,7 @@ le plus de contenu culturel compressible. `di.md` pèse à lui seul 30 slides.
     `@Component` avec des `@GetMapping` ne sert aucune route
   - Seul `@Service` est effectivement un pur alias sémantique
   Reformuler : « trois spécialisations, dont deux ont un comportement propre ».
-- [ ] **C1-05** · ⚪ `di.md:894` — « 3 alias pour le **DDD** » : la doc Spring parle de stéréotypes d'une
+- [x] **C1-05** · ⚪ `di.md:894` — « 3 alias pour le **DDD** » : la doc Spring parle de stéréotypes d'une
   architecture en couches, pas de DDD. Terme à retirer, il embrouille plus qu'il n'aide.
 
 ### `mvc.md`
@@ -180,10 +180,10 @@ Slides sans note où le contenu ne se lit pas seul :
 >   flèche d'héritage change de style), et c'est celle qui porte l'erreur de compilation.
 >   Supprimer plutôt que corriger.
 >   **REPORTÉ : décision plus tard (C1-01 reste ouvert d'ici là).**
-> - [ ] **C1-41** · **`di.md:1039-1216` (TL;DR, 5 slides)** : utile, mais à resserrer — le TL;DR reprend
+> - [x] **C1-41** · **`di.md:1039-1216` (TL;DR, 5 slides)** : utile, mais à resserrer — le TL;DR reprend
 >   intégralement du code déjà montré. 3 slides suffisent, et ça élimine au passage
 >   l'erreur de `di.md:1200-1209` et le titre dupliqué de `di.md:1145`.
->   **DÉCISION partielle : `@Autowired lateinit var` n'est PAS barré** (pattern désuet à connaître, utile en test, pas interdit). On marque plutôt l'injection par **constructeur comme le standard**. Plan de slides (Q6/Q7) en attente.
+>   **DÉCISION partielle : `@Autowired lateinit var` n'est PAS barré** (pattern désuet à connaître, utile en test, pas interdit). On marque plutôt l'injection par **constructeur comme le standard**. **FAIT : TL;DR réécrit en 4 slides** (déclarer, injecter, scope, conflits). Noms de beans corrigés (C1-03), titre dupliqué supprimé, appel direct gardé avec commentaire CGLIB.
 >
 > Ces ~12 slides financent : la slide plugins Gradle Kotlin, la slide conventions REST,
 > et l'avertissement sur l'injection par propriété.

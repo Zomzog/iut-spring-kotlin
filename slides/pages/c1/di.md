@@ -893,7 +893,9 @@ Déclare que la classe doit devenir un bean lors du scan
 
 <div v-click>
 
-## 3 alias pour le DDD
+## 3 spécialisations
+
+Identifient mieux le rôle de la classe (DDD, n-tiers...)
 
 @Controller
 
@@ -903,9 +905,11 @@ Déclare que la classe doit devenir un bean lors du scan
 </div>
 
 <!--
-
-Les 4 sont équivalent,
-ils sont plus sémantique pour de la documentation
+Les 3 sont des spécialisations de @Component : le bean est créé de la même façon.
+Elles identifient mieux le rôle de la classe dans des patterns comme le DDD ou le n-tiers
+(@Controller sert surtout le n-tiers).
+Elles permettent aussi à certaines libs d'ajouter un comportement plus précis
+que sur un simple @Component. On y reviendra plus tard.
 -->
 
 ---
@@ -1038,83 +1042,79 @@ layout: full
 class: text-left
 ---
 
-## Bean creation avec @Bean
+## Déclarer un bean
+
+### Avec `@Bean`
 
 ```kotlin
 @Configuration
-class MyDatabaseConfig() {
+class MyDatabaseConfig {
     @Bean
-    fun myDb() = PostgresDb()
+    fun myDb() = PostgresDb() // nom du bean : myDb
+
+    @Bean("autreNom")
+    fun uneAutreMethode() = PostgresDb() // nom du bean : autreNom
 }
 ```
 
-## Bean creation avec Stereotype
+### Avec un stéréotype
 
 ```kotlin
 @Service
-class MyService() {
-}
+class MyService // nom du bean : myService
 
-@Component
-class MyOtherService() {
-}
+@Component("unAutreNom")
+class MyOtherService // nom du bean : unAutreNom
 ```
 
 ---
-layout: full
+layout: TwoColumns
 class: text-left
 ---
 
-## @Configuration
+## Injecter une dépendance
 
-### Injection de dépendances appel direct
+::left::
+
+### @Configuration
+
+#### Par appel direct (le proxy CGLIB renvoie le singleton)
 
 ```kotlin
 @Configuration
-class MyDatabaseConfig() {
+class MyDatabaseConfig {
     @Bean
     fun myDb() = PostgresDb()
+
     @Bean
     fun myService() = MyService(myDb())
 }
 ```
 
-### Injection de dépendances par paramètre
+#### Par paramètre
 
 ```kotlin
 @Configuration
-class MyDatabaseConfig() {
+class MyDatabaseConfig {
     @Bean
     fun myService(db: Database) = MyService(db)
 }
 ```
 
-### Injection de dépendances par constructeur
+::right::
 
-```kotlin
-@Configuration
-class MyDatabaseConfig(val db: Database) {
-    @Bean
-    fun myService() = MyService(db)
-}
-```
+### @Component
 
----
-layout: full
-class: text-left
----
+#### Par constructeur
 
-## @Component
-
-### Injection de dépendances par constructeur
+> ✅ Le standard : à privilégier
 
 ```kotlin
 @Service
-class MyService(val db: Database) {
-}
+class MyService(val db: Database)
 ```
 
-### Injection de dépendances par autowired
+#### Par autowired
 
 ```kotlin
 @Service
@@ -1131,27 +1131,14 @@ class: text-left
 
 ## @Scope
 
-### @Bean @Scope
-
 ```kotlin
 @Configuration
 class MyConfig {
-    @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
+    @Bean // SINGLETON par défaut : une seule instance pour tous
     fun onlyOneForAll() = PostgresDb()
 
     @Bean @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     fun oneBeanPerCall() = PostgresDb()
-}
-```
-
-### @Component @Scope
-
-```kotlin
-@Service
-@Scope(BeanDefinition.SCOPE_SINGLETON)
-class MyService {
-    @Autowired
-    lateinit var db: Database
 }
 ```
 
@@ -1161,8 +1148,6 @@ class: text-left
 ---
 
 ## Résolution de conflit
-
-### @Primary
 
 ```kotlin
 @Configuration
@@ -1175,44 +1160,9 @@ class MyConfig {
     fun my2ndDb() = PostgresDb()
 
     @Bean
-    fun aService(@Qualifier("secondary") db: Database) = AService(db) //  my2ndDb
-}
-```
-
-### @Qualifier
-
-```kotlin
-@Configuration
-class MyConfig {
+    fun aService(db: Database) = AService(db) // myDb (@Primary)
 
     @Bean
-    fun aService(@Qualifier("secondary") db: Database) = AService(db) //  my2ndDb
-}
-```
-
----
-layout: full
-class: text-left
----
-
-## Résolution de conflit
-
-### Noms des beans
-
-```kotlin
-@Configuration
-class MyConfig {
-
-    @Bean
-    fun nomDuBean() = PostgresDb()
-
-    @Bean("nouveauNomDuBean")
-    fun nomDuBean() = PostgresDb()
-}
-```
-
-```kotlin
-@Service("unAutreNom")
-class MyService {
+    fun bService(@Qualifier("secondary") db: Database) = BService(db) // my2ndDb
 }
 ```
