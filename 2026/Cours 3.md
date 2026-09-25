@@ -144,7 +144,7 @@ C'est le cours qui contient **le plus de code faux** (transactions et sécurité
 
 ## 🔴 Erreurs — `jpa3.md`
 
-- [ ] **`jpa3.md:232-240`** — `@JoinColumn(name = "phone_id") val phone: PhoneEntity`
+- [ ] **`jpa3.md:134-142`** — `@JoinColumn(name = "phone_id") val phone: PhoneEntity`
   **sans `@OneToOne`**. Sans annotation de relation, Hibernate ne mappe pas l'association.
   La plage surlignée (`{all|6-7,13-14}`) montre bien que deux lignes étaient attendues : le
   `@OneToOne` a été perdu.
@@ -153,13 +153,13 @@ C'est le cours qui contient **le plus de code faux** (transactions et sécurité
   - **incohérence** entre deux cours sur le même sujet, à une semaine d'intervalle
   - c'est la version `data class` qui est **problématique** : `equals`/`hashCode`/`toString`
     portent sur tous les champs, donc récursion infinie sur une relation bidirectionnelle
-    (`UserEntity.phone` ↔ `PhoneEntity.user`, littéralement le cas de `jpa3.md:232-248`)
+    (`UserEntity.phone` ↔ `PhoneEntity.user`, littéralement le cas de `jpa3.md:134-150`)
   Trancher pour `class`, et faire du « pourquoi pas `data class` » une slide (voir manque
   correspondant dans [[2026/Cours 2]]).
 - [ ] 🟡 Les entités bidirectionnelles de `jpa3.md` ont des deux côtés non-nullables et sans
   valeur par défaut (`val user: UserEntity`, `val phones: List<PhoneEntity>`) → mêmes
   problèmes de construction que `jpa2.md:409-427`.
-- [ ] ⚪ `jpa3.md:429` — plage de surlignage `{all|9,11-131}` : `131` au lieu de `13`.
+- [ ] ⚪ `jpa3.md:331` — plage de surlignage `{all|9,11-131}` : `131` au lieu de `13`.
 
 ## 🔴 Erreurs — `di-reminder.md`
 
@@ -221,9 +221,9 @@ C'est le cours qui contient **le plus de code faux** (transactions et sécurité
 - [ ] **`OncePerRequestFilter`** : c'est la classe de base **recommandée** par Spring pour
   écrire un filtre (gère les dispatches async et les forwards, qui sinon exécutent le filtre
   plusieurs fois). `filters.md` enseigne `Filter` puis `HttpFilter`, et s'arrête juste avant.
-  Le filtre de log de `filters.md:630-640` est précisément un cas où ça compte.
+  Le filtre de log de `filters.md:128-138` est précisément un cas où ça compte.
 - [ ] **`HandlerInterceptor` vs `Filter`** : quand utiliser l'un plutôt que l'autre (avant/
-  après le `DispatcherServlet`, accès au handler). Le schéma de `filters.md:540-546` est déjà
+  après le `DispatcherServlet`, accès au handler). Le schéma de `filters.md:38-44` est déjà
   en place pour le dire.
 - [ ] **`@AuthenticationPrincipal`** : bien plus idiomatique que `Principal`
   (`security.md:455`) ou `SecurityContextHolder` (`security.md:468`), et permet de récupérer
@@ -239,11 +239,11 @@ C'est le cours qui contient **le plus de code faux** (transactions et sécurité
 - [ ] **Timeouts sur les appels sortants** : `spring.http.clients.connect-timeout` /
   `read-timeout`. Première cause d'incident en production, zéro slide.
 - [ ] **La dépendance `kotlin-logging` n'est jamais déclarée** alors que
-  `filters.md:632` utilise `KotlinLogging.logger {}` (et `c4/caching.md:683` aussi). Elle est
+  `filters.md:130` utilise `KotlinLogging.logger {}` (et `c4/caching.md:298` aussi). Elle est
   introduite en `[[slides/pages/c4/logs|c4/logs.md:230-254]]`, soit **une séance après** son
   premier usage.
 - [ ] 🔵 Une phrase de transition entre `filters.md` et `security.md` : « Spring Security,
-  c'est cette chaîne de filtres » — le schéma de `filters.md:540` vient d'être posé, le lien
+  c'est cette chaîne de filtres » — le schéma de `filters.md:38` vient d'être posé, le lien
   est gratuit et très éclairant.
 
 ## 🟡 Mal expliqué

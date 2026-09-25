@@ -28,7 +28,7 @@ slides: 74
 >
 > Or tout le chapitre repose sur `@Validated` :
 > `[[slides/pages/c2/validation|c2/validation.md:44-137]]`, `:198-206`, `:470-485`.
-> Et `[[slides/pages/c2/error|c2/error.md:604-639]]` traite
+> Et `[[slides/pages/c2/error|c2/error.md:119-154]]` traite
 > `MethodArgumentNotValidException` — qui ne concerne en réalité **que** `@Valid @RequestBody`,
 > pas les `@RequestParam`/`@PathVariable` annotés.
 >
@@ -55,14 +55,14 @@ slides: 74
 
 ## 🔴 Erreurs — `error.md`
 
-- [ ] **`error.md:716-736`** — le test est nommé `` `happy path` `` alors qu'il injecte une
+- [ ] **`error.md:231-251`** — le test est nommé `` `happy path` `` alors qu'il injecte une
   exception et attend un **400**. En plus :
   - la classe s'appelle `DemoDtoTest` mais teste un contrôleur
   - `ImATeapotException` n'existe pas dans Spring (il y a `HttpStatus.I_AM_A_TEAPOT`,
     `ResponseStatusException`, ou `HttpClientErrorException.ImATeapot` côté client)
   - un teapot devrait donner 418, pas 400
   Slide à reprendre entièrement, et à renommer (`unhandled exception gives 400`).
-- [ ] 🟡 `error.md:595`, `:601`, `:609`, `:618`, `:628`, `:666`, `:671`, `:685` —
+- [ ] 🟡 `error.md:110`, `:116`, `:124`, `:133`, `:143`, `:181`, `:186`, `:200` —
   `@ControllerAdvice` partout. Ça fonctionne (le type de retour `ResponseEntity` suffit à
   déclencher l'écriture du corps), mais pour une API REST l'idiome est
   **`@RestControllerAdvice`**. À corriger, avec une phrase sur la différence.
@@ -129,7 +129,7 @@ slides: 74
   jointure**, et les deux côtés de la relation sont désynchronisés. Il faut
   `@ManyToMany(mappedBy = "phones")`. L'erreur est reproduite dans le TL;DR, donc affichée
   deux fois.
-  (`[[slides/pages/c3/jpa3|c3/jpa3.md:533]]` le fait correctement — bon contre-exemple à
+  (`[[slides/pages/c3/jpa3|c3/jpa3.md:435]]` le fait correctement — bon contre-exemple à
   aligner.)
 - [ ] **`jpa2.md:409-427`** — état final du One-to-One bidirectionnel :
   `UserEntity.phone: PhoneEntity?` (nullable, `var`) mais `PhoneEntity.user: UserEntity`
@@ -168,7 +168,7 @@ slides: 74
 ## 🔵 Manques
 
 - [ ] **`ProblemDetail` / RFC 9457** — le meilleur rapport valeur/effort du cours.
-  `[[slides/pages/c2/error|c2/error.md:662-701]]` étend **déjà**
+  `[[slides/pages/c2/error|c2/error.md:177-216]]` étend **déjà**
   `ResponseEntityExceptionHandler`, qui est précisément le point d'entrée du support
   `ProblemDetail`. Il manque : `spring.mvc.problemdetails.enabled=true`, la forme du corps
   (`type`, `title`, `status`, `detail`, `instance`), le media type
@@ -228,7 +228,7 @@ slides: 74
 - [ ] `validation.md:321-396` — custom annotation (magic-move de 5 étapes dont une marquée
   🚫) : aucune note
 - [ ] `validation.md:470-485` — slide finale d'utilisation : aucune note
-- [ ] `error.md:494-504`, `:709-737` — introduction et test de couche : aucune note
+- [ ] `error.md:9-19`, `:224-252` — introduction et test de couche : aucune note
 - [ ] `jpa.md:430-506` — `JpaRepository` et les 3 contre-exemples barrés : aucune note, et
   les slides barrées ont besoin d'être commentées pour être comprises
 - [ ] `jpa2.md:1-198` — les 5 slides de types de jointures : **aucune note sur les cinq**

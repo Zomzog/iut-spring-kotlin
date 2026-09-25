@@ -41,15 +41,15 @@ ajouts. C'est aussi celle qui a le moins de speaker notes.
 
 ## 🔴 Erreurs — `flyway.md`
 
-- [ ] **`flyway.md:235-238`** — dépendance Maven avec
+- [ ] **`flyway.md:84-87`** — dépendance Maven avec
   `<groupId>org.postgresql</groupId>` pour l'artefact `flyway-database-postgresql`.
   C'est **`org.flywaydb`** (le bloc Gradle juste au-dessus est correct).
-- [ ] **`flyway.md:329-334`** — les **Undo migrations (`U<version>__…sql`) sont une
+- [ ] **`flyway.md:178-183`** — les **Undo migrations (`U<version>__…sql`) sont une
   fonctionnalité Flyway Teams/Enterprise**, payante, indisponible en édition Community. La
   slide les présente au même niveau que les migrations versionnées et répétables. Les
   étudiants vont écrire un `U1__…sql` et se demander pourquoi il est ignoré. → ajouter la
   mention, ou retirer la slide.
-- [ ] ⚪ `flyway.md:349-369` — la slide est titrée « Exemple SQL
+- [ ] ⚪ `flyway.md:198-218` — la slide est titrée « Exemple SQL
   (`V1__create_users_table.sql`) », le SQL crée une table **`pony`**, et la table
   d'historique affiche **`V1__init.sql`** avec la description `init`. Trois noms pour un seul
   exemple ; c'est la slide qui explique le lien nom de fichier ↔ historique, donc la
@@ -57,28 +57,28 @@ ajouts. C'est aussi celle qui a le moins de speaker notes.
 
 ## 🔴 Erreurs — `caching.md`
 
-- [ ] **`caching.md:551`** — `key = "#root.methodName : #max"` : **`:` n'est pas un opérateur
+- [ ] **`caching.md:166`** — `key = "#root.methodName : #max"` : **`:` n'est pas un opérateur
   SpEL**. L'expression ne s'évalue pas.
   → `key = "#root.methodName + ':' + #max"`.
-- [ ] **`caching.md:509-514`** — `@Cacheable("myCache")` sur une fonction présentée hors
+- [ ] **`caching.md:124-129`** — `@Cacheable("myCache")` sur une fonction présentée hors
   classe. `@Cacheable` exige un **bean** et un **proxy** : sur une fonction top-level Kotlin,
   ça ne peut pas fonctionner. Même problème que `@Transactional` en c3 → renvoyer
   explicitement au manque « proxies Kotlin » de [[2026/Cours 3]], **y compris
   l'auto-invocation** : `@Cacheable` appelé depuis la même classe ne met rien en cache.
-- [ ] **`caching.md:681-688`** et **`:705-712`**, **`:733-740`** —
+- [ ] **`caching.md:296-303`** et **`:320-327`**, **`:348-355`** —
   `class CacheErrorHandlerConfig : CacheErrorHandler` n'implémente que
   `handleCacheGetError`. L'interface en déclare **quatre** (`handleCacheGetError`,
   `handleCachePutError`, `handleCacheEvictError`, `handleCacheClearError`), toutes abstraites.
   **Ne compile pas.**
-- [ ] ⚪ `caching.md:634-637` — `@CachePut … fun updateUser(…): User { /* commentaire */ }` :
+- [ ] ⚪ `caching.md:249-252` — `@CachePut … fun updateUser(…): User { /* commentaire */ }` :
   type de retour non-`Unit` sans `return`.
-- [ ] ⚪ `caching.md:550` — `fun chacheWithKey`.
+- [ ] ⚪ `caching.md:165` — `fun chacheWithKey`.
 - [ ] ⚪ Le nom `CacheErrorHandlerConfig` pour un handler (pas une `@Configuration`) prête à
   confusion.
 
 ## 🔴 Erreurs — `actuators.md`
 
-- [ ] **`actuators.md:479-490`** — `val info = this.delegate.info()` puis
+- [ ] **`actuators.md:156-167`** — `val info = this.delegate.info()` puis
   `info["custom.value"] = "pony"`. `InfoEndpoint.info()` renvoie une **`Map` non modifiable**.
   Le code compile (types plateforme Java côté Kotlin) mais lève
   `UnsupportedOperationException` à l'exécution.
@@ -91,25 +91,25 @@ ajouts. C'est aussi celle qui a le moins de speaker notes.
 
 ## 🔴 Erreurs — `integration-testing.md`
 
-- [ ] **`integration-testing.md:277`, `:301`, `:326`** — `@Container` sur un `val` dans un
+- [ ] **`integration-testing.md:78`, `:102`, `:127`** — `@Container` sur un `val` dans un
   `companion object` **sans `@JvmStatic`**. L'extension JUnit de Testcontainers n'inspecte que
   les champs **statiques** : sans `@JvmStatic`, le conteneur **n'est jamais démarré**.
   Piège Kotlin classique, et il rend l'exemple entier non fonctionnel.
   → `@Container @JvmStatic val postgres = …`
-- [ ] **`integration-testing.md:250`**, `:267`, `:290`, etc. —
+- [ ] **`integration-testing.md:51`**, `:68`, `:91`, etc. —
   `userRepository.findById(user.id.toString())` : l'entité est créée avec `id = 2L`, donc le
   repository est un `JpaRepository<UserEntity, Long>`. Passer une `String` ne compile pas.
-- [ ] **`integration-testing.md:251`** — **`assert(found.isPresent)`** : l'`assert` de Kotlin
+- [ ] **`integration-testing.md:52`** — **`assert(found.isPresent)`** : l'`assert` de Kotlin
   est **désactivé** sans `-ea` sur la JVM. Le test passe donc **toujours**, quoi qu'il arrive.
   C'est le pire cas possible dans un cours sur les tests, et le reste du programme utilise
   assertk (`assertThat(...)`) — à aligner.
-- [ ] ⚪ `integration-testing.md:277` — `PostgreSQLContainer("postgres:18-alpine")` : le
+- [ ] ⚪ `integration-testing.md:78` — `PostgreSQLContainer("postgres:18-alpine")` : le
   constructeur prenant une `String` est déprécié au profit de `DockerImageName.parse(...)`
   (forme que la slide Kafka utilise, d'ailleurs).
 
 ## 🔴 Erreurs — `reactive.md`
 
-- [ ] **`reactive.md:495-501`** — trois problèmes sur une seule méthode :
+- [ ] **`reactive.md:31-37`** — trois problèmes sur une seule méthode :
   - `@GetMapping("/products/{productId}")` mais paramètre `@PathVariable id` : **les noms ne
     correspondent pas** → échec au démarrage (sans `@PathVariable("productId")`)
   - corps en bloc `{ … }` avec un type de retour `ProductStockDTO` et **aucun `return`** →
@@ -117,23 +117,23 @@ ajouts. C'est aussi celle qui a le moins de speaker notes.
   - `productRepository.findById(id.id)` sur un `CrudRepository` renvoie un
     **`Optional<Product>`**, pas un nullable → `product?.let` est faux
   - accessoirement, `@PathVariable id: ProductId` sur un type métier exigerait un converter
-- [ ] 🟡 **`reactive.md:520-534`** — étape intermédiaire où `val product = async { … }` est
+- [ ] 🟡 **`reactive.md:56-70`** — étape intermédiaire où `val product = async { … }` est
   suivi de `product?.let` : un `Deferred` n'est pas nullable. Corrigé à l'étape suivante avec
   `.await()`, mais l'étape fausse **n'est pas marquée** (le cours utilise un 🚫 ailleurs).
 
 ## 🔴 Erreurs — `telemetry.md`
 
-- [ ] ⚪ **`telemetry.md:779`** — la commande `java -javaagent:… -jar myapp.jar` est en
+- [ ] ⚪ **`telemetry.md:170`** — la commande `java -javaagent:… -jar myapp.jar` est en
   **paragraphe**, pas dans un bloc de code : pas de coloration, et le rendu casse la
   lisibilité d'une ligne longue.
 
 ## 🟠 Obsolescence 4.1
 
-- [ ] **`integration-testing.md:385`** — `KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.0"))` :
+- [ ] **`integration-testing.md:186`** — `KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.0"))` :
   `org.testcontainers.containers.KafkaContainer` est déprécié, et l'image Confluent 7.4.0
   date de 2023. → `org.testcontainers.kafka.KafkaContainer` avec l'image `apache/kafka`.
   Même correction à porter dans `code/`.
-- [ ] **`telemetry.md:697-698`** — `@Service class SpanDemoService(private val tracer: io.opentelemetry.api.trace.Tracer)` :
+- [ ] **`telemetry.md:88-89`** — `@Service class SpanDemoService(private val tracer: io.opentelemetry.api.trace.Tracer)` :
   l'injection directe d'un `Tracer` OpenTelemetry est douteuse (le starter expose un
   `OpenTelemetry`, dont on tire un `Tracer` via `getTracer(name)`). Surtout, l'API idiomatique
   côté Spring est **Micrometer Observation** — `ObservationRegistry`, `@Observed` — et
@@ -145,16 +145,16 @@ ajouts. C'est aussi celle qui a le moins de speaker notes.
   d'architecture : pour la majorité des applications, c'est aujourd'hui l'alternative
   pragmatique au passage en réactif. → voir la proposition d'extension ci-dessous.
 - [ ] ⚪ `auto-configuration.md:41` — le chemin du `.imports` est **correct** et confirmé
-  inchangé en 4.1 : c'est `c1/springboot.md:355` qu'il faut corriger (voir [[2026/Cours 1]]).
+  inchangé en 4.1 : c'est `c1/springboot.md:169-171` qu'il faut corriger (voir [[2026/Cours 1]]).
 
 ## 🔵 Manques
 
-- [ ] **Sécuriser `/actuator`.** `actuators.md:397` dit « all endpoints **do not use in
+- [ ] **Sécuriser `/actuator`.** `actuators.md:74` dit « all endpoints **do not use in
   production** » sans jamais montrer **comment** protéger. Or la sécurité vient d'être vue en
   c3 : le lien est gratuit et important.
   → `management.server.port` (port de management séparé), ou une règle
   `authorize("/actuator/**", hasRole("ADMIN"))`. **1 slide**, et elle referme la boucle c3 → c4.
-- [ ] **`HealthIndicator` et `InfoContributor` custom.** `actuators.md:458-492` montre
+- [ ] **`HealthIndicator` et `InfoContributor` custom.** `actuators.md:135-169` montre
   `@EndpointWebExtension` — un mécanisme obscur, rarement utilisé, et dont l'exemple ne
   fonctionne pas (voir plus haut). Un `HealthIndicator` custom est plus simple, plus utile, et
   c'est ce que les étudiants auront réellement à écrire. → remplacer.
@@ -165,7 +165,7 @@ ajouts. C'est aussi celle qui a le moins de speaker notes.
 - [ ] **Logs structurés JSON**, natifs depuis Spring Boot 3.4 :
   `logging.structured.format.console=ecs` (ou `logstash`, `gelf`). Une ligne de configuration
   pour des logs exploitables par une stack d'agrégation — exactement le sujet du chapitre
-  « production ready » de `actuators.md:336-342`. Aujourd'hui `logs.md` ne parle que de
+  « production ready » de `actuators.md:13-19`. Aujourd'hui `logs.md` ne parle que de
   `logback.xml` et de Jansi (couleurs en dev).
 - [ ] **MDC / correlation-id dans les logs.** Spring Boot ajoute automatiquement
   `logging.pattern.correlation` quand Micrometer Tracing est présent : le `traceId` apparaît
@@ -179,9 +179,9 @@ ajouts. C'est aussi celle qui a le moins de speaker notes.
 - [ ] **Flyway vs `spring.jpa.hibernate.ddl-auto`.** c2 laisse Hibernate générer le schéma ;
   c4 introduit Flyway. Les deux ensemble se marchent dessus. La transition doit être
   explicite : avec Flyway, on passe `ddl-auto` à `validate` (ou `none`).
-  `flyway.md:206-210` effleure le sujet (« préférable au DDL auto en production ») sans
+  `flyway.md:55-59` effleure le sujet (« préférable au DDL auto en production ») sans
   donner la propriété.
-- [ ] **Caffeine par propriétés.** `caching.md:459-503` construit un `CacheManager` à la main
+- [ ] **Caffeine par propriétés.** `caching.md:74-118` construit un `CacheManager` à la main
   sur 4 étapes, alors que Spring Boot auto-configure Caffeine depuis
   `spring.cache.caffeine.spec=maximumSize=500,expireAfterWrite=10m`. Montrer la version
   propriétés **d'abord** (c'est un cours sur Spring **Boot**), puis le bean manuel pour les
@@ -200,7 +200,7 @@ ajouts. C'est aussi celle qui a le moins de speaker notes.
   et le piège `spring.json.trusted.packages`. Également : `KafkaTemplate.send` renvoie un
   `CompletableFuture` (depuis Boot 3), que `messaging.md:111` ignore silencieusement.
 - [ ] **`reactive.md` : on ne peut pas utiliser JPA/JDBC avec WebFlux.** C'est la raison
-  d'être de R2DBC, qui apparaît en `reactive.md:477` sans explication. Sans cette phrase, les
+  d'être de R2DBC, qui apparaît en `reactive.md:13` sans explication. Sans cette phrase, les
   deux slides de ce chapitre sont incompréhensibles.
 - [ ] ⚪ `caching.md` : `@Caching`, `condition`/`unless`, et le fait qu'un retour `null` est
   mis en cache. Et les métriques de cache exposées via Actuator — lien naturel avec la
@@ -229,11 +229,11 @@ c4 est la séance la moins annotée, et celle qui contient le plus de configurat
   slide, et elle est absente.
 - [ ] `logs.md:295-323` — alternative `application.yml` / variables d'environnement : aucune
   note
-- [ ] `actuators.md:380-416` — configuration des endpoints : aucune note
-- [ ] `actuators.md:418-451` — le JSON de `/actuator/health` : aucune note, alors qu'il y a
+- [ ] `actuators.md:57-93` — configuration des endpoints : aucune note
+- [ ] `actuators.md:95-128` — le JSON de `/actuator/health` : aucune note, alors qu'il y a
   beaucoup à dire (composants, `show-details`, agrégation du statut global)
-- [ ] `actuators.md:453-492` — customisation : aucune note
-- [ ] `actuators.md:494-609` — Metrics, Prometheus, métriques custom : aucune note sur
+- [ ] `actuators.md:130-169` — customisation : aucune note
+- [ ] `actuators.md:171-286` — Metrics, Prometheus, métriques custom : aucune note sur
   l'ensemble du bloc
 - [ ] `telemetry.md` — les 9 slides sont sans note ; le contenu est en listes à puces
   auto-portantes, mais `:683-723` (exemple de span manuel) et `:770-786` (agent Java) en
@@ -247,9 +247,9 @@ c4 est la séance la moins annotée, et celle qui contient le plus de configurat
 
 > [!tip] Arbitrages proposés — c4 a de la marge (64 slides contre 89 pour c1)
 > **À remplacer plutôt qu'à ajouter :**
-> - `actuators.md:453-492` (`@EndpointWebExtension`, 1 slide, exemple cassé) →
+> - `actuators.md:130-169` (`@EndpointWebExtension`, 1 slide, exemple cassé) →
 >   `HealthIndicator` custom. Même volume, bien plus utile.
-> - `caching.md:459-503` : inverser l'ordre — `spring.cache.caffeine.spec` d'abord, bean
+> - `caching.md:74-118` : inverser l'ordre — `spring.cache.caffeine.spec` d'abord, bean
 >   manuel ensuite. Même volume.
 >
 > **À ajouter (le budget existe) :**

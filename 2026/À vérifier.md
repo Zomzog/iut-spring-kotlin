@@ -52,7 +52,7 @@ MockMvc sans header, je m'attends à la 302.
 
 ## 3. `@DataJpaTest` + `@ServiceConnection` : faut-il `replace = NONE` ?
 
-**Où** : `[[slides/pages/c4/integration-testing|c4/integration-testing.md:234-344]]`
+**Où** : `[[slides/pages/c4/integration-testing|c4/integration-testing.md:35-145]]`
 
 **Ce que je pense** : `@DataJpaTest` applique `@AutoConfigureTestDatabase`, qui **remplace la
 `DataSource`** par une base embarquée si elle est disponible sur le classpath. Or

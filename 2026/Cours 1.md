@@ -82,18 +82,18 @@ le plus de contenu culturel compressible. `di.md` pèse à lui seul 30 slides.
 
 ### `springboot.md`
 
-- [ ] **`springboot.md:345-357`** — le chemin du fichier d'auto-configuration omet le dossier
+- [ ] **`springboot.md:160-172`** — le chemin du fichier d'auto-configuration omet le dossier
   `spring/` : `META-INF/org.springframework…imports` au lieu de
   `META-INF/spring/org.springframework…imports`. **Contredit
   `[[slides/pages/c4/auto-configuration|c4/auto-configuration.md:41,112]]`, qui est juste.**
-- [ ] ⚪ `springboot.md:224`, `:269`, `:288` — `fun main(args: Array<String>) { runApplication<…>(*args)`
+- [ ] ⚪ `springboot.md:37-38`, `:82-83`, `:101-102` — `fun main(args: Array<String>) { runApplication<…>(*args)`
   sans `}` de fermeture, sur trois slides.
 
 ## 🟠 Obsolescence 4.1
 
 Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
 
-- [ ] `mvc.md:13,19,25` et `springboot.md:340` — `spring-boot-starter-web` →
+- [ ] `mvc.md:13,19,25` et `springboot.md:155` — `spring-boot-starter-web` →
   **`spring-boot-starter-webmvc`** (titre de slide inclus)
 - [ ] `test.md:334,352,371` — `@SpykBean` → **`@MockkSpyBean`** (springmockk 5.x)
 - [ ] `test.md:438,455,475` — `ObjectMapper` passe sous `tools.jackson` (Jackson 3), et

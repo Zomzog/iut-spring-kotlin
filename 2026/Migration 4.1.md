@@ -28,7 +28,7 @@ correspondants.
 - [ ] 🟠 `spring-boot-starter-web` → **`spring-boot-starter-webmvc`**
   - `[[slides/pages/c1/mvc|c1/mvc.md:19]]` (gradle) et `:25` (maven) — la slide est titrée
     « ## spring-boot-starter-web », le titre change aussi
-  - `[[slides/pages/c1/springboot|c1/springboot.md:340]]`
+  - `[[slides/pages/c1/springboot|c1/springboot.md:155]]`
 - [ ] 🟠 Vérifier les autres starters cités : `spring-boot-starter-validation`,
   `-security`, `-actuator`, `-cache`, `-data-jpa`, `-webflux`, `-data-r2dbc` sont inchangés.
   `spring-boot-starter-kafka` **existe désormais** (nouveau en 4.x) → `c4/messaging.md:26`

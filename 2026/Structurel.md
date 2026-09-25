@@ -47,14 +47,14 @@ transverses :
   successifs sur la même slide. Slidev ne retient que **le dernier** (vérifié : la note de
   cette slide est « On peut cumuler les contraintes, même sans cohérence »). L'explication de
   `@Validated` et `@Min` — le cœur de la slide — est **perdue**. Fusionner les deux blocs.
-- [ ] 🟡 `[[slides/pages/c3/filters|c3/filters.md:603-621]]` : même problème, deux blocs
+- [ ] 🟡 `[[slides/pages/c3/filters|c3/filters.md:101-119]]` : même problème, deux blocs
   successifs. Le second (« il est possible de modifier la requête avant… ») écrase le premier
   qui explique `doFilter`, `FilterChain` et le wrapper de réponse.
 
 ## Cohérence interne
 
 - [ ] 🔴 **Contradiction entre deux cours sur le même chemin.**
-  `[[slides/pages/c1/springboot|c1/springboot.md:345-357]]` place le fichier d'imports dans
+  `[[slides/pages/c1/springboot|c1/springboot.md:160-172]]` place le fichier d'imports dans
   `src/main/resources/META-INF/` — il manque le dossier `spring/`.
   `[[slides/pages/c4/auto-configuration|c4/auto-configuration.md:41,112]]` donne le bon
   chemin : `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`
@@ -71,7 +71,7 @@ transverses :
   `TwoColumns` / `TwoColumnsTitle` (`layouts/`) et le `two-cols` natif de Slidev, utilisé
   une seule fois en `[[slides/pages/c1/di|c1/di.md:411]]`. Les deux fonctionnent (même slot
   `::right::`), mais le rendu diffère. Harmoniser sur les layouts maison.
-- [ ] ⚪ `[[slides/pages/c4/actuators|c4/actuators.md:387,397,409]]` : des étiquettes de
+- [ ] ⚪ `[[slides/pages/c4/actuators|c4/actuators.md:64,74,86]]` : des étiquettes de
   bloc de code (`[select endpoints]`, `[all endpoints do not use in production]`) sont
   utilisées comme phrases explicatives, hors d'un `code-group`. Détourne un mécanisme prévu
   pour des noms de fichiers ; mettre le texte sur la slide.
@@ -102,7 +102,7 @@ Le fichier `slides/note.adoc` contient 4 constats de l'an dernier, aucun n'est a
   1h30 chacun. c1 est 39 % plus dense que c4. Les coupes de [[2026/Cours 1]] (~12 slides)
   suffisent à l'aligner.
 - [ ] ⚪ **Pas de slide de conclusion.** Le cours s'achève sur
-  `[[slides/pages/c4/telemetry|c4/telemetry.md:788-791]]`, une image `/flam.avif` seule,
+  `[[slides/pages/c4/telemetry|c4/telemetry.md:179-182]]`, une image `/flam.avif` seule,
   sans texte. Ajouter un récapitulatif + pointeurs (doc Spring, Baeldung, `start.spring.io`).
 - [ ] ⚪ `[[slides/pages/c3/security|c3/security.md:12-18]]` : slide « ## Vocabulaire »
   **entièrement vide** (titre seul). Soit la remplir, soit la supprimer — les trois slides
@@ -112,10 +112,10 @@ Le fichier `slides/note.adoc` contient 4 constats de l'an dernier, aucun n'est a
 > Cinq choses qui ressemblent à des bugs et qui n'en sont pas. Vérifiées, pas supposées.
 >
 > - **`:: code-group` avec un espace** (6 occurrences : `c1/mvc.md:15`,
->   `c2/validation.md:14`, `c4/flyway.md:219`, `c4/caching.md:429`,
->   `c4/actuators.md:351,514`) → **fonctionne**. Inspection du bundle produit : le composant
+>   `c2/validation.md:14`, `c4/flyway.md:68`, `c4/caching.md:44`,
+>   `c4/actuators.md:28,191`) → **fonctionne**. Inspection du bundle produit : le composant
 >   `CodeGroup` est bien instancié, avec les onglets « gradle » et « maven ».
-> - **`c1/springboot.md:209`** : une fence ``` orpheline en tête du bloc `md magic-move`.
+> - **`c1/springboot.md:24`** : une fence ``` orpheline en tête du bloc `md magic-move`.
 >   Slidev la tolère. Décompression du `steps-lz` du bundle : 2 étapes, correctes,
 >   correctement colorées.
 > - **`c2/config.md:109-168`** : « `.properties` > `.yml` > `.yaml` » est **correct**. La doc
