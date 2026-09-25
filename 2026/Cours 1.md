@@ -135,7 +135,7 @@ Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
   `proxyBeanMethods`**, alors que la slide juste avant (`di.md:368-408`) explique précisément
   le proxy CGLIB. `proxyBeanMethods = false` est la réponse à « comment on désactive ce
   proxy » : la question va être posée.
-- [ ] **C1-29** · 🟡 `di.md:786-810` présente l'injection par propriété (`@Autowired lateinit var`) comme
+- [x] **C1-29** · 🟡 `di.md:786-810` présente l'injection par propriété (`@Autowired lateinit var`) comme
   une **alternative équivalente** à l'injection par constructeur. C'est un anti-pattern
   (non testable, dépendances cachées, pas d'immutabilité). Le TL;DR de
   `[[slides/pages/c3/di-reminder|c3/di-reminder.md:90-93]]` tranche correctement — mais deux
@@ -145,6 +145,7 @@ Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
 
 Slides sans note où le contenu ne se lit pas seul :
 
+  **FAIT : note visible sur la slide (`> ✅ Le standard : à privilégier`), pas de speaker note. Pas de badge sur `@Autowired`.**
 - [ ] **C1-30** · `test.md:14-22` — slide image `code_coverage.jpg` : aucune note, et l'image seule ne
   porte pas le message
 - [ ] **C1-31** · `test.md:18-26` — pyramide des tests : aucune note pour une slide qui est *uniquement*
@@ -182,6 +183,7 @@ Slides sans note où le contenu ne se lit pas seul :
 > - [ ] **C1-41** · **`di.md:1039-1216` (TL;DR, 5 slides)** : utile, mais à resserrer — le TL;DR reprend
 >   intégralement du code déjà montré. 3 slides suffisent, et ça élimine au passage
 >   l'erreur de `di.md:1200-1209` et le titre dupliqué de `di.md:1145`.
+>   **DÉCISION partielle : `@Autowired lateinit var` n'est PAS barré** (pattern désuet à connaître, utile en test, pas interdit). On marque plutôt l'injection par **constructeur comme le standard**. Plan de slides (Q6/Q7) en attente.
 >
 > Ces ~12 slides financent : la slide plugins Gradle Kotlin, la slide conventions REST,
 > et l'avertissement sur l'injection par propriété.

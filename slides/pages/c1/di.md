@@ -756,6 +756,8 @@ class: text-left
 
 ## Injection par constructeur
 
+> ✅ Le standard : à privilégier
+
 ```kotlin
 class AService(val db: Database) {
 
