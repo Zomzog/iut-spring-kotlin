@@ -158,7 +158,7 @@ Slides sans note où le contenu ne se lit pas seul :
 - [ ] **C1-35** · `di.md:224-249`, `di.md:465-524`, `di.md:936-1025` — magic-move sans note
 - [ ] **C1-36** · `mvc.md:116-150`, `mvc.md:183-226`, `mvc.md:228-271` — tout le chapitre paramètres /
   codes retour / DTO est sans note
-- [ ] **C1-37** · `jee.md:80-244` — le grand schéma animé (10 clics) a une note très riche… qui est
+- [x] **C1-37** · `jee.md:80-244` — le grand schéma animé (10 clics) a une note très riche… qui est
   ensuite **recopiée mot pour mot** dans les 10 slides suivantes (voir coupe ci-dessous)
 
 ## 🟡 Placement
@@ -169,15 +169,17 @@ Slides sans note où le contenu ne se lit pas seul :
   (C'est vraisemblablement le « slide warning mal placé » de `note.adoc`.)
 
 > [!tip] Coupes proposées — ~12 slides, de quoi aligner c1 sur les autres séances
-> - **C1-39** · **`jee.md:246-310` (10 slides)** : JPA, JTA, JMS, CDI, EJB, Servlet, JSP, JSF, JAX
+> - [x] **C1-39** · **`jee.md:246-310` (10 slides)** : JPA, JTA, JMS, CDI, EJB, Servlet, JSP, JSF, JAX
 >   reprennent **mot pour mot** le contenu de la note orateur du grand schéma animé
 >   (`jee.md:204-244`). Le schéma animé fait déjà le travail, avec l'avantage de montrer les
 >   dépendances entre briques. Garder le schéma + la note, supprimer les 10 slides de texte.
 >   → **le meilleur gain du cours : 10 slides, zéro perte pédagogique.**
-> - **C1-40** · **`di.md:155-222` (1 slide)** : quasi-doublon de `di.md:74-153` (même diagramme, seule la
+>   **DÉCISION : on garde les 10 slides (volontaire).** Elles servent à la relecture : slides auto-portantes sans speaker notes, souvent lues en fond via le PDF. → ajouter une speaker note qui l'explique.
+> - [ ] **C1-40** · **`di.md:155-222` (1 slide)** : quasi-doublon de `di.md:74-153` (même diagramme, seule la
 >   flèche d'héritage change de style), et c'est celle qui porte l'erreur de compilation.
 >   Supprimer plutôt que corriger.
-> - **C1-41** · **`di.md:1039-1216` (TL;DR, 5 slides)** : utile, mais à resserrer — le TL;DR reprend
+>   **REPORTÉ : décision plus tard (C1-01 reste ouvert d'ici là).**
+> - [ ] **C1-41** · **`di.md:1039-1216` (TL;DR, 5 slides)** : utile, mais à resserrer — le TL;DR reprend
 >   intégralement du code déjà montré. 3 slides suffisent, et ça élimine au passage
 >   l'erreur de `di.md:1200-1209` et le titre dupliqué de `di.md:1145`.
 >

@@ -244,11 +244,21 @@ JAX.RS - Java API for RESTful Web Service
 -->
 
 ---
+review: true
+---
 
 ## JPA - Java Persistence API
 
 Par exemple la communication avec une base de données
 
+<!--
+Slides de relecture (`review: true`) : elles répètent le contenu du schéma animé
+pour rester auto-portantes, sans speaker notes, dans le PDF que les élèves relisent.
+Pas besoin de les détailler à l'oral : le schéma animé a déjà été présenté.
+-->
+
+---
+review: true
 ---
 
 ## JTA - Java Transaction API
@@ -256,21 +266,29 @@ Par exemple la communication avec une base de données
 Par exemple une transaction SQL
 
 ---
+review: true
+---
 
 ## JMS - Java Message Service
 
 Par exemple la communication avec ActiveMq
 
 ---
+review: true
+---
 
 ## CDI - Contexts and Dependency Injection
 
+---
+review: true
 ---
 
 ## EJB - Enterprise Java Bean
 
 Composant logiciel pouvant être appelé par le serveur
 
+---
+review: true
 ---
 
 ## Servlet - Point entrée application
@@ -280,11 +298,15 @@ Classe Java de génération de contenu dynamique
 Non limité au HTTP (JDBC...)
 
 ---
+review: true
+---
 
 ## JSP - Java Server page
 
 Génération de contenu statique (html...)
 
+---
+review: true
 ---
 
 ## JSF - Java Server Faces
@@ -297,6 +319,8 @@ Application "riche" ie communication avec le serveur (validation...)
 AJAX
 -->
 
+---
+review: true
 ---
 
 ## JAX
