@@ -22,7 +22,7 @@ le plus de contenu culturel compressible. `di.md` pèse à lui seul 30 slides.
   `AService` appelle `db.findAllInDb()`. **Ne compile pas.** La slide précédente
   (`di.md:106-148`) est cohérente, elle : c'est le doublon qui a dérivé.
   → cette slide est de toute façon proposée à la coupe (voir plus bas).
-- [ ] **C1-02** · **`di.md:431-441`** — le pseudo-code du proxy CGLIB accumule trois problèmes sur
+- [x] **C1-02** · **`di.md:431-441`** — le pseudo-code du proxy CGLIB accumule trois problèmes sur
   10 lignes, alors que c'est la slide qui doit faire comprendre le mécanisme :
   - `val myDb: PostgresDb? = null` puis `myDb ?: base.postgresDb()` → un `val` ne peut pas
     mémoriser le résultat ; il faut `var` pour que le cache ait un sens, c'est **tout le

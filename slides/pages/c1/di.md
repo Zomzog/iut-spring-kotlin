@@ -430,14 +430,14 @@ class MyConfig {
 // /!\ pseudo code
 class SpringProxyMyConfig(val base: MyConfig) {
     
-    val myDb: PostgresDb? = null;
-    fun myDb() = myDb ?: base.postgresDb()
+    var myDb: PostgresDb? = null
+    fun myDb() = myDb ?: base.myDb().also { myDb = it }
 
-    val aService: aService? = null;
-    fun aService() = aService ?: base.aService(myDb())
+    var aService: AService? = null
+    fun aService() = aService ?: base.aService().also { aService = it }
 
-    val another: another? = null;
-    fun another() = another ?: base.Other(myDb())
+    var another: Other? = null
+    fun another() = another ?: base.another().also { another = it }
 }
 ```
 ````
@@ -446,15 +446,15 @@ class SpringProxyMyConfig(val base: MyConfig) {
 
 ````md magic-move
 ```kotlin
-val myDb = PostgresDB()
+val myDb = PostgresDb()
 
-val aService = AService(PostgresDB())
+val aService = AService(PostgresDb())
 
-val another = Other(PostgresDB())
+val another = Other(PostgresDb())
 ```
 
 ```kotlin
-val myDb = PostgresDB()
+val myDb = PostgresDb()
 
 val aService = AService(myDb)
 
