@@ -203,7 +203,7 @@ spring:
 
 src/resources/application-prod.yml
 
-```yaml [application-dev.yml]
+```yaml [application-prod.yml]
 
 spring:
     application.name: myProdConfig
@@ -268,7 +268,7 @@ spring:
     application.name: demoMongo
 ```
 
-```yaml [application-prod.yaml]
+```yaml [application-prod.yml]
 
 spring:
     application.name: demoProd

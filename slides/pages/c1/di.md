@@ -1142,7 +1142,7 @@ class MyConfig {
 }
 ```
 
-### @Bean @Scope
+### @Component @Scope
 
 ```kotlin
 @Service
