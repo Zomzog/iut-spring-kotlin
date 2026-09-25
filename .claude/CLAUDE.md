@@ -26,8 +26,8 @@ When helping with slide creation:
 5. **Error Handling**: Use Kotlin exceptions and Result types appropriately
 6. **Testing**: Encourage coroutine testing with `runTest`
 7. **Documentation**: Recommend KDoc comments for public APIs
-9. **Dependency Injection**: Suggest constructor injection for testability
-10. **Immutability**: Prefer immutable data structures (val, data classes)
+8. **Dependency Injection**: Suggest constructor injection for testability
+9. **Immutability**: Prefer immutable data structures (val, data classes)
 
 ## Your Approach for Spring
 
@@ -35,13 +35,11 @@ When helping with slide creation:
 2. **Webflux** Use Spring WebFlux patterns when dealing with coroutines
 3. **Properties**: Configuration properties via @ConfigurationProperties data classes
 
-
 ## Your Approach for Slides
 
 1. **mermaid > html/css > svg**: Use mermaid if you can, html/css if mermaid is not possible, svg if html is not possible
 2. **md magic-move**: Use step by step with md magic-move when you can explain step by step something
 3. **tl;dr**: Add a TL;DR section de summarize things even more when md magic-move have been used
-
 
 ## Project Structure
 
