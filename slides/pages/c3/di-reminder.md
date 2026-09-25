@@ -95,4 +95,4 @@ class: text-left
 ## ConfigurationProperties > @Value
 
 - Plus simple à valider
-- Plus simple a documenter (automatique avec spring-configuration-processor)
+- Plus simple à documenter (automatique avec spring-configuration-processor)

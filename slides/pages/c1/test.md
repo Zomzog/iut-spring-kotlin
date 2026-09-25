@@ -99,7 +99,7 @@ class PonyTest {
 
 ::right::
 
-```kotlin
+```txt
 before all
 before each
 test1
@@ -273,7 +273,7 @@ every { dependency.call(Pony("name") } returns "23"
 </div>
 <div v-click>
 
-## Envoi d'une excéption
+## Envoi d'une exception
 
 ```kotlin
 every { dependency.call(more(10), any()) } throws Exception("Nope")
@@ -291,7 +291,7 @@ every { dependency.call(any(), any()) } answers { callRealMethod() }
 </div>
 <div v-click>
 
-## Changer la valeur
+## Réponses successives
 
 ```kotlin
 every { dependency.call(eq(42), any()) } returnsMany listOf(1,2,3)
@@ -496,7 +496,7 @@ et on peut injecter MockMvc
 
 On peut le faire à la manière de Java ou utiliser le DSL Kotlin
 
-Le DSL Kotlin est moins verbeux, donc souvant plus lisible
+Le DSL Kotlin est moins verbeux, donc souvent plus lisible
 
 Ici on donne le verbe http, le endpoint
 
@@ -510,7 +510,7 @@ De base c'est aussi jackson qui est utilisé pour la serialization spring
 On peut faire des assertions sur le résultat,
 ici le code retour
 
-Ou sur le contentu, par exemple en Json path
+Ou sur le contenu, par exemple en Json path
 -->
 
 ---

@@ -185,14 +185,14 @@ Spécifie les exceptions qui ne doivent ou non entraîner de rollback.
 <div v-click>
 
 **timeout** : Définit un délai d'attente pour la transaction.
-Le rollback est effectué si la transaction a dépasser ce délai,
+Le rollback est effectué si la transaction a dépassé ce délai,
 mais ne stoppe pas l'exécution en cours.
 
 </div>
 
 <div v-click>
 
-**propagation** : Définit le comportement de la transaction vis à vis d'un appel à une autre méhtode annotée
+**propagation** : Définit le comportement de la transaction vis à vis d'un appel à une autre méthode annotée
 
 - REQUIRED (par défaut) : Utilise la transaction existante ou en crée une nouvelle si aucune n'existe
 - NESTED : Crée une sous-transaction (savepoint)
@@ -429,7 +429,7 @@ class: text-left
 
 ### @Transactional
 
-Permet de gérer les transactions de manière déclarative et de grantir le rollback en cas d'erreur.
+Permet de gérer les transactions de manière déclarative et de garantir le rollback en cas d'erreur.
 
 Spring garantit le rollback par défaut pour les exceptions non vérifiées.
 Utilisez `rollbackFor` pour les exceptions vérifiées.
@@ -439,7 +439,7 @@ Utilisez `rollbackFor` pour les exceptions vérifiées.
 Par défaut,
 Spring ouvre une transaction à chaque requête HTTP s'il y a la dépendance JPA
 
-Ça peut-être désacitvé avec la propriété `spring.jpa.open-in-view=false`
+Ça peut-être désactivé avec la propriété `spring.jpa.open-in-view=false`
 
 ---
 layout: full
@@ -454,7 +454,7 @@ Utile quand on est sûr de toujours avoir besoin des données associées.
 
 Peut entraîner des surcharges inutiles si les données associées sont volumineuses ou rarement utilisées.
 
-La transaction peut etre coupe apres la récupération initiale.
+La transaction peut être coupée après la récupération initiale.
 
 ### FetchType.LAZY
 

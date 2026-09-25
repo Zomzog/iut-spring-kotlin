@@ -214,7 +214,7 @@ JMS - Java Message Service
 
 Par exemple la communication avec ActiveMq
 
-EJB - Entreprise Java Bean
+EJB - Enterprise Java Bean
 
 Composant logiciel pouvant être appelé par le serveur
 
@@ -230,7 +230,7 @@ JSP - Java Server page
 
 Génération de contenu statique (html...)
 
-JSF - Java server face
+JSF - Java Server Faces
 
 EL - Expressions Languages
 
@@ -267,7 +267,7 @@ Par exemple la communication avec ActiveMq
 
 ---
 
-## EJB - Entreprise Java Bean
+## EJB - Enterprise Java Bean
 
 Composant logiciel pouvant être appelé par le serveur
 
@@ -287,7 +287,7 @@ Génération de contenu statique (html...)
 
 ---
 
-## JSF - Java server faces
+## JSF - Java Server Faces
 
 EL - Expressions Languages
 
@@ -335,7 +335,7 @@ Serveurs complets qui couvrent tout (Servlet, EJB, JPA..)
 
 ## Fonctionnement
 
-Création de l'appication java et packaging en .WAR
+Création de l'application java et packaging en .WAR
 
 <div v-click>
 
@@ -438,14 +438,14 @@ transition: fade
 </div>
 
 <!--
-Faut-il tout même pour un micro serivce?
+Faut-il tout même pour un microservice?
 -->
 
 ---
 
 ## Conteneur Web / Servlet
 
-Serveurs léger qui ne font "que" les parties servlet et jsp
+Serveurs légers qui ne font "que" les parties servlet et jsp
 
 Exemple de serveurs développés en Java
 

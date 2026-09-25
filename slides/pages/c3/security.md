@@ -54,12 +54,12 @@ Ensemble de droits sur l'application
 
 ## User
 
-Information de base sur l'utilisateur connécté (login, role...)
+Information de base sur l'utilisateur connecté (login, role...)
 
 </v-click>
 <v-click>
 
-## UserDetail
+## UserDetailsService
 
 API Spring pour faire la phase d'authentification
 
@@ -83,9 +83,9 @@ testImplementation("org.springframework.security:spring-security-test")
 
 ⚠️ **STARTER**
 
-Ajouter cette dépandance active directement la sécurité
+Ajouter cette dépendance active directement la sécurité
 
-De base toute requete doit etre authentifié,
+De base toute requête doit être authentifiée,
 donc tout répond un 401.
 
 </v-click>
@@ -196,9 +196,9 @@ Cette partie ajoute une JSP pour pouvoir s'authentifier par formulaire `/login` 
 <!--
 FormLogin permet de se connecter via un formulaire,
 de base un formulaire est généré par spring security a l'adresse `/login`.
-Spring fournir aussi un endpoint `/logout`.
+Spring fournit aussi un endpoint `/logout`.
 
-La session est gére par un cookie `JSESSIONID`.
+La session est gérée par un cookie `JSESSIONID`.
 -->
 
 ---
@@ -212,7 +212,7 @@ class: text-left
 httpBasic { }
 ```
 
-Cette partie ajoute la possibilité s'authentifier au format basic
+Cette partie ajoute la possibilité de s'authentifier au format basic
 
 ```bash
 BASE=$(echo -ne "login:password" | base64 --wrap 0)
@@ -250,7 +250,7 @@ cors { disable() }
 ⚠️ **Ne pas faire en PROD sauf cas particuliers**
 
 <!--
-On peut configuer ou supprimer des sécurités comme le CSRF ou le CORS
+On peut configurer ou supprimer des sécurités comme le CSRF ou le CORS
 -->
 
 ---
@@ -266,7 +266,7 @@ Permet de gérer les filtres par path http
   http {
     authorizeHttpRequests {
       authorize("/ponies", permitAll)
-      authorize (HttpMethod.GET, "/**", permitAll)
+      authorize(HttpMethod.GET, "/**", permitAll)
       authorize("/admin", hasRole("ADMIN"))
       authorize(anyRequest, authenticated)
     }
@@ -281,10 +281,10 @@ fun authorize(pattern: String,
 
 <!--
 Cette partie de la configuration permet de definir les droits d'accès.
-On peut les donner par pattern ou pour toutes les requetes.
+On peut les donner par pattern ou pour toutes les requêtes.
 
-On peut enlever la sécurité pour certaines requetes (permitAll),
-juste etre authentifié (authenticated),
+On peut enlever la sécurité pour certaines requêtes (permitAll),
+juste être authentifié (authenticated),
 ou définir des droits spécifiques par role, ip...)
 -->
 
@@ -338,7 +338,7 @@ class MySecurityConfig {
 
 <!--
 Avant de parler gestion authentification,
-on ne stock jamais un mot de passe en claire.
+on ne stocke jamais un mot de passe en clair.
 -->
 
 ---
@@ -476,7 +476,7 @@ SecurityContextHolder.getContext().authentication.principal.let {
 <!--
 Dans le cadre de SpringMVC le contexte de sécurité est lié au Thread.
 
-Il est donc important si on veut multi-threader une requete de prendre soin de copier ce contexte.
+Il est donc important si on veut multi-threader une requête de prendre soin de copier ce contexte.
 -->
 
 ---
@@ -507,7 +507,7 @@ class HelloControllerTest {
 <!--
 @Import du security filter
 
-/!\ il faut qu'il n'y ai aucune dependance autre (bdd...)
+/!\ il faut qu'il n'y ait aucune dépendance autre (bdd...)
 -->
 
 ---

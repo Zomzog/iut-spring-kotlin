@@ -349,7 +349,7 @@ class MyConfig {
 
 <!--
 
-@Configuration dit à spring que c'est une classe de configuration, il doit la parcourir et instancier tout les Beans
+@Configuration dit à spring que c'est une classe de configuration, il doit la parcourir et instancier tous les Beans
 
 Ça remplace la configuration XML
 
@@ -400,7 +400,7 @@ Invoke-1, MyConfig$$SpringCGLIB$$FastClass$$1 (bzh.zomzog)
 
 Si on met un breakpoint sur l'appel de methode à cette stack
 
-Spring va en-capsuler chaque instance dans des proxy
+Spring va encapsuler chaque instance dans des proxy
 
 CGLIB est un système de génération de code dynamique
 

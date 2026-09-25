@@ -177,7 +177,7 @@ clicks: 2
 
 <!--
 
-Spring est souvant présenté comme une sorte de boite à outils
+Spring est souvent présenté comme une sorte de boite à outils
 
 SpringBoot comme le résultat direct
 

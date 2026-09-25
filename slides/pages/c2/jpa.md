@@ -41,7 +41,7 @@ class: text-left
 
 ::title::
 
-## Base relationnel
+## Base relationnelle
 
 ::left::
 
@@ -70,7 +70,7 @@ class: text-left
 ```json
 {
   "id": 1,
-  "name": "Dsicord",
+  "name": "Discord",
   "kind": "DRACONEQUUS",
   "occupation": [
     "Spirit of Chaos",
@@ -307,7 +307,7 @@ layout: full
 class: text-left
 ---
 
-## EntiyManager with Spring
+## EntityManager with Spring
 
 ````md magic-move
 ```kotlin
@@ -382,7 +382,7 @@ class Repository {
 <!--
 1. Passage à PersistenceContext
 2. Passage à EntityManager directement
-3. Utilisation de @Transaction pour gérer la transaction (car on ne peut plus utilisé celle de jakarta)
+3. Utilisation de @Transaction pour gérer la transaction (car on ne peut plus utiliser celle de jakarta)
 -->
 
 ---
@@ -565,7 +565,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
     fun findAllByNameNotIn(names: List<String> ): List<DemoEntity>
 
     fun findByAgeLessThanEqualAndNameNotInOrKindOrderByIdDesc(age: Int,
-                                            name: List<String>,
+                                            names: List<String>,
                                             kind: String): List<DemoEntity>
 }
 ```
@@ -607,7 +607,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
   @Query(value = """SELECT d from DemoEntity d
     where (:name is null or d.name = :name)""")
-  fun manualOrNul(name: String?): List<DemoEntity>
+  fun manualOrNull(name: String?): List<DemoEntity>
 }
 ```
 ````
@@ -615,7 +615,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 <!--
 On peut utiliser du JPQL
 
-Ne pas hésiter à utiliser les string template
+Ne pas hésiter à utiliser les raw strings (triple quotes) pour les requêtes sur plusieurs lignes, mais ne jamais y interpoler de variable : toujours passer par des paramètres (:name)
 -->
 
 ---

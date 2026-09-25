@@ -95,7 +95,7 @@ fun dispatch(request: HttpServletRequest) {
 
 <!--
 Autrement dit en pseudo code il fait ca.
-C'est une vision très très simplifié.
+C'est une vision très très simplifiée.
 -->
 
 ---
@@ -117,7 +117,7 @@ class HttpErrorHandler {
 class HttpErrorHandler {
 
     fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
-        ResponseEntity.badRequest().body("You're arg is invalid")
+        ResponseEntity.badRequest().body("Your arg is invalid")
 }
 ```
 ```kotlin
@@ -126,7 +126,7 @@ class HttpErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
-        ResponseEntity.badRequest().body("You're arg is invalid")
+        ResponseEntity.badRequest().body("Your arg is invalid")
 }
 ```
 ```kotlin {4-5}
@@ -135,7 +135,7 @@ class HttpErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
-        ResponseEntity.badRequest().body("You're arg is invalid")
+        ResponseEntity.badRequest().body("Your arg is invalid")
 }
 ```
 
@@ -145,7 +145,7 @@ class HttpErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
-        ResponseEntity.badRequest().body("You're arg is invalid")
+        ResponseEntity.badRequest().body("Your arg is invalid")
 
     @ExceptionHandler(Exception::class)
     fun fallback(e: Exception) =
@@ -191,7 +191,7 @@ class HttpErrorHandler : ResponseEntityExceptionHandler() {
                                             status: HttpStatusCode,
                                             request: WebRequest)
                                             : ResponseEntity<Any>? {
-      return ResponseEntity.badRequest().body("You're arg is invalid")
+      return ResponseEntity.badRequest().body("Your arg is invalid")
   }
 }
 ```
@@ -205,7 +205,7 @@ class HttpErrorHandler : ResponseEntityExceptionHandler() {
                                             status: HttpStatusCode,
                                             request: WebRequest)
                                             : ResponseEntity<Any>? {
-      return ResponseEntity.badRequest().body("You're arg is invalid")
+      return ResponseEntity.badRequest().body("Your arg is invalid")
   }
 
   @ExceptionHandler(MyCustomException::class)
