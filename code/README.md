@@ -1,7 +1,7 @@
 Demos and tests for c4 slides
 
 Prerequisites:
-- Java 21
+- Java 25
 - Docker (for Testcontainers and services)
 
 Run a specific demo (example: observability):
