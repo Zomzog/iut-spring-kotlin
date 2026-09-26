@@ -116,7 +116,7 @@ Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
   Une slide en c1, juste après `springboot.md`, au moment où on parle des proxies CGLIB
   (`di.md:303-343`) : c'est le bon endroit, l'enchaînement est naturel.
   → le piège correspondant côté `@Transactional` est détaillé dans [[2026/Cours 3]].
-- [ ] **C1-21** · **Conventions REST** : le chapitre `mvc.md` montre `ResponseEntity.ok()` et
+- [x] **C1-21** · **Conventions REST** : le chapitre `mvc.md` montre `ResponseEntity.ok()` et
   `badRequest()`, mais rien sur **201 Created + header `Location`** pour un POST, ni sur
   `@ResponseStatus`. Ce sont les deux premières choses attendues d'une API REST en TP.
 - [ ] **C1-22** · `@RequestMapping` au niveau **classe** pour factoriser le préfixe (`/api/v1/…`) : tous

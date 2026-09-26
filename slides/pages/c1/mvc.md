@@ -230,6 +230,41 @@ layout: full
 class: text-left
 ---
 
+## Création : 201 + `Location`
+
+Un `POST` qui crée une ressource répond **201 Created** avec l'URL de la ressource dans le header `Location`
+
+```kotlin
+@PostMapping("/hello")
+fun create(@RequestBody name: String): ResponseEntity<String> {
+    val uri = URI.create("/hello/${URLEncoder.encode(name, Charsets.UTF_8)}")
+    return ResponseEntity.created(uri).body("Hello $name")
+}
+```
+
+```bash
+curl -v -XPOST 'http://localhost:8080/hello' -d 'world'
+< HTTP/1.1 201
+< Location: /hello/world
+```
+
+<div v-click>
+
+Pour un code fixe sans logique, `@ResponseStatus` suffit
+
+```kotlin
+@PostMapping("/hello")
+@ResponseStatus(HttpStatus.CREATED)
+fun create(@RequestBody name: String) = "Hello $name"
+```
+
+</div>
+
+---
+layout: full
+class: text-left
+---
+
 ## DTO & serialization
 
 Design Pattern - Data Transfer Object
