@@ -119,7 +119,7 @@ Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
 - [x] **C1-21** · **Conventions REST** : le chapitre `mvc.md` montre `ResponseEntity.ok()` et
   `badRequest()`, mais rien sur **201 Created + header `Location`** pour un POST, ni sur
   `@ResponseStatus`. Ce sont les deux premières choses attendues d'une API REST en TP.
-- [ ] **C1-22** · `@RequestMapping` au niveau **classe** pour factoriser le préfixe (`/api/v1/…`) : tous
+- [x] **C1-22** · `@RequestMapping` au niveau **classe** pour factoriser le préfixe (`/api/v1/…`) : tous
   les exemples répètent le chemin complet, et les slides suivantes du cours utilisent
   `/api/v1/demo` sans jamais montrer d'où vient le préfixe.
 - [ ] **C1-23** · `@RequestParam` optionnel / avec `defaultValue` — cas le plus fréquent en pratique,

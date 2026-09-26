@@ -185,6 +185,37 @@ layout: full
 class: text-left
 ---
 
+## Préfixe commun : `@RequestMapping` sur la classe
+
+Le chemin de la classe est ajouté devant celui de chaque méthode
+
+```kotlin
+@RestController
+@RequestMapping("/api/v1/hello")
+class HelloController {
+
+    @GetMapping
+    fun hello() = "Hello world"
+
+    @GetMapping("/{name}")
+    fun path(@PathVariable name: String) = "Hello $name"
+
+    @PostMapping
+    fun body(@RequestBody name: String) = "Hello $name"
+}
+```
+
+```bash
+curl -XGET  http://localhost:8080/api/v1/hello
+curl -XGET  http://localhost:8080/api/v1/hello/world
+curl -XPOST http://localhost:8080/api/v1/hello -d 'world'
+```
+
+---
+layout: full
+class: text-left
+---
+
 ## Code retour
 
 ```kotlin
