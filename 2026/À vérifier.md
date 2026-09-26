@@ -12,7 +12,7 @@ Cinq constats que je n'ai **pas** pu confirmer sans exécuter le code. Ils sont 
 « probables » dans les notes de cours, pas comme des faits. Chacun se vérifie en quelques
 minutes dans `code/`.
 
-## 1. `findAllOrderByIdDesc()` échoue-t-il au démarrage ?
+## **AV-1** · `findAllOrderByIdDesc()` échoue-t-il au démarrage ?
 
 **Où** : `[[slides/pages/c2/jpa|c2/jpa.md:531]]`
 
@@ -27,7 +27,7 @@ l'application. Si le contexte démarre, mon analyse est fausse.
 
 - [ ] Vérifié → conclusion : ______
 
-## 2. `@WithAnonymousUser` donne-t-il 401 ou 302 ?
+## **AV-2** · `@WithAnonymousUser` donne-t-il 401 ou 302 ?
 
 **Où** : `[[slides/pages/c3/security|c3/security.md:518-529]]`
 
@@ -50,7 +50,7 @@ MockMvc sans header, je m'attends à la 302.
 
 - [ ] Vérifié → conclusion : ______
 
-## 3. `@DataJpaTest` + `@ServiceConnection` : faut-il `replace = NONE` ?
+## **AV-3** · `@DataJpaTest` + `@ServiceConnection` : faut-il `replace = NONE` ?
 
 **Où** : `[[slides/pages/c4/integration-testing|c4/integration-testing.md:35-145]]`
 
@@ -72,7 +72,7 @@ qu'un test « passe » sans tester ce qu'on croit.
 
 - [ ] Vérifié → conclusion : ______
 
-## 4. springmockk 5.x fonctionne-t-il réellement avec Spring Boot 4.1 ?
+## **AV-4** · springmockk 5.x fonctionne-t-il réellement avec Spring Boot 4.1 ?
 
 **Où** : `[[slides/pages/c1/test|c1/test.md]]` (`@MockkBean`, `@SpykBean`), et par ricochet
 c2 et c3.
@@ -96,7 +96,7 @@ tôt, pas la veille de la rentrée.
 
 - [ ] Vérifié → conclusion : ______
 
-## 5. Précédence `.yml` vs `.yaml`
+## **AV-5** · Précédence `.yml` vs `.yaml`
 
 **Où** : `[[slides/pages/c2/config|c2/config.md:109-168]]`, `:293-327`
 
