@@ -99,7 +99,7 @@ class PonyTest {
 
 ::right::
 
-```kotlin
+```txt
 before all
 before each
 test1
@@ -185,7 +185,7 @@ class: text-left
 
 ```kotlin
 @Service
-class DummyService() {
+class DummyService(val dependency: Dependency) {
     fun callDep(pony: String) = dependency.call()
 }
 ```
@@ -236,7 +236,7 @@ class DummyServiceIntTest {
     @Test
     fun `call good`() {
         // GIVEN
-        every { dependency.call() } returns true
+        every { dependency.call() } returns "good"
         // WHEN
         val result = service.callDep("pony") // call the mock
         // THEN
@@ -267,13 +267,13 @@ every { dependency.call(any()) } returns true
 ## Réponse seulement si le paramètre est exactement celui attendu
 
 ```kotlin
-every { dependency.call(Pony("name") } returns "23"
+every { dependency.call(Pony("name")) } returns "23"
 ```
 
 </div>
 <div v-click>
 
-## Envoi d'une excéption
+## Envoi d'une exception
 
 ```kotlin
 every { dependency.call(more(10), any()) } throws Exception("Nope")
@@ -291,7 +291,7 @@ every { dependency.call(any(), any()) } answers { callRealMethod() }
 </div>
 <div v-click>
 
-## Changer la valeur
+## Réponses successives
 
 ```kotlin
 every { dependency.call(eq(42), any()) } returnsMany listOf(1,2,3)
@@ -306,7 +306,7 @@ class: text-left
 
 ```kotlin
 @Service
-class DummyService() {
+class DummyService(val dependency: Dependency) {
     fun callDep(pony: String) = dependency.call()
 }
 ```
@@ -331,7 +331,7 @@ class DummyServiceIntTest {
 ```kotlin
 @SpringBootTest
 class DummyServiceIntTest {
-    @SpykBean
+    @MockkSpyBean
     private lateinit var dependency: Dependency
     @Autowired
     private lateinit var service: DummyService
@@ -349,7 +349,7 @@ class DummyServiceIntTest {
 ```kotlin
 @SpringBootTest
 class DummyServiceIntTest {
-    @SpykBean
+    @MockkSpyBean
     private lateinit var dependency: Dependency
     @Autowired
     private lateinit var service: DummyService
@@ -357,7 +357,7 @@ class DummyServiceIntTest {
     @Test
     fun `call good`() {
         // GIVEN
-        every { dependency.call() } returns true
+        every { dependency.call() } returns "good"
         // WHEN
         val result = service.callDep("pony") // call the mock
         // THEN
@@ -369,7 +369,7 @@ class DummyServiceIntTest {
 ```kotlin
 @SpringBootTest
 class DummyServiceIntTest {
-    @SpykBean
+    @MockkSpyBean
     private lateinit var dependency: Dependency
     @Autowired
     private lateinit var service: DummyService
@@ -377,7 +377,7 @@ class DummyServiceIntTest {
     @Test
     fun `call good`() {
         // GIVEN
-        every { dependency.call() } returns true
+        every { dependency.call() } returns "good"
         // WHEN
         val result = service.callDep("pony") // call the mock
         // THEN
@@ -419,6 +419,7 @@ class MovieControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
+  @Test
   fun post() {
     mockMvc.post("/api/demo") // mockMvc.perform(post("/api/movies"))
   }
@@ -432,10 +433,51 @@ class MovieControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
+  @Test
   fun post() {
     mockMvc.post("/api/demo") {
         contentType = MediaType.APPLICATION_JSON
-        content = ObjectMapper()
+        content = """{"name":"name"}"""
+    }
+  }
+}
+```
+```kotlin
+@AutoConfigureMockMvc
+@SpringBootTest
+class MovieControllerTest {
+
+  @Autowired
+  lateinit var mockMvc: MockMvc
+
+  @Autowired
+  lateinit var jsonMapper: JsonMapper
+
+  @Test
+  fun post() {
+    mockMvc.post("/api/demo") {
+        contentType = MediaType.APPLICATION_JSON
+        content = """{"name":"name"}"""
+    }
+  }
+}
+```
+```kotlin
+@AutoConfigureMockMvc
+@SpringBootTest
+class MovieControllerTest {
+
+  @Autowired
+  lateinit var mockMvc: MockMvc
+
+  @Autowired
+  lateinit var jsonMapper: JsonMapper
+
+  @Test
+  fun post() {
+    mockMvc.post("/api/demo") {
+        contentType = MediaType.APPLICATION_JSON
+        content = jsonMapper
             .writeValueAsString(DemoEntity(name = "name"))
     }
   }
@@ -449,10 +491,14 @@ class MovieControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
+  @Autowired
+  lateinit var jsonMapper: JsonMapper
+
+  @Test
   fun post() {
     mockMvc.post("/api/demo") {
         contentType = MediaType.APPLICATION_JSON
-        content = ObjectMapper()
+        content = jsonMapper
             .writeValueAsString(DemoEntity(name = "name"))
     }
     .andExpect {
@@ -469,10 +515,14 @@ class MovieControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
+  @Autowired
+  lateinit var jsonMapper: JsonMapper
+
+  @Test
   fun post() {
     mockMvc.post("/api/demo") {
         contentType = MediaType.APPLICATION_JSON
-        content = ObjectMapper()
+        content = jsonMapper
             .writeValueAsString(DemoEntity(name = "name"))
     }
     .andExpect {
@@ -496,21 +546,29 @@ et on peut injecter MockMvc
 
 On peut le faire à la manière de Java ou utiliser le DSL Kotlin
 
-Le DSL Kotlin est moins verbeux, donc souvant plus lisible
+Le DSL Kotlin est moins verbeux, donc souvent plus lisible
 
 Ici on donne le verbe http, le endpoint
 
 Pour un POST on va souvent donner un contentType et un content
 
-Le content est une String,
-ObjectMapper est un serializer qui transforme l'objet en json
+Le content est une String : le plus simple est d'écrire le JSON à la main.
+Avantage : on teste le contrat réel, si un champ du DTO est renommé le test casse
 
-De base c'est aussi jackson qui est utilisé pour la serialization spring
+Autre possibilité : laisser un serializer produire le JSON.
+JsonMapper (Jackson 3) transforme l'objet en json
+
+On injecte celui configuré par Spring Boot plutôt que d'en créer un :
+même config que l'appli (module Kotlin inclus), c'est lui qui sérialise les réponses des controllers
+
+C'est l'occasion de redire que @Autowired sert encore : dans une classe de test,
+c'est JUnit qui instancie la classe, l'injection par propriété (lateinit var) y reste l'usage courant
+(l'injection par constructeur est possible en test, mais rarement utilisée)
 
 On peut faire des assertions sur le résultat,
 ici le code retour
 
-Ou sur le contentu, par exemple en Json path
+Ou sur le contenu, par exemple en Json path
 -->
 
 ---
@@ -522,6 +580,7 @@ class: text-left
 
 ````md magic-move
 ```kotlin
+@Test
 fun get() {
     mockMvc.get("/api/demo/{id}?param=value", "theId") {
         headers {
@@ -535,6 +594,7 @@ fun get() {
   }
 ```
 ```kotlin
+@Test
 fun get() {
     mockMvc.get("/api/demo/{id}?param=value", "theId") {
         headers {
@@ -616,15 +676,18 @@ class: text-left
 class DemoControllerTest {
 
     @MockkBean
-    private lateinit var demoRepository: Repository
+    private lateinit var demoService: DemoService
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @Test
     fun get() {
-        every { demoRepository.save(any()) } returns Unit
+        every { demoService.findAll() } returns listOf(DemoEntity(name = "name"))
         mockMvc.get("/api/demo")
-                .andExpect { status { isOk() } }
+                .andExpect {
+                    status { isOk() }
+                    content { jsonPath("$[0].name", `is`("name")) }
+                }
     }
 }
 ```
@@ -634,15 +697,18 @@ class DemoControllerTest {
 class DemoControllerTest {
 
     @MockkBean
-    private lateinit var demoRepository: Repository
+    private lateinit var demoService: DemoService
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @Test
     fun get() {
-        every { demoRepository.save(any()) } returns Unit
+        every { demoService.findAll() } returns listOf(DemoEntity(name = "name"))
         mockMvc.get("/api/demo")
-                .andExpect { status { isOk() } }
+                .andExpect {
+                    status { isOk() }
+                    content { jsonPath("$[0].name", `is`("name")) }
+                }
     }
 }
 ```
@@ -655,4 +721,63 @@ Mais il faut fournir des mocks des beans
 
 Pour limiter encore plus,
 on peut limiter à un controlleur
+-->
+
+---
+layout: TwoColumnsTitle
+class: text-left
+---
+
+::title::
+
+## Alternatives à MockMvc
+
+::left::
+
+**MockMvcTester** (assertions AssertJ)
+
+```kotlin
+@Autowired
+lateinit var mvc: MockMvcTester
+
+@Test
+fun get() {
+    mvc.get().uri("/api/demo")
+        .assertThat()
+        .hasStatusOk()
+        .bodyJson()
+        .extractingPath("$[0].name")
+        .isEqualTo("name")
+}
+```
+
+::right::
+
+**RestTestClient** (`@AutoConfigureRestTestClient`)
+
+```kotlin
+@Autowired
+lateinit var client: RestTestClient
+
+@Test
+fun get() {
+    client.get().uri("/api/demo")
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody()
+        .jsonPath("$[0].name").isEqualTo("name")
+}
+```
+
+<!--
+
+MockMvc et son DSL Kotlin restent valides, ce sont des alternatives
+
+MockMvcTester : même moteur que MockMvc, mais assertions AssertJ fluides.
+Injecté automatiquement avec @AutoConfigureMockMvc / @WebMvcTest
+
+RestTestClient : nouveau client de test de Spring 7, même API que WebTestClient.
+Dépendance spring-boot-resttestclient + @AutoConfigureRestTestClient.
+Il passe par MockMvc, ou par un vrai serveur si le test en démarre un (RANDOM_PORT) :
+le même test fonctionne dans les deux cas
 -->

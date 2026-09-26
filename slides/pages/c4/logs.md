@@ -44,7 +44,7 @@ ERROR > WARN > INFO > DEBUG > TRACE
 
 <v-click>
 
-## Logback.
+## Logback
 
 Système de gestion des journaux d'événements (logs).
 

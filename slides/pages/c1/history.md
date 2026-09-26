@@ -78,6 +78,7 @@ gitGraph
     commit id:"2025" tag:"7.0"
     checkout SpringBoot
     merge Spring id:"2025-11" tag:"4.0.0"
+    commit id:"2026-06" tag:"4.1.0"
 ```
 
 <!--
@@ -177,7 +178,7 @@ clicks: 2
 
 <!--
 
-Spring est souvant présenté comme une sorte de boite à outils
+Spring est souvent présenté comme une sorte de boite à outils
 
 SpringBoot comme le résultat direct
 

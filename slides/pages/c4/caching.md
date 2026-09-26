@@ -162,7 +162,7 @@ fun cacheWithKey(max: Int) = ...
 @Cacheable("myCache")
 fun randomOnlyOnce(max: Int): Int = ..
 @Cacheable("myCache", key = "#max")
-fun chacheWithKey(max: Int) = ..
+fun cacheWithKey(max: Int) = ..
 @Cacheable("myCache", key = "#root.methodName : #max")
 fun cacheWithComplexKey(max: Int) = ..
 ```

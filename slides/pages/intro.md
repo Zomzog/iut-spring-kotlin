@@ -19,7 +19,7 @@ layout: TwoColumnsTitle
 
 ::right::
 
-Lead tech Backend
+Staff Backend
 
 Decathlon Digital Nantes
 

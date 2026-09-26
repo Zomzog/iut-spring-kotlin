@@ -10,19 +10,19 @@ layout: full
 class: text-left
 ---
 
-## spring-boot-starter-web
+## spring-boot-starter-webmvc
 
 :: code-group
 
 ```kotlin [gradle]
 
- implementation("org.springframework.boot:spring-boot-starter-web")
+ implementation("org.springframework.boot:spring-boot-starter-webmvc")
 ```
 
 ```xml [maven]
 <dependency>
     <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
+    <artifactId>spring-boot-starter-webmvc</artifactId>
 </dependency>
 ```
 
@@ -125,7 +125,7 @@ class: text-left
 ## Query param
 
 ```bash
-curl -XGET <http://localhost:8080/hello?name=me>
+curl -XGET "http://localhost:8080/hello?name=me"
 ```
 
 ```kotlin
@@ -145,6 +145,42 @@ curl -XGET http://localhost:8080/hello/world
 ```kotlin
 @GetMapping("/hello/{name}")
 fun path(@PathVariable name: String) = "Hello $name"
+```
+
+</div>
+
+---
+layout: full
+class: text-left
+---
+
+## Query param optionnel
+
+Par défaut un `@RequestParam` est **obligatoire** : absent, Spring répond 400
+
+```kotlin
+@GetMapping("/hello")
+fun optional(@RequestParam name: String?) = "Hello ${name ?: "world"}"
+```
+
+<div v-click>
+
+Trois façons de le rendre optionnel
+
+```kotlin
+// type nullable
+fun a(@RequestParam name: String?) = "Hello $name"
+
+// valeur par défaut
+fun b(@RequestParam(defaultValue = "world") name: String) = "Hello $name"
+
+// required = false
+fun c(@RequestParam(required = false) name: String?) = "Hello $name"
+```
+
+```bash
+curl -XGET "http://localhost:8080/hello"
+curl -XGET "http://localhost:8080/hello?name=me"
 ```
 
 </div>
@@ -179,6 +215,37 @@ fun header(@RequestHeader name: String) = "Hello $name"
 ```
 
 </div>
+
+---
+layout: full
+class: text-left
+---
+
+## Préfixe commun : `@RequestMapping` sur la classe
+
+Le chemin de la classe est ajouté devant celui de chaque méthode
+
+```kotlin
+@RestController
+@RequestMapping("/api/v1/hello")
+class HelloController {
+
+    @GetMapping
+    fun hello() = "Hello world"
+
+    @GetMapping("/{name}")
+    fun path(@PathVariable name: String) = "Hello $name"
+
+    @PostMapping
+    fun body(@RequestBody name: String) = "Hello $name"
+}
+```
+
+```bash
+curl -XGET  http://localhost:8080/api/v1/hello
+curl -XGET  http://localhost:8080/api/v1/hello/world
+curl -XPOST http://localhost:8080/api/v1/hello -d 'world'
+```
 
 ---
 layout: full
@@ -230,9 +297,44 @@ layout: full
 class: text-left
 ---
 
+## Création : 201 + `Location`
+
+Un `POST` qui crée une ressource répond **201 Created** avec l'URL de la ressource dans le header `Location`
+
+```kotlin
+@PostMapping("/hello")
+fun create(@RequestBody name: String): ResponseEntity<String> {
+    val uri = URI.create("/hello/${URLEncoder.encode(name, Charsets.UTF_8)}")
+    return ResponseEntity.created(uri).body("Hello $name")
+}
+```
+
+```bash
+curl -v -XPOST 'http://localhost:8080/hello' -d 'world'
+< HTTP/1.1 201
+< Location: /hello/world
+```
+
+<div v-click>
+
+Pour un code fixe sans logique, `@ResponseStatus` suffit
+
+```kotlin
+@PostMapping("/hello")
+@ResponseStatus(HttpStatus.CREATED)
+fun create(@RequestBody name: String) = "Hello $name"
+```
+
+</div>
+
+---
+layout: full
+class: text-left
+---
+
 ## DTO & serialization
 
-Desing Pattern - Data Transfert Object
+Design Pattern - Data Transfer Object
 
 Objet simple représentant la donnée
 
@@ -265,7 +367,7 @@ fun hello() = ResponseEntity.ok(PersonDTO("John", 42))
 
 ```kotlin
 @PostMapping("/hello")
-fun body(@RequestBody person: PersonDTO) = "Hello $person.name"
+fun body(@RequestBody person: PersonDTO) = "Hello ${person.name}"
 ```
 
 </div>

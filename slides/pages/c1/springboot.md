@@ -36,6 +36,7 @@ class PocApplication
 
 fun main(args: Array<String>) {
     runApplication<PocApplication>(*args)
+}
 ```
 ````
 
@@ -58,7 +59,7 @@ Démarre le serveur web si besoin
 
 <div v-click>
 
-Chargemement des configurations (variables d'environement...)
+Chargement des configurations (variables d'environnement...)
 </div>
 
 <div v-click>
@@ -81,6 +82,7 @@ class PocApplication
 
 fun main(args: Array<String>) {
     runApplication<PocApplication>(*args)
+}
 ```
 
 Cherche les @Component (@Service, @Configuration...) dans les sous packages (ex: bzh.zomzog.iut.amphi.service)
@@ -100,6 +102,7 @@ class PocApplication
 
 fun main(args: Array<String>) {
     runApplication<PocApplication>(*args)
+}
 ```
 
 <div v-click>
@@ -152,7 +155,7 @@ class: text-left
 # Springboot starters
 
 ```kotlin
- implementation("org.springframework.boot:spring-boot-starter-web")
+ implementation("org.springframework.boot:spring-boot-starter-webmvc")
 ```
 
 <div v-click>
@@ -168,7 +171,9 @@ project
       │
       └─META-INF
         │
-        └─  org.springframework.boot.autoconfigure.AutoConfiguration.imports
+        └─spring
+          │
+          └─  org.springframework.boot.autoconfigure.AutoConfiguration.imports
 ```
 
 </div>
@@ -188,3 +193,10 @@ bzh.zomzog.another.autoconfigure.MyAutoConfiguration
 TOUS les starters spring boot en dépendance sont chargés
 
 </div>
+
+<!--
+
+Un starter tire le module d'auto-configuration de sa techno (ex. `spring-boot-webmvc`),
+qui contient ce fichier `.imports`. Au démarrage, Spring lit tous les `.imports` du classpath.
+Ici, même structure pour notre propre lib `bzh.zomzog.another` — détaillé en C4.
+-->

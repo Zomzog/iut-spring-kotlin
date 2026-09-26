@@ -195,7 +195,7 @@ layout: full
 class: text-left
 ---
 
-## Exemple SQL (V1__create_users_table.sql)
+## Exemple SQL (V1__create_pony_table.sql)
 
 <div v-click>
 
@@ -215,7 +215,7 @@ CREATE TABLE pony (
 
 | installed_rank | version | description | type | script       | checksum   | installed_by | installed_on            | execution_time | success |
 |----------------|---------|-------------|------|--------------|------------|--------------|-------------------------|----------------|---------|
-| 1              | "1"     | init        | SQL  | V1__init.sql | 1429062969 | iut          | 2026-01-01 21:48:01.252 | 4              | true    |
+| 1              | "1"     | create pony table | SQL  | V1__create_pony_table.sql | 1429062969 | iut          | 2026-01-01 21:48:01.252 | 4              | true    |
 
 </div>
 

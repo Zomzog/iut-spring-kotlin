@@ -231,13 +231,13 @@ public @interface Min {
 <!--
 @Target: là où on peut utiliser l'annotation
 
-@Retention: Elle doit rester lors de l'éxecution,
+@Retention: Elle doit rester lors de l'exécution,
 contrairement à d'autres qui sont là pour changer la compilation (ex lombok)
 
 @Repeatable On peut l'utiliser plusieurs fois sur un élément
 
 @Constraint validatedBy: La class qui valide,
-spring/hibernate fourni ceux par default
+spring/hibernate fournit ceux par défaut
 
 Il faut pour qu'elle soit valide:
 
