@@ -49,7 +49,7 @@ le plus de contenu culturel compressible. `di.md` pèse à lui seul 30 slides.
 
 ### `mvc.md`
 
-- [ ] **C1-06** · **`mvc.md:268`** — `"Hello $person.name"` : Kotlin interpole `person` puis concatène
+- [x] **C1-06** · **`mvc.md:268`** — `"Hello $person.name"` : Kotlin interpole `person` puis concatène
   le littéral `.name`. Affiche `Hello PersonDTO(name=John, age=42).name`. Il faut
   `"Hello ${person.name}"`.
   C'est **le** piège d'interpolation Kotlin, sur la slide qui introduit la désérialisation :

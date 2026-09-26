@@ -265,7 +265,7 @@ fun hello() = ResponseEntity.ok(PersonDTO("John", 42))
 
 ```kotlin
 @PostMapping("/hello")
-fun body(@RequestBody person: PersonDTO) = "Hello $person.name"
+fun body(@RequestBody person: PersonDTO) = "Hello ${person.name}"
 ```
 
 </div>
