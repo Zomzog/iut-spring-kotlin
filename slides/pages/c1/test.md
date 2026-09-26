@@ -331,7 +331,7 @@ class DummyServiceIntTest {
 ```kotlin
 @SpringBootTest
 class DummyServiceIntTest {
-    @SpykBean
+    @MockkSpyBean
     private lateinit var dependency: Dependency
     @Autowired
     private lateinit var service: DummyService
@@ -349,7 +349,7 @@ class DummyServiceIntTest {
 ```kotlin
 @SpringBootTest
 class DummyServiceIntTest {
-    @SpykBean
+    @MockkSpyBean
     private lateinit var dependency: Dependency
     @Autowired
     private lateinit var service: DummyService
@@ -369,7 +369,7 @@ class DummyServiceIntTest {
 ```kotlin
 @SpringBootTest
 class DummyServiceIntTest {
-    @SpykBean
+    @MockkSpyBean
     private lateinit var dependency: Dependency
     @Autowired
     private lateinit var service: DummyService

@@ -96,7 +96,7 @@ Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
 
 - [x] **C1-15** · `mvc.md:13,19,25` et `springboot.md:155` — `spring-boot-starter-web` →
   **`spring-boot-starter-webmvc`** (titre de slide inclus)
-- [ ] **C1-16** · `test.md:334,352,371` — `@SpykBean` → **`@MockkSpyBean`** (springmockk 5.x)
+- [x] **C1-16** · `test.md:334,352,371` — `@SpykBean` → **`@MockkSpyBean`** (springmockk 5.x)
 - [ ] **C1-17** · `test.md:438,455,475` — `ObjectMapper` passe sous `tools.jackson` (Jackson 3), et
   gagnerait surtout à être **injecté** plutôt qu'instancié
 - [ ] **C1-18** · `history.md:59-81` — ajouter Spring Boot 4.1 (2026-06) à la frise
@@ -165,7 +165,7 @@ Slides sans note où le contenu ne se lit pas seul :
 
 ## 🟡 Placement
 
-- [ ] **C1-38** · `test.md:162-172` — l'avertissement « `@SpringBootTest` ne fonctionne que dans un
+- [x] **C1-38** · `test.md:162-172` — l'avertissement « `@SpringBootTest` ne fonctionne que dans un
   sous-package » arrive **après** les trois slides `@SpringBootTest`. C'est un prérequis pour
   que les exemples marchent : le remonter avant `test.md:118`.
   (C'est vraisemblablement le « slide warning mal placé » de `note.adoc`.)
