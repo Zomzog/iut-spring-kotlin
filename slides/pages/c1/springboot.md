@@ -155,7 +155,7 @@ class: text-left
 # Springboot starters
 
 ```kotlin
- implementation("org.springframework.boot:spring-boot-starter-web")
+ implementation("org.springframework.boot:spring-boot-starter-webmvc")
 ```
 
 <div v-click>
@@ -171,7 +171,9 @@ project
       │
       └─META-INF
         │
-        └─  org.springframework.boot.autoconfigure.AutoConfiguration.imports
+        └─spring
+          │
+          └─  org.springframework.boot.autoconfigure.AutoConfiguration.imports
 ```
 
 </div>
@@ -191,3 +193,10 @@ bzh.zomzog.another.autoconfigure.MyAutoConfiguration
 TOUS les starters spring boot en dépendance sont chargés
 
 </div>
+
+<!--
+
+Un starter tire le module d'auto-configuration de sa techno (ex. `spring-boot-webmvc`),
+qui contient ce fichier `.imports`. Au démarrage, Spring lit tous les `.imports` du classpath.
+Ici, même structure pour notre propre lib `bzh.zomzog.another` — détaillé en C4.
+-->

@@ -10,19 +10,19 @@ layout: full
 class: text-left
 ---
 
-## spring-boot-starter-web
+## spring-boot-starter-webmvc
 
 :: code-group
 
 ```kotlin [gradle]
 
- implementation("org.springframework.boot:spring-boot-starter-web")
+ implementation("org.springframework.boot:spring-boot-starter-webmvc")
 ```
 
 ```xml [maven]
 <dependency>
     <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
+    <artifactId>spring-boot-starter-webmvc</artifactId>
 </dependency>
 ```
 
