@@ -97,8 +97,9 @@ Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
 - [x] **C1-15** · `mvc.md:13,19,25` et `springboot.md:155` — `spring-boot-starter-web` →
   **`spring-boot-starter-webmvc`** (titre de slide inclus)
 - [x] **C1-16** · `test.md:334,352,371` — `@SpykBean` → **`@MockkSpyBean`** (springmockk 5.x)
-- [ ] **C1-17** · `test.md:438,455,475` — `ObjectMapper` passe sous `tools.jackson` (Jackson 3), et
+- [x] **C1-17** · `test.md:438,455,475` — `ObjectMapper` passe sous `tools.jackson` (Jackson 3), et
   gagnerait surtout à être **injecté** plutôt qu'instancié
+  **FAIT :** magic-move en 3 temps : body en chaîne brute → `@Autowired lateinit var jsonMapper: JsonMapper` injecté → utilisé. Note orateur : contrat JSON réel vs mapper de Boot (module Kotlin) + `@Autowired` encore d'usage en test.
 - [ ] **C1-18** · `history.md:59-81` — ajouter Spring Boot 4.1 (2026-06) à la frise
 - [ ] **C1-19** · 🔵 Mentionner `MockMvcTester` / `RestTestClient` en fin de chapitre test : `MockMvc` et
   son DSL Kotlin restent valides, ce sont des alternatives

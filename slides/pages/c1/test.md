@@ -437,7 +437,47 @@ class MovieControllerTest {
   fun post() {
     mockMvc.post("/api/demo") {
         contentType = MediaType.APPLICATION_JSON
-        content = ObjectMapper()
+        content = """{"name":"name"}"""
+    }
+  }
+}
+```
+```kotlin
+@AutoConfigureMockMvc
+@SpringBootTest
+class MovieControllerTest {
+
+  @Autowired
+  lateinit var mockMvc: MockMvc
+
+  @Autowired
+  lateinit var jsonMapper: JsonMapper
+
+  @Test
+  fun post() {
+    mockMvc.post("/api/demo") {
+        contentType = MediaType.APPLICATION_JSON
+        content = """{"name":"name"}"""
+    }
+  }
+}
+```
+```kotlin
+@AutoConfigureMockMvc
+@SpringBootTest
+class MovieControllerTest {
+
+  @Autowired
+  lateinit var mockMvc: MockMvc
+
+  @Autowired
+  lateinit var jsonMapper: JsonMapper
+
+  @Test
+  fun post() {
+    mockMvc.post("/api/demo") {
+        contentType = MediaType.APPLICATION_JSON
+        content = jsonMapper
             .writeValueAsString(DemoEntity(name = "name"))
     }
   }
@@ -451,11 +491,14 @@ class MovieControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
+  @Autowired
+  lateinit var jsonMapper: JsonMapper
+
   @Test
   fun post() {
     mockMvc.post("/api/demo") {
         contentType = MediaType.APPLICATION_JSON
-        content = ObjectMapper()
+        content = jsonMapper
             .writeValueAsString(DemoEntity(name = "name"))
     }
     .andExpect {
@@ -472,11 +515,14 @@ class MovieControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
+  @Autowired
+  lateinit var jsonMapper: JsonMapper
+
   @Test
   fun post() {
     mockMvc.post("/api/demo") {
         contentType = MediaType.APPLICATION_JSON
-        content = ObjectMapper()
+        content = jsonMapper
             .writeValueAsString(DemoEntity(name = "name"))
     }
     .andExpect {
@@ -506,10 +552,18 @@ Ici on donne le verbe http, le endpoint
 
 Pour un POST on va souvent donner un contentType et un content
 
-Le content est une String,
-ObjectMapper est un serializer qui transforme l'objet en json
+Le content est une String : le plus simple est d'écrire le JSON à la main.
+Avantage : on teste le contrat réel, si un champ du DTO est renommé le test casse
 
-De base c'est aussi jackson qui est utilisé pour la serialization spring
+Autre possibilité : laisser un serializer produire le JSON.
+JsonMapper (Jackson 3) transforme l'objet en json
+
+On injecte celui configuré par Spring Boot plutôt que d'en créer un :
+même config que l'appli (module Kotlin inclus), c'est lui qui sérialise les réponses des controllers
+
+C'est l'occasion de redire que @Autowired sert encore : dans une classe de test,
+c'est JUnit qui instancie la classe, l'injection par propriété (lateinit var) y reste l'usage courant
+(l'injection par constructeur est possible en test, mais rarement utilisée)
 
 On peut faire des assertions sur le résultat,
 ici le code retour
