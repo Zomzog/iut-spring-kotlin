@@ -45,7 +45,7 @@ class Pony(
     val id: Long?,
     val name: String,
     val kind: String,
-    val occupations: Occupation,
+    val occupation: Occupation,
 )
 
 class Occupation(
@@ -131,7 +131,7 @@ class: text-left
 class Pony(
     val id: Long?,
     val name: String,
-    val occupations: Occupation,
+    val occupation: Occupation,
 )
 
 class Occupation(
@@ -214,7 +214,7 @@ modifier/ajouter/supprimer l'objet B ou ignorer toutes les modifications de B
 
 ## Direction
 
-Une relation peut être uni-directionnel ie je ne peux aller que de l'objet A vers l'objet B
+Une relation peut être unidirectionnelle ie je ne peux aller que de l'objet A vers l'objet B
 
 ou bi-directionnel ie je peux aller de A à B et de B à A.
 
@@ -242,7 +242,7 @@ layout: full
 class: text-left
 ---
 
-## One-To-One uni-directionnel
+## One-To-One unidirectionnel
 
 ````md magic-move
 ```kotlin
@@ -317,7 +317,7 @@ class PhoneEntity(
 ````
 
 <!--
-Reference par nom de colonnes, la plus simple mais uni-directionnel
+Reference par nom de colonnes, la plus simple mais unidirectionnelle
 -->
 
 ---
@@ -438,7 +438,7 @@ layout: full
 class: text-left
 ---
 
-## One-To-Many uni-directionnel
+## One-To-Many unidirectionnel
 
 ````md magic-move
 ```kotlin
@@ -493,7 +493,7 @@ class PhoneEntity(
 ````
 
 <!--
-One-to-many uni-directionnel
+One-to-many unidirectionnel
 -->
 
 ---
@@ -585,7 +585,7 @@ class UserEntity(
 @Table(name = "phone")
 class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        val user: List<UserEntity>,
+        val users: List<UserEntity>,
         val number: String,
 )
 ```
@@ -605,7 +605,7 @@ class UserEntity(
 @Table(name = "phone")
 class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        val user: List<UserEntity>,
+        val users: List<UserEntity>,
         val number: String,
 )
 ```
@@ -626,7 +626,7 @@ class UserEntity(
 class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
         @ManyToMany
-        val user: List<UserEntity>,
+        val users: List<UserEntity>,
         val number: String,
 )
 ```
@@ -644,7 +644,7 @@ layout: full
 class: text-left
 ---
 
-## OneToOne - uni-directionnel
+## OneToOne - unidirectionnel
 
 ```kotlin
 @Entity
@@ -729,7 +729,7 @@ layout: full
 class: text-left
 ---
 
-## OneToMany - uni-directionnel
+## OneToMany - unidirectionnel
 
 ```kotlin
 @Entity
@@ -828,7 +828,7 @@ class UserEntity(
 class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
         @ManyToMany
-        val user: List<UserEntity>,
+        val users: List<UserEntity>,
         val number: String,
 )
 ```

@@ -36,6 +36,7 @@ class PocApplication
 
 fun main(args: Array<String>) {
     runApplication<PocApplication>(*args)
+}
 ```
 ````
 
@@ -58,7 +59,7 @@ Démarre le serveur web si besoin
 
 <div v-click>
 
-Chargemement des configurations (variables d'environement...)
+Chargement des configurations (variables d'environnement...)
 </div>
 
 <div v-click>
@@ -81,6 +82,7 @@ class PocApplication
 
 fun main(args: Array<String>) {
     runApplication<PocApplication>(*args)
+}
 ```
 
 Cherche les @Component (@Service, @Configuration...) dans les sous packages (ex: bzh.zomzog.iut.amphi.service)
@@ -100,6 +102,7 @@ class PocApplication
 
 fun main(args: Array<String>) {
     runApplication<PocApplication>(*args)
+}
 ```
 
 <div v-click>

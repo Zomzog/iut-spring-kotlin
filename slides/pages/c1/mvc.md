@@ -125,7 +125,7 @@ class: text-left
 ## Query param
 
 ```bash
-curl -XGET <http://localhost:8080/hello?name=me>
+curl -XGET "http://localhost:8080/hello?name=me"
 ```
 
 ```kotlin
@@ -232,7 +232,7 @@ class: text-left
 
 ## DTO & serialization
 
-Desing Pattern - Data Transfert Object
+Design Pattern - Data Transfer Object
 
 Objet simple représentant la donnée
 
@@ -265,7 +265,7 @@ fun hello() = ResponseEntity.ok(PersonDTO("John", 42))
 
 ```kotlin
 @PostMapping("/hello")
-fun body(@RequestBody person: PersonDTO) = "Hello $person.name"
+fun body(@RequestBody person: PersonDTO) = "Hello ${person.name}"
 ```
 
 </div>

@@ -1,8 +1,12 @@
 package bzh.zomzog.iut.amphi
 
+import io.opentelemetry.api.OpenTelemetry
+import io.opentelemetry.api.trace.Tracer
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 class TelemetryConfig {
-    // With the starter most configuration is automatic. Use this class for explicit beans
+    @Bean
+    fun tracer(openTelemetry: OpenTelemetry): Tracer = openTelemetry.getTracer("amphi")
 }
