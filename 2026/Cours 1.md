@@ -101,7 +101,7 @@ Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
   gagnerait surtout à être **injecté** plutôt qu'instancié
   **FAIT :** magic-move en 3 temps : body en chaîne brute → `@Autowired lateinit var jsonMapper: JsonMapper` injecté → utilisé. Note orateur : contrat JSON réel vs mapper de Boot (module Kotlin) + `@Autowired` encore d'usage en test.
 - [x] **C1-18** · `history.md:59-81` — ajouter Spring Boot 4.1 (2026-06) à la frise
-- [ ] **C1-19** · 🔵 Mentionner `MockMvcTester` / `RestTestClient` en fin de chapitre test : `MockMvc` et
+- [x] **C1-19** · 🔵 Mentionner `MockMvcTester` / `RestTestClient` en fin de chapitre test : `MockMvc` et
   son DSL Kotlin restent valides, ce sont des alternatives
 
 ## 🔵 Manques

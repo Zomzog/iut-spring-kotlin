@@ -722,3 +722,62 @@ Mais il faut fournir des mocks des beans
 Pour limiter encore plus,
 on peut limiter à un controlleur
 -->
+
+---
+layout: TwoColumnsTitle
+class: text-left
+---
+
+::title::
+
+## Alternatives à MockMvc
+
+::left::
+
+**MockMvcTester** (assertions AssertJ)
+
+```kotlin
+@Autowired
+lateinit var mvc: MockMvcTester
+
+@Test
+fun get() {
+    mvc.get().uri("/api/demo")
+        .assertThat()
+        .hasStatusOk()
+        .bodyJson()
+        .extractingPath("$[0].name")
+        .isEqualTo("name")
+}
+```
+
+::right::
+
+**RestTestClient** (`@AutoConfigureRestTestClient`)
+
+```kotlin
+@Autowired
+lateinit var client: RestTestClient
+
+@Test
+fun get() {
+    client.get().uri("/api/demo")
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody()
+        .jsonPath("$[0].name").isEqualTo("name")
+}
+```
+
+<!--
+
+MockMvc et son DSL Kotlin restent valides, ce sont des alternatives
+
+MockMvcTester : même moteur que MockMvc, mais assertions AssertJ fluides.
+Injecté automatiquement avec @AutoConfigureMockMvc / @WebMvcTest
+
+RestTestClient : nouveau client de test de Spring 7, même API que WebTestClient.
+Dépendance spring-boot-resttestclient + @AutoConfigureRestTestClient.
+Il passe par MockMvc, ou par un vrai serveur si le test en démarre un (RANDOM_PORT) :
+le même test fonctionne dans les deux cas
+-->
