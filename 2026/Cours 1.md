@@ -122,7 +122,7 @@ Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
 - [x] **C1-22** · `@RequestMapping` au niveau **classe** pour factoriser le préfixe (`/api/v1/…`) : tous
   les exemples répètent le chemin complet, et les slides suivantes du cours utilisent
   `/api/v1/demo` sans jamais montrer d'où vient le préfixe.
-- [ ] **C1-23** · `@RequestParam` optionnel / avec `defaultValue` — cas le plus fréquent en pratique,
+- [x] **C1-23** · `@RequestParam` optionnel / avec `defaultValue` — cas le plus fréquent en pratique,
   absent.
 - [ ] **C1-24** · `@Profile` : jamais montré en c1, alors que les profils sont introduits en c2 côté
   configuration. Le lien `@Profile` sur un bean n'arrive qu'en `c2/config.md:522`.

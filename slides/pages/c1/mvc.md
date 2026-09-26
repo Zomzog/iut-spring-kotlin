@@ -154,6 +154,42 @@ layout: full
 class: text-left
 ---
 
+## Query param optionnel
+
+Par défaut un `@RequestParam` est **obligatoire** : absent, Spring répond 400
+
+```kotlin
+@GetMapping("/hello")
+fun optional(@RequestParam name: String?) = "Hello ${name ?: "world"}"
+```
+
+<div v-click>
+
+Trois façons de le rendre optionnel
+
+```kotlin
+// type nullable
+fun a(@RequestParam name: String?) = "Hello $name"
+
+// valeur par défaut
+fun b(@RequestParam(defaultValue = "world") name: String) = "Hello $name"
+
+// required = false
+fun c(@RequestParam(required = false) name: String?) = "Hello $name"
+```
+
+```bash
+curl -XGET "http://localhost:8080/hello"
+curl -XGET "http://localhost:8080/hello?name=me"
+```
+
+</div>
+
+---
+layout: full
+class: text-left
+---
+
 ## Body param
 
 ```bash
