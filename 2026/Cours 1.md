@@ -57,24 +57,24 @@ le plus de contenu culturel compressible. `di.md` pèse à lui seul 30 slides.
 
 ### `test.md`
 
-- [ ] **C1-07** · **`test.md:186-190`** et **`test.md:307-311`** — `class DummyService() { fun callDep(pony: String) = dependency.call() }` :
+- [x] **C1-07** · **`test.md:186-190`** et **`test.md:307-311`** — `class DummyService() { fun callDep(pony: String) = dependency.call() }` :
   **`dependency` n'est déclaré nulle part**. Ne compile pas, et surtout : tout l'exercice
   consiste à mocker cette dépendance, donc la slide doit montrer
   `class DummyService(val dependency: Dependency)`. Sans ça, l'étudiant ne voit pas *par où*
   le mock entre.
-- [ ] **C1-08** · **`test.md:205,223,243`** et **`test.md:326,344,364,384`** — `every { dependency.call() } returns true`
+- [x] **C1-08** · **`test.md:205,223,243`** et **`test.md:326,344,364,384`** — `every { dependency.call() } returns true`
   puis `assertThat(result).isEqualTo("good")` : le mock renvoie un `Boolean`, l'assertion
   attend une `String`. Incohérent de bout en bout sur les deux magic-move.
-- [ ] **C1-09** · **`test.md:270`** — `every { dependency.call(Pony("name") } returns "23"` : **parenthèse
+- [x] **C1-09** · **`test.md:270`** — `every { dependency.call(Pony("name") } returns "23"` : **parenthèse
   fermante manquante**. Et le `returns "23"` détonne avec les `returns true` des autres
   exemples.
-- [ ] **C1-10** · **`test.md:422`** et **`test.md:525`** — `fun post()` et `fun get()` **sans `@Test`**.
+- [x] **C1-10** · **`test.md:422`** et **`test.md:525`** — `fun post()` et `fun get()` **sans `@Test`**.
   Les étudiants copient ces exemples MockMvc tels quels, et le test ne s'exécute jamais :
   vert au premier essai, aucune couverture. C'est le bug le plus coûteux du chapitre.
-- [ ] **C1-11** · **`test.md:625`** — `every { demoRepository.save(any()) } returns Unit` dans un test
+- [x] **C1-11** · **`test.md:625`** — `every { demoRepository.save(any()) } returns Unit` dans un test
   qui fait un **GET**. Mocker un `save` pour tester une lecture n'a pas de sens ; et
   `returns Unit` pour un `save` de repository est faux (il renvoie l'entité).
-- [ ] **C1-12** · 🟡 **`test.md:611-648`** — le `@WebMvcTest` mocke un bean nommé `Repository`, ce qui
+- [x] **C1-12** · 🟡 **`test.md:611-648`** — le `@WebMvcTest` mocke un bean nommé `Repository`, ce qui
   cumule deux problèmes : `Repository` est le nom d'une interface marqueur Spring
   (collision de vocabulaire), et **les repositories n'existent pas encore** à ce stade du
   cours (JPA arrive en c2). Utiliser un `DemoService` — c'est aussi la couche qu'on mocke

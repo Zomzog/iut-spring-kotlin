@@ -185,7 +185,7 @@ class: text-left
 
 ```kotlin
 @Service
-class DummyService() {
+class DummyService(val dependency: Dependency) {
     fun callDep(pony: String) = dependency.call()
 }
 ```
@@ -236,7 +236,7 @@ class DummyServiceIntTest {
     @Test
     fun `call good`() {
         // GIVEN
-        every { dependency.call() } returns true
+        every { dependency.call() } returns "good"
         // WHEN
         val result = service.callDep("pony") // call the mock
         // THEN
@@ -267,7 +267,7 @@ every { dependency.call(any()) } returns true
 ## Réponse seulement si le paramètre est exactement celui attendu
 
 ```kotlin
-every { dependency.call(Pony("name") } returns "23"
+every { dependency.call(Pony("name")) } returns "23"
 ```
 
 </div>
@@ -306,7 +306,7 @@ class: text-left
 
 ```kotlin
 @Service
-class DummyService() {
+class DummyService(val dependency: Dependency) {
     fun callDep(pony: String) = dependency.call()
 }
 ```
@@ -357,7 +357,7 @@ class DummyServiceIntTest {
     @Test
     fun `call good`() {
         // GIVEN
-        every { dependency.call() } returns true
+        every { dependency.call() } returns "good"
         // WHEN
         val result = service.callDep("pony") // call the mock
         // THEN
@@ -377,7 +377,7 @@ class DummyServiceIntTest {
     @Test
     fun `call good`() {
         // GIVEN
-        every { dependency.call() } returns true
+        every { dependency.call() } returns "good"
         // WHEN
         val result = service.callDep("pony") // call the mock
         // THEN
@@ -419,6 +419,7 @@ class MovieControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
+  @Test
   fun post() {
     mockMvc.post("/api/demo") // mockMvc.perform(post("/api/movies"))
   }
@@ -432,6 +433,7 @@ class MovieControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
+  @Test
   fun post() {
     mockMvc.post("/api/demo") {
         contentType = MediaType.APPLICATION_JSON
@@ -449,6 +451,7 @@ class MovieControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
+  @Test
   fun post() {
     mockMvc.post("/api/demo") {
         contentType = MediaType.APPLICATION_JSON
@@ -469,6 +472,7 @@ class MovieControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
+  @Test
   fun post() {
     mockMvc.post("/api/demo") {
         contentType = MediaType.APPLICATION_JSON
@@ -522,6 +526,7 @@ class: text-left
 
 ````md magic-move
 ```kotlin
+@Test
 fun get() {
     mockMvc.get("/api/demo/{id}?param=value", "theId") {
         headers {
@@ -535,6 +540,7 @@ fun get() {
   }
 ```
 ```kotlin
+@Test
 fun get() {
     mockMvc.get("/api/demo/{id}?param=value", "theId") {
         headers {
@@ -616,15 +622,18 @@ class: text-left
 class DemoControllerTest {
 
     @MockkBean
-    private lateinit var demoRepository: Repository
+    private lateinit var demoService: DemoService
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @Test
     fun get() {
-        every { demoRepository.save(any()) } returns Unit
+        every { demoService.findAll() } returns listOf(DemoEntity(name = "name"))
         mockMvc.get("/api/demo")
-                .andExpect { status { isOk() } }
+                .andExpect {
+                    status { isOk() }
+                    content { jsonPath("$[0].name", `is`("name")) }
+                }
     }
 }
 ```
@@ -634,15 +643,18 @@ class DemoControllerTest {
 class DemoControllerTest {
 
     @MockkBean
-    private lateinit var demoRepository: Repository
+    private lateinit var demoService: DemoService
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @Test
     fun get() {
-        every { demoRepository.save(any()) } returns Unit
+        every { demoService.findAll() } returns listOf(DemoEntity(name = "name"))
         mockMvc.get("/api/demo")
-                .andExpect { status { isOk() } }
+                .andExpect {
+                    status { isOk() }
+                    content { jsonPath("$[0].name", `is`("name")) }
+                }
     }
 }
 ```
