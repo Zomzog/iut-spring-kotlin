@@ -18,7 +18,7 @@ le plus de contenu culturel compressible. `di.md` pèse à lui seul 30 slides.
 
 ### `di.md` — injection de dépendances
 
-- [ ] **C1-01** · **`di.md:190-215`** — l'interface déclare `fun findAll(): List<Something>` mais
+- [x] **C1-01** · **`di.md:190-215`** — l'interface déclare `fun findAll(): List<Something>` mais
   `AService` appelle `db.findAllInDb()`. **Ne compile pas.** La slide précédente
   (`di.md:106-148`) est cohérente, elle : c'est le doublon qui a dérivé.
   → cette slide est de toute façon proposée à la coupe (voir plus bas).
@@ -113,7 +113,7 @@ Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
   - `plugin.jpa` génère le constructeur sans argument exigé par JPA — sans lui, les entités
     de c2 ne se chargent pas
   Une slide en c1, juste après `springboot.md`, au moment où on parle des proxies CGLIB
-  (`di.md:368-408`) : c'est le bon endroit, l'enchaînement est naturel.
+  (`di.md:303-343`) : c'est le bon endroit, l'enchaînement est naturel.
   → le piège correspondant côté `@Transactional` est détaillé dans [[2026/Cours 3]].
 - [ ] **C1-21** · **Conventions REST** : le chapitre `mvc.md` montre `ResponseEntity.ok()` et
   `badRequest()`, mais rien sur **201 Created + header `Location`** pour un POST, ni sur
@@ -131,8 +131,8 @@ Voir [[2026/Migration 4.1]] pour le détail. Ce qui touche c1 :
 - [ ] **C1-26** · **Dépendances circulaires** : erreur que les étudiants rencontreront en TP, et qui
   découle directement de l'arbre de dépendances expliqué en `c3/di-reminder.md:77-80`.
 - [ ] **C1-27** · `@PostConstruct` / `@PreDestroy` — cycle de vie des beans, jamais évoqué.
-- [ ] **C1-28** · 🟡 `di.md:918-925` montre le source de `@Configuration` mais **omet
-  `proxyBeanMethods`**, alors que la slide juste avant (`di.md:368-408`) explique précisément
+- [ ] **C1-28** · 🟡 `di.md:853-860` montre le source de `@Configuration` mais **omet
+  `proxyBeanMethods`**, alors que la slide juste avant (`di.md:303-343`) explique précisément
   le proxy CGLIB. `proxyBeanMethods = false` est la réponse à « comment on désactive ce
   proxy » : la question va être posée.
 - [x] **C1-29** · 🟡 `di.md:786-810` présente l'injection par propriété (`@Autowired lateinit var`) comme
@@ -156,7 +156,7 @@ Slides sans note où le contenu ne se lit pas seul :
   c'est le modèle à reproduire ailleurs
 - [ ] **C1-34** · `di.md:10-34` — premier diagramme du fil conducteur : la note est sur la slide
   *suivante* (`di.md:68-72`), donc la première slide est muette
-- [ ] **C1-35** · `di.md:224-249`, `di.md:465-524`, `di.md:936-1025` — magic-move sans note
+- [ ] **C1-35** · `di.md:159-184`, `di.md:400-459`, `di.md:871-960` — magic-move sans note
 - [ ] **C1-36** · `mvc.md:116-150`, `mvc.md:183-226`, `mvc.md:228-271` — tout le chapitre paramètres /
   codes retour / DTO est sans note
 - [x] **C1-37** · `jee.md:80-244` — le grand schéma animé (10 clics) a une note très riche… qui est
@@ -176,10 +176,10 @@ Slides sans note où le contenu ne se lit pas seul :
 >   dépendances entre briques. Garder le schéma + la note, supprimer les 10 slides de texte.
 >   → **le meilleur gain du cours : 10 slides, zéro perte pédagogique.**
 >   **DÉCISION : on garde les 10 slides (volontaire).** Elles servent à la relecture : slides auto-portantes sans speaker notes, souvent lues en fond via le PDF. → ajouter une speaker note qui l'explique.
-> - [ ] **C1-40** · **`di.md:155-222` (1 slide)** : quasi-doublon de `di.md:74-153` (même diagramme, seule la
+> - [x] **C1-40** · **`di.md:155-222` (1 slide)** : quasi-doublon de `di.md:74-153` (même diagramme, seule la
 >   flèche d'héritage change de style), et c'est celle qui porte l'erreur de compilation.
 >   Supprimer plutôt que corriger.
->   **REPORTÉ : décision plus tard (C1-01 reste ouvert d'ici là).**
+>   **DÉCISION : page 36 supprimée.** Flèche `<|..` et note « extraire une interface » reprises dans la page 35 (note réécrite en 3 temps `[click]`), `List<All>` → `List<Pony>`, `<<interface>>` en minuscule. Refs `di.md` ouvertes décalées de -65.
 > - [x] **C1-41** · **`di.md:1039-1216` (TL;DR, 5 slides)** : utile, mais à resserrer — le TL;DR reprend
 >   intégralement du code déjà montré. 3 slides suffisent, et ça élimine au passage
 >   l'erreur de `di.md:1200-1209` et le titre dupliqué de `di.md:1145`.

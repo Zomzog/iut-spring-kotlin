@@ -87,7 +87,7 @@ classDiagram
         +findAll()
     }
     class Database {
-        <<Interface>>
+        <<interface>>
         +findAllInDb()
     }
     class MySqlDb {
@@ -97,8 +97,8 @@ classDiagram
         <<class>>
     }
     AService ..> Database
-    Database <|-- MySqlDb
-    Database <|-- PostgresDb
+    Database <|.. MySqlDb
+    Database <|.. PostgresDb
 ```
 
 ::right::
@@ -110,7 +110,7 @@ class AService(val db: Database) {
 }
 
 interface Database {
-  fun findAllInDb(): List<All>
+  fun findAllInDb(): List<Pony>
 }
 ```
 
@@ -120,7 +120,7 @@ class AService(val db: Database) {
 }
 
 interface Database {
-  fun findAllInDb(): List<All>
+  fun findAllInDb(): List<Pony>
 }
 
 class PostgresDb: Database {
@@ -134,7 +134,7 @@ class AService(val db: Database) {
 }
 
 interface Database {
-  fun findAllInDb(): List<All>
+  fun findAllInDb(): List<Pony>
 }
 
 class PostgresDb: Database {
@@ -149,76 +149,11 @@ class MySqlDb: Database {
 
 <!--
 
-Avec deux implémentations de la base de donnée ça donne ça
--->
+On extrait une interface `Database` : `AService` ne dépend plus d'une implémentation concrète.
 
----
-layout: TwoColumns
-class: text-left
-transition: fade
----
+[click] `PostgresDb` implémente l'interface
 
-::left::
-
-```mermaid
-classDiagram
-    direction TD
-    class AService {
-        <<class>>
-        +findAll()
-    }
-    class Database {
-        <<interface>>
-        +findAllInDb()
-    }
-    class PostgresDb {
-        <<class>>
-    }
-    class MySqlDb {
-        <<class>>
-    }
-    AService ..> Database
-    Database <|.. PostgresDb
-    Database <|.. MySqlDb
-```
-
-::right::
-
-````md magic-move
-
-```kotlin
-class AService(val db: Database) {
-  fun findAll() = db.findAllInDb()
-}
-
-interface Database {
-  fun findAll() : List<Something>
-}
-
-```
-
-```kotlin
-class AService(val db: Database) {
-  fun findAll() = db.findAllInDb()
-}
-
-interface Database {
-  fun findAll() : List<Something>
-}
-
-class PostgresDb(): Database {
-  override fun findAll() = TODO()
-}
-
-class MySqlDb(): Database{
-  override fun findAll() = TODO()
-}
-```
-````
-
-<!--
-
-On peut extraire une interface pour n'utiliser qu'une implémentation à la fois
+[click] `MySqlDb` aussi → on choisit l'une ou l'autre sans toucher `AService`
 -->
 
 ---
