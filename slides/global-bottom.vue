@@ -151,6 +151,7 @@ const poly3 = usePloy(3)
 
 <template>
   <div>
+    <div v-if="formatter.review" class="review-badge">📖 Relecture</div>
     <div
       class="bg transform-gpu overflow-hidden pointer-events-none"
       :style="{ filter: `blur(70px) hue-rotate(${hue}deg)` }"
@@ -173,6 +174,14 @@ const poly3 = usePloy(3)
 </template>
 
 <style scoped>
+.review-badge {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 1rem;
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
 .bg,
 .clip {
   transition: all 2.5s ease;

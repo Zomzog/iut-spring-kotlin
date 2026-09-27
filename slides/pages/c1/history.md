@@ -78,6 +78,7 @@ gitGraph
     commit id:"2025" tag:"7.0"
     checkout SpringBoot
     merge Spring id:"2025-11" tag:"4.0.0"
+    commit id:"2026-06" tag:"4.1.0"
 ```
 
 <!--
@@ -110,8 +111,10 @@ spring-kafka
 -->
 
 ---
-layout: full
+layout: TwoColumnsTitle
 ---
+
+::left::
 
 ## Spring
 
@@ -125,16 +128,9 @@ flowchart TD
     tomcat --> debug
 ```
 
-<!--
+::right::
 
-Fonctionnement similaire, car il fonctionne dans un serveur JakartaEE
-
-Remote debug pour travailler
--->
-
----
-layout: full
----
+<div v-click>
 
 ## Spring Boot
 
@@ -147,13 +143,24 @@ flowchart TD
     jar --> run(java -jar mon.jar)
 ```
 
+</div>
+
 <!--
+
+Spring:
+
+Fonctionnement similaire, car il fonctionne dans un serveur JakartaEE
+
+Remote debug pour travailler
+
+Springboot:
 
 Tomcat est une application en java donc peut être dans le jar
 
 On parle de fatJar # 1 jar avec tout dedans
 
 Debug direct comme si c'était un projet simple
+
 -->
 
 ---
@@ -177,7 +184,7 @@ clicks: 2
 
 <!--
 
-Spring est souvant présenté comme une sorte de boite à outils
+Spring est souvent présenté comme une sorte de boite à outils
 
 SpringBoot comme le résultat direct
 

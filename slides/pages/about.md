@@ -1,11 +1,4 @@
 ---
-layout: full
-class: text-left
----
-
-<Toc />
-
----
 layout: TwoColumnsTitle
 ---
 
@@ -19,7 +12,7 @@ layout: TwoColumnsTitle
 
 ::right::
 
-Lead tech Backend
+Staff Backend
 
 Decathlon Digital Nantes
 

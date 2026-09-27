@@ -9,6 +9,9 @@ transition: fade
 
 ::left::
 
+<div class="grid grid-cols-2 gap-8 h-full">
+  <div class="w-full">
+
 ```mermaid
 classDiagram
     direction TD
@@ -23,25 +26,15 @@ classDiagram
     AService ..> PostgresDb
 ```
 
-::right::
-
-```kotlin
-class AService() {
-    val db = PostgresDb()
-
-    fun findAll() = db.findAllInDb()
-}
-```
-
----
-layout: TwoColumns
-class: text-left
-transition: fade
----
-
-::left::
+  </div>
+  <div class="w-full" v-click.at="2">
 
 ```mermaid
+---
+  config:
+    class:
+      hideEmptyMembersBox: true
+---
 classDiagram
     direction TD
     class AService {
@@ -55,7 +48,24 @@ classDiagram
     AService ..> MySqlDb
 ```
 
+  </div>
+</div>
+
 ::right::
+
+<div v-click.at="1">
+
+```kotlin
+class AService() {
+    val db = PostgresDb()
+
+    fun findAll() = db.findAllInDb()
+}
+```
+
+</div>
+
+<div v-click.at="3">
 
 ```kotlin
 class AService() {
@@ -64,6 +74,8 @@ class AService() {
     fun findAll() = db.findAllInDb()
 }
 ```
+
+</div>
 
 <!--
 
@@ -87,7 +99,7 @@ classDiagram
         +findAll()
     }
     class Database {
-        <<Interface>>
+        <<interface>>
         +findAllInDb()
     }
     class MySqlDb {
@@ -97,8 +109,8 @@ classDiagram
         <<class>>
     }
     AService ..> Database
-    Database <|-- MySqlDb
-    Database <|-- PostgresDb
+    Database <|.. MySqlDb
+    Database <|.. PostgresDb
 ```
 
 ::right::
@@ -110,7 +122,7 @@ class AService(val db: Database) {
 }
 
 interface Database {
-  fun findAllInDb(): List<All>
+  fun findAllInDb(): List<Pony>
 }
 ```
 
@@ -120,7 +132,7 @@ class AService(val db: Database) {
 }
 
 interface Database {
-  fun findAllInDb(): List<All>
+  fun findAllInDb(): List<Pony>
 }
 
 class PostgresDb: Database {
@@ -134,7 +146,7 @@ class AService(val db: Database) {
 }
 
 interface Database {
-  fun findAllInDb(): List<All>
+  fun findAllInDb(): List<Pony>
 }
 
 class PostgresDb: Database {
@@ -146,86 +158,6 @@ class MySqlDb: Database {
 }
 ```
 ````
-
-<!--
-
-Avec deux implémentations de la base de donnée ça donne ça
--->
-
----
-layout: TwoColumns
-class: text-left
-transition: fade
----
-
-::left::
-
-```mermaid
-classDiagram
-    direction TD
-    class AService {
-        <<class>>
-        +findAll()
-    }
-    class Database {
-        <<interface>>
-        +findAllInDb()
-    }
-    class PostgresDb {
-        <<class>>
-    }
-    class MySqlDb {
-        <<class>>
-    }
-    AService ..> Database
-    Database <|.. PostgresDb
-    Database <|.. MySqlDb
-```
-
-::right::
-
-````md magic-move
-
-```kotlin
-class AService(val db: Database) {
-  fun findAll() = db.findAllInDb()
-}
-
-interface Database {
-  fun findAll() : List<Something>
-}
-
-```
-
-```kotlin
-class AService(val db: Database) {
-  fun findAll() = db.findAllInDb()
-}
-
-interface Database {
-  fun findAll() : List<Something>
-}
-
-class PostgresDb(): Database {
-  override fun findAll() = TODO()
-}
-
-class MySqlDb(): Database{
-  override fun findAll() = TODO()
-}
-```
-````
-
-<!--
-
-On peut extraire une interface pour n'utiliser qu'une implémentation à la fois
--->
-
----
-class: text-left
----
-
-## Injection de dépendances
 
 <div v-click>
 
@@ -244,6 +176,12 @@ val appMy = AService(MySqlDb())
 </div>
 
 <!--
+
+On extrait une interface `Database` : `AService` ne dépend plus d'une implémentation concrète.
+
+[click] `PostgresDb` implémente l'interface
+
+[click] `MySqlDb` aussi → on choisit l'une ou l'autre sans toucher `AService`
 
 On peut donc faire plusieurs versions de notre application avec soit l'une soit l'autre
 -->
@@ -345,46 +283,25 @@ class MyConfig {
     fun another() = Other(myDb())
 }
 ```
-````
-
-<!--
-
-@Configuration dit à spring que c'est une classe de configuration, il doit la parcourir et instancier tout les Beans
-
-Ça remplace la configuration XML
-
-@Bean explique à Spring qu'il va devoir gérer cette instance
-
-On peut utiliser ce bean dans un autre service
-
-Et dans un autre
--->
-
----
-layout: full
-class: text-left
----
-
-## Proxy proxy proxy
-
-````md magic-move
-```kotlin
-@Configuration
-class MyConfig {
-    @Bean
-    fun myDb() = PostgresDb()
-}
-```
 ```kotlin
 @Configuration
 class MyConfig {
     @Bean
 ●   fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+
+    @Bean
+    fun another() = Other(myDb())
 }
 ```
 ````
 
-<div v-click.at="2">
+<div v-click.at="7">
+
+## Proxy proxy proxy
+
 Stack du breakpoint
 
 ```txt
@@ -398,9 +315,21 @@ Invoke-1, MyConfig$$SpringCGLIB$$FastClass$$1 (bzh.zomzog)
 
 <!--
 
+@Configuration dit à spring que c'est une classe de configuration, il doit la parcourir et instancier tous les Beans
+
+Ça remplace la configuration XML
+
+@Bean explique à Spring qu'il va devoir gérer cette instance
+
+On peut utiliser ce bean dans un autre service
+
+Et dans un autre
+
+## proxy
+
 Si on met un breakpoint sur l'appel de methode à cette stack
 
-Spring va en-capsuler chaque instance dans des proxy
+Spring va encapsuler chaque instance dans des proxy
 
 CGLIB est un système de génération de code dynamique
 
@@ -430,14 +359,14 @@ class MyConfig {
 // /!\ pseudo code
 class SpringProxyMyConfig(val base: MyConfig) {
     
-    val myDb: PostgresDb? = null;
-    fun myDb() = myDb ?: base.postgresDb()
+    var myDb: PostgresDb? = null
+    fun myDb() = myDb ?: base.myDb().also { myDb = it }
 
-    val aService: aService? = null;
-    fun aService() = aService ?: base.aService(myDb())
+    var aService: AService? = null
+    fun aService() = aService ?: base.aService().also { aService = it }
 
-    val another: another? = null;
-    fun another() = another ?: base.Other(myDb())
+    var another: Other? = null
+    fun another() = another ?: base.another().also { another = it }
 }
 ```
 ````
@@ -446,15 +375,15 @@ class SpringProxyMyConfig(val base: MyConfig) {
 
 ````md magic-move
 ```kotlin
-val myDb = PostgresDB()
+val myDb = PostgresDb()
 
-val aService = AService(PostgresDB())
+val aService = AService(PostgresDb())
 
-val another = Other(PostgresDB())
+val another = Other(PostgresDb())
 ```
 
 ```kotlin
-val myDb = PostgresDB()
+val myDb = PostgresDb()
 
 val aService = AService(myDb)
 
@@ -518,7 +447,8 @@ fun main() {
 class ApplicationContext {
   val beans = List<Bean>
 
-  fun getBean(klass: Class<T>) : T
+  fun <T: Bean> getBean(klass: Class<T>) : T = 
+    beans.first { it.javaClass.isInstance(klass) } as T
 }
 ```
 ````
@@ -544,6 +474,42 @@ class: text-left
 ---
 
 ````md magic-move
+```kotlin
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+
+    @Bean
+    fun another() = Other(myDb())
+}
+
+fun main() {
+  val context: ApplicationContext = AnnotationConfigApplicationContext(MyConfig::class.java)
+}
+```
+```kotlin
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb() = PostgresDb()
+
+    @Bean
+    fun aService() = AService(myDb())
+
+    @Bean
+    fun another() = Other(myDb())
+}
+
+fun main() {
+  val context: ApplicationContext = AnnotationConfigApplicationContext(MyConfig::class.java)
+  val service = context.getBean(AService::class.java)
+  val another = context.getBean(Other::class.java)
+}
+```
 ```kotlin
 @Configuration
 class MyConfig {
@@ -641,31 +607,75 @@ Pas en PROTOTYPE
 ---
 layout: full
 class: text-left
+zoom: 0.8
 ---
 
 ## Scope
 
-Singleton -> un unique bean
+```kotlin
+@Scope(BeanDefinition.SCOPE_SINGLETON)
+```
 
-Prototype -> un bean par instance d'objet
+Une instance unique bean
 
-<div v-click.at="2">
+<div v-click>
+
+```kotlin
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+```
+
+Une instance du bean par demande du bean au conteneur
+
+</div>
+<div v-click>
 
 ## Web-aware Scope
 
-Request -> un bean pour la durée de vie de la requête HTTP
+```kotlin
+@Scope(WebApplicationContext.SCOPE_REQUEST) @RequestScope
+```
 
-Session -> un bean pour la durée de la session HTTP
+Une instance du bean pour la durée de vie de la requête HTTP
 
-Application -> un bean pour la durée de vie de la servlet
-
-WebSocket -> un bean pour la durée de vie de la WebSocket
 </div>
+<div v-click>
+
+```kotlin
+@Scope(WebApplicationContext.SCOPE_SESSION) @SessionScope
+```
+
+Un bean pour la durée de la session HTTP
+
+</div>
+<div v-click>
+
+```kotlin
+@Scope(WebApplicationContext.SCOPE_APPLICATION) @ApplicationScope
+```
+
+Une instance du bean pour la durée de vie de la servlet
+
+</div>
+<div v-click>
+
+```kotlin
+@Scope(WebApplicationContext.SCOPE_WEBSOCKET)
+```
+
+Une instance du bean pour la durée de vie de la WebSocket
+
+</div>
+
+<!-- 
+Singleton et SCOPE_APPLICATION sont plus ou moins equivalent en SpringBoot car on a une seule application par servlet
+-->
 
 ---
 layout: full
 class: text-left
 ---
+
+## Découpler grâce à l’injection de dépendances 
 
 ````md magic-move
 ```kotlin
@@ -673,7 +683,7 @@ class: text-left
 class MyConfig {
 
     @Bean
-    fun myDb() = PostgresDb()
+    fun myDb(): Database = PostgresDb()
 
     @Bean
     fun aService() = AService(myDb())
@@ -688,7 +698,7 @@ class MyConfig {
 class MyDatabaseConfig {
 
     @Bean
-    fun myDb() = PostgresDb()
+    fun myDb(): Database = PostgresDb()
 }
 
 @Configuration
@@ -707,7 +717,7 @@ class MyConfig {
 class MyDatabaseConfig {
 
     @Bean
-    fun myDb() = PostgresDb()
+    fun myDb(): Database = PostgresDb()
 }
 
 @Configuration
@@ -726,7 +736,7 @@ class MyConfig {
 class MyDatabaseConfig {
 
     @Bean
-    fun myDb() = PostgresDb()
+    fun myDb(): Database = PostgresDb()
 }
 
 @Configuration
@@ -745,7 +755,7 @@ class MyConfig(val db: Database) {
 layout: cover
 ---
 
-# Autowired
+# L'injection / Autowired
 
 ---
 layout: TwoColumns
@@ -755,6 +765,7 @@ class: text-left
 ::left::
 
 ## Injection par constructeur
+
 
 ```kotlin
 class AService(val db: Database) {
@@ -820,6 +831,8 @@ layout: full
 class: text-left
 ---
 
+# Stereotype
+
 ````md magic-move
 
 ```kotlin
@@ -848,7 +861,7 @@ class MyConfig {
     //fun aService() = AService()
 }
 
-@Service
+@Component
 class AService {
     @Autowired
     lateinit var database: Database
@@ -891,7 +904,9 @@ Déclare que la classe doit devenir un bean lors du scan
 
 <div v-click>
 
-## 3 alias pour le DDD
+## 3 spécialisations
+
+Identifient mieux le rôle de la classe (DDD, n-tiers...)
 
 @Controller
 
@@ -901,9 +916,11 @@ Déclare que la classe doit devenir un bean lors du scan
 </div>
 
 <!--
-
-Les 4 sont équivalent,
-ils sont plus sémantique pour de la documentation
+Les 3 sont des spécialisations de @Component : le bean est créé de la même façon.
+Elles identifient mieux le rôle de la classe dans des patterns comme le DDD ou le n-tiers
+(@Controller sert surtout le n-tiers).
+Elles permettent aussi à certaines libs d'ajouter un comportement plus précis
+que sur un simple @Component. On y reviendra plus tard.
 -->
 
 ---
@@ -911,11 +928,11 @@ layout: full
 class: text-left
 ---
 
-## Stereotype
+## Stereotype - @Configuration ?
 
-## @Configuration ?
+<div v-click.at="1">
 
-```java
+```java {all|4|all}{at:'2'}
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -924,57 +941,52 @@ public @interface Configuration {
 }
 ```
 
+</div>
+<div v-click.at="2">
+
 @Configuration est une extension de component, mais a son propre cycle de vie
 
+</div>
+<div v-click.at="3">
+
 @Configuration crée quand même un bean
+
+</div>
 
 ---
 layout: full
 class: text-left
 ---
 
+## Conflits
+
 ````md magic-move
 
 ```kotlin
-fun main() {
-  val context: ApplicationContext = 
-     AnnotationConfigApplicationContext(MyConfig::class.java)
-  val service = context.getBean(AService::class.java)
-  service.findAllInDb()
-}
-
-// /!\ pseudo code
-class ApplicationContext {
-  val beans = List<Bean>
-
-  fun getBean(klass: Class<T>) : T
+@Configuration
+class MyConfig {
+    @Bean
+    fun myDb(): Database = PostgresDb()
 }
 ```
 ```kotlin
 @Configuration
 class MyConfig {
     @Bean
-    fun myDb() = PostgresDb()
+    fun myDb(): Database = PostgresDb()
+
+    @Bean
+    fun my2ndDb(): Database = PostgresDb()
 }
 ```
 ```kotlin
 @Configuration
 class MyConfig {
     @Bean
-    fun myDb() = PostgresDb()
+    fun myDb(): Database = PostgresDb()
 
     @Bean
-    fun my2ndDb() = PostgresDb()
-}
-```
-```kotlin
-@Configuration
-class MyConfig {
-    @Bean
-    fun myDb() = PostgresDb()
-
-    @Bean
-    fun my2ndDb() = PostgresDb()
+    fun my2ndDb(): Database = PostgresDb()
 
     @Bean
 🚫  fun aService(db: Database) = AService(db) // deux bean db
@@ -985,10 +997,10 @@ class MyConfig {
 class MyConfig {
     @Bean
     @Primary
-    fun myDb() = PostgresDb()
+    fun myDb(): Database = PostgresDb()
 
     @Bean
-    fun my2ndDb() = PostgresDb()
+    fun my2ndDb(): Database = PostgresDb()
 
     @Bean
     fun aService(db: Database) = AService(db) // myDb
@@ -999,10 +1011,10 @@ class MyConfig {
 class MyConfig {
     @Bean
     @Primary
-    fun myDb() = PostgresDb()
+    fun myDb(): Database = PostgresDb()
 
     @Bean
-    fun my2ndDb() = PostgresDb()
+    fun my2ndDb(): Database = PostgresDb()
 
     @Bean
     fun aService(@Qualifier("my2ndDb") db: Database) = AService(db) //  my2ndDb
@@ -1013,10 +1025,10 @@ class MyConfig {
 class MyConfig {
     @Bean
     @Primary
-    fun myDb() = PostgresDb()
+    fun myDb(): Database = PostgresDb()
 
     @Bean("secondary")
-    fun my2ndDb() = PostgresDb()
+    fun my2ndDb(): Database = PostgresDb()
 
     @Bean
     fun aService(@Qualifier("secondary") db: Database) = AService(db) //  my2ndDb
@@ -1036,83 +1048,79 @@ layout: full
 class: text-left
 ---
 
-## Bean creation avec @Bean
+## Déclarer un bean
+
+### Avec `@Bean`
 
 ```kotlin
 @Configuration
-class MyDatabaseConfig() {
+class MyDatabaseConfig {
     @Bean
-    fun myDb() = PostgresDb()
+    fun myDb() = PostgresDb() // nom du bean : myDb
+
+    @Bean("autreNom")
+    fun uneAutreMethode() = PostgresDb() // nom du bean : autreNom
 }
 ```
 
-## Bean creation avec Stereotype
+### Avec un stéréotype
 
 ```kotlin
 @Service
-class MyService() {
-}
+class MyService // nom du bean : myService
 
-@Component
-class MyOtherService() {
-}
+@Component("unAutreNom")
+class MyOtherService // nom du bean : unAutreNom
 ```
 
 ---
-layout: full
+layout: TwoColumns
 class: text-left
 ---
 
-## @Configuration
+## Injecter une dépendance
 
-### Injection de dépendances appel direct
+::left::
+
+### @Configuration
+
+#### Par appel direct (le proxy CGLIB renvoie le singleton)
 
 ```kotlin
 @Configuration
-class MyDatabaseConfig() {
+class MyDatabaseConfig {
     @Bean
     fun myDb() = PostgresDb()
+
     @Bean
     fun myService() = MyService(myDb())
 }
 ```
 
-### Injection de dépendances par paramètre
+#### Par paramètre
 
 ```kotlin
 @Configuration
-class MyDatabaseConfig() {
+class MyDatabaseConfig {
     @Bean
     fun myService(db: Database) = MyService(db)
 }
 ```
 
-### Injection de dépendances par constructeur
+::right::
 
-```kotlin
-@Configuration
-class MyDatabaseConfig(val db: Database) {
-    @Bean
-    fun myService() = MyService(db)
-}
-```
+### @Component
 
----
-layout: full
-class: text-left
----
-
-## @Component
-
-### Injection de dépendances par constructeur
+#### Par constructeur
 
 ```kotlin
 @Service
-class MyService(val db: Database) {
-}
+class MyService(val db: Database)
 ```
 
-### Injection de dépendances par autowired
+> ✅ Le standard : à privilégier
+
+#### Par autowired
 
 ```kotlin
 @Service
@@ -1129,27 +1137,14 @@ class: text-left
 
 ## @Scope
 
-### @Bean @Scope
-
 ```kotlin
 @Configuration
 class MyConfig {
-    @Bean @Scope(BeanDefinition.SCOPE_SINGLETON)
+    @Bean // SINGLETON par défaut : une seule instance pour tous
     fun onlyOneForAll() = PostgresDb()
 
     @Bean @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     fun oneBeanPerCall() = PostgresDb()
-}
-```
-
-### @Bean @Scope
-
-```kotlin
-@Service
-@Scope(BeanDefinition.SCOPE_SINGLETON)
-class MyService {
-    @Autowired
-    lateinit var db: Database
 }
 ```
 
@@ -1159,8 +1154,6 @@ class: text-left
 ---
 
 ## Résolution de conflit
-
-### @Primary
 
 ```kotlin
 @Configuration
@@ -1173,44 +1166,9 @@ class MyConfig {
     fun my2ndDb() = PostgresDb()
 
     @Bean
-    fun aService(@Qualifier("secondary") db: Database) = AService(db) //  my2ndDb
-}
-```
-
-### @Qualifier
-
-```kotlin
-@Configuration
-class MyConfig {
+    fun aService(db: Database) = AService(db) // myDb (@Primary)
 
     @Bean
-    fun aService(@Qualifier("secondary") db: Database) = AService(db) //  my2ndDb
-}
-```
-
----
-layout: full
-class: text-left
----
-
-## Résolution de conflit
-
-### Noms des beans
-
-```kotlin
-@Configuration
-class MyConfig {
-
-    @Bean
-    fun nomDuBean() = PostgresDb()
-
-    @Bean("nouveauNomDuBean")
-    fun nomDuBean() = PostgresDb()
-}
-```
-
-```kotlin
-@Service("unAutreNom")
-class MyService {
+    fun bService(@Qualifier("secondary") db: Database) = BService(db) // my2ndDb
 }
 ```
