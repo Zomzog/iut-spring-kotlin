@@ -1,0 +1,24 @@
+/* style.css */
+.slidev-layout .slidev-toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.slidev-layout .slidev-toc-list li {
+  margin: 0;
+  font-weight: 500;
+}
+
+.slidev-layout .slidev-toc-list li a {
+  text-decoration: none;
+  color: inherit; /* Exemple de couleur */
+}
+
+.slidev-layout .slidev-toc-list li a:hover {
+  color: var(--slidev-theme-primary);
+}   
