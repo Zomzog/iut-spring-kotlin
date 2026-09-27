@@ -20,9 +20,9 @@ flowchart TD
 ```
 
 <!--
-Si on se se place dans le cas d'une requète HTTP.
+Si on se place dans le cas d'une requête HTTP.
 
-Si on reprend une version simplifié du traitement d'une requète.
+Si on reprend une version simplifié du traitement d'une requête.
 
 Le client passe par le DispatcherServlet pour aller sur mon controlleur
 -->
@@ -101,21 +101,21 @@ class FilterA : Filter {
 <!--
 Cette interface va imposer d'implémenter cette méthode
 
-Il y a la requète originale
+Il y a la requête originale
 
 Un wrapper qui contient la réponse
 
 FilterChain qui contient la liste des filtres et permet d'appeler le suivant.
 
-On appel le suivant en appelant le doFilter où on donne la requète et la réponse
+On appel le suivant en appelant le doFilter où on donne la requête et la réponse
 -->
 
 <!--
-Donc il est possible de modifier la requète avant
+Donc il est possible de modifier la requête avant
 et modifier la réponse après.
 
 Si on modifie la réponse avant,
-les modifications peuvent etre écrasés par les filtres suivants.
+les modifications peuvent être écrasées par les filtres suivants.
 -->
 
 ---
@@ -142,7 +142,7 @@ class LoggerHttpFilter : HttpFilter() {
 Il existe des filtres plus spécialisés,
 par example le HttpFilter,
 derrière c'est un filtre classique,
-mais il fait pour vous la validation  et le cast en HttpServlet*
+mais il fait pour vous la validation et le cast en HttpServlet*
 -->
 
 ---
@@ -166,8 +166,8 @@ fun filterA(filter: FilterA): FilterRegistrationBean<FilterA> {
 Il faut créer un bean FilterRegistrationBean pour l'ajouter
 
 On peut ajouter des conditions au filtre,
-ici je le limtes aux URL /api et je lui met un ordre.
+ici je le limite aux URL /api et je lui met un ordre.
 
-L'ordre n'est pas stict, il sera après les 0, avant les 2.
+L'ordre n'est pas strict, il sera après les 0, avant les 2.
 Mais sans priorité particulière sur les autres 1.
 -->

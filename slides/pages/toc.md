@@ -1,6 +1,6 @@
 ---
 layout: full
-class: text-left
+class: text-center
 ---
 
 <Toc />

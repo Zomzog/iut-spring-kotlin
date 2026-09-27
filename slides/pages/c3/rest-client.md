@@ -111,7 +111,7 @@ Spring propose 3 clients HTTP
 
 Ce sont des abstractions qui simplifient l'utilisation.
 
-Un peut comme JPA simplifie l'utilisation de JDBC
+Un peu comme JPA simplifie l'utilisation de JDBC
 -->
 
 ---
@@ -162,9 +162,9 @@ il est donc un bon client pour un bean
 
 <div v-click.at="1">
 
-**Builder**: RestTemplateBuilder est un bean pre-configure par Spring
+**Builder**: RestTemplateBuilder est un bean préconfiguré par Spring
 
-Il permet par exemple d'avoir les instrumetation de monitoring
+Il permet par exemple d'avoir les instrumentations de monitoring
 
 </div>
 
@@ -301,7 +301,7 @@ class: text-left
 @Configuration
 class WebClientConfig {
   @Bean
-  fun webCleint(builder: WebClient.Builder) =
+  fun webClient(builder: WebClient.Builder) =
      builder.baseUrl("http://localhost:8080")
             .build()
 }
