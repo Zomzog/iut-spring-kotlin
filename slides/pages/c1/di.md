@@ -1,3 +1,8 @@
+---
+layout: full
+title: Injection de dépendances 
+hideInToc: false
+---
 
 ![image](/di_everywhere.webp)
 
@@ -394,6 +399,7 @@ val another = Other(myDb)
 ---
 layout: cover
 class: text-left
+hideInToc: false
 ---
 
 # Application Context
