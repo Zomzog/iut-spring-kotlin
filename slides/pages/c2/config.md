@@ -12,7 +12,7 @@ class: text-left
 
 ## Application Configuration
 
-src/resources/application.properites
+src/resources/application.properties
 
 ```properties
 spring.application.name=demo
@@ -44,7 +44,7 @@ spring:
 </div>
 
 <!--
-Trois moyens de fournir des properites,
+Trois moyens de fournir des properties,
 avec un fichier properties,
 un yml,
 un yaml
@@ -145,7 +145,7 @@ flowchart LR
     application.yml --> |\>| application.yaml
 ```
 
-```properties [application.properites]
+```properties [application.properties]
 spring.application.name=demoProperties
 ```
 
@@ -174,7 +174,7 @@ class: text-left
 
 ## Profiles
 
-Les profils son un moyen de séparer des parties de la configuration
+Les profils sont un moyen de séparer des parties de la configuration
 
 Exemple:
 
@@ -203,7 +203,7 @@ spring:
 
 src/resources/application-prod.yml
 
-```yaml [application-dev.yml]
+```yaml [application-prod.yml]
 
 spring:
     application.name: myProdConfig
@@ -268,7 +268,7 @@ spring:
     application.name: demoMongo
 ```
 
-```yaml [application-prod.yaml]
+```yaml [application-prod.yml]
 
 spring:
     application.name: demoProd
@@ -420,7 +420,7 @@ On peut transformer les properties en instance de class
 
 @ConfigurationProperties donne la base du nom
 
-@EnableConfigurationProperties active la lécture
+@EnableConfigurationProperties active la lecture
 
 C'est un bean, donc on peut réutiliser la validation
 -->
@@ -449,7 +449,7 @@ class Demo {
 ```
 
 <!--
-On inject la classe comme un bean
+On injecte la classe comme un bean
 -->
 
 ---
@@ -582,9 +582,9 @@ ConditionalOnMissingClass
 <!--
 Il y a beaucoup de ConditionalOn*
 
-ConditionalOnBean sur l'existance d'un bean
+ConditionalOnBean sur l'existence d'un bean
 
-ConditionalOnClass sur l'existance d'une class dans le classpath
+ConditionalOnClass sur l'existence d'une class dans le classpath
 
 ConditionalOnJava sur la version de java
 

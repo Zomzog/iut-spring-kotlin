@@ -36,6 +36,7 @@ class PocApplication
 
 fun main(args: Array<String>) {
     runApplication<PocApplication>(*args)
+}
 ```
 ````
 
@@ -58,7 +59,7 @@ Démarre le serveur web si besoin
 
 <div v-click>
 
-Chargemement des configurations (variables d'environement...)
+Chargement des configurations (variables d'environnement...)
 </div>
 
 <div v-click>
@@ -81,6 +82,7 @@ class PocApplication
 
 fun main(args: Array<String>) {
     runApplication<PocApplication>(*args)
+}
 ```
 
 Cherche les @Component (@Service, @Configuration...) dans les sous packages (ex: bzh.zomzog.iut.amphi.service)
@@ -92,7 +94,7 @@ class: text-left
 
 # Scan des sous packages
 
-```kotlin
+```kotlin {all|all|all|1|all}{at:'0'}
 package bzh.zomzog.iut.amphi
 
 @SpringBootApplication
@@ -100,11 +102,12 @@ class PocApplication
 
 fun main(args: Array<String>) {
     runApplication<PocApplication>(*args)
+}
 ```
 
 <div v-click>
 
-```kotlin
+```kotlin {all|all|all|9|all}{at:'1'}
 package bzh.zomzog.iut.amphi.services
 
 @Service
@@ -116,7 +119,7 @@ class AServiceOk(db: Database) {
 
 <div v-click>
 
-```kotlin
+```kotlin {all|1|all}{at:'3'}
 package bzh.zomzog.iut
 
 @Service
@@ -134,6 +137,27 @@ class: text-left
 # Extensions du scan
 
 ```kotlin
+package bzh.zomzog.iut.amphi
+
+@SpringBootApplication
+class PocApplication
+
+fun main(args: Array<String>) {
+    runApplication<PocApplication>(*args)
+}
+```
+
+<div v-click.at="1">
+
+````md magic-move {at: '2'}
+```kotlin
+package bzh.zomzog.iut.amphi.config
+
+@Configuration
+class MyConfig {
+}
+```
+```kotlin
 package bzh.zomzog.iut.amphi.config
 
 @Configuration
@@ -141,18 +165,26 @@ package bzh.zomzog.iut.amphi.config
 class MyConfig {
 }
 ```
+````
+
+</div>
+
+<div v-click.at="3">
 
 Va scanner aussi le package bzh.zomzog.another et ses sous packages
+
+</div>
 
 ---
 layout: full
 class: text-left
+zoom: 0.9
 ---
 
 # Springboot starters
 
 ```kotlin
- implementation("org.springframework.boot:spring-boot-starter-web")
+ implementation("org.springframework.boot:spring-boot-starter-webmvc")
 ```
 
 <div v-click>
@@ -168,7 +200,9 @@ project
       │
       └─META-INF
         │
-        └─  org.springframework.boot.autoconfigure.AutoConfiguration.imports
+        └─spring
+          │
+          └─  org.springframework.boot.autoconfigure.AutoConfiguration.imports
 ```
 
 </div>
@@ -178,7 +212,12 @@ project
 Contenu:
 
 ```txt
-bzh.zomzog.another.autoconfigure.MyAutoConfiguration
+org.springframework.boot.webmvc.autoconfigure.DispatcherServletAutoConfiguration
+org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration
+org.springframework.boot.webmvc.autoconfigure.WebMvcObservationAutoConfiguration
+org.springframework.boot.webmvc.autoconfigure.actuate.endpoint.web.WebMvcHealthEndpointExtensionAutoConfiguration
+org.springframework.boot.webmvc.autoconfigure.actuate.web.mappings.WebMvcMappingsAutoConfiguration
+org.springframework.boot.webmvc.autoconfigure.error.ErrorMvcAutoConfiguration
 ```
 
 </div>
@@ -188,3 +227,10 @@ bzh.zomzog.another.autoconfigure.MyAutoConfiguration
 TOUS les starters spring boot en dépendance sont chargés
 
 </div>
+
+<!--
+
+Un starter tire le module d'auto-configuration de sa techno (ex. `spring-boot-webmvc`),
+qui contient ce fichier `.imports`. Au démarrage, Spring lit tous les `.imports` du classpath.
+Ici, même structure pour notre propre lib `bzh.zomzog.another` — détaillé en C4.
+-->

@@ -1,1 +1,23 @@
-../prez-framework/_tooling/package.json
+{
+    "name": "no-name",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "dev:c1": "slidev c1.md --open",
+        "dev:c2": "slidev c2.md --open",
+        "dev:c3": "slidev c3.md --open",
+        "dev:c4": "slidev c4.md --open",
+        "build": "for c in c1 c2 c3 c4; do slidev build $c.md --base \"${BASE:-/}$c/\" --out dist/$c || exit 1; done && cp pages/index.html dist/"
+    },
+    "dependencies": {
+        "@slidev/cli": "^53.0.0",
+        "@slidev/theme-default": "latest",
+        "@slidev/theme-seriph": "latest",
+        "@types/seedrandom": "^3.0.8",
+        "seedrandom": "^3.0.5",
+        "vue": "^3.5.33"
+    },
+    "devDependencies": {
+        "playwright-chromium": "^1.55.1"
+    }
+}

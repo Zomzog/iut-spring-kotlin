@@ -106,7 +106,7 @@ class: text-left
     "db": {
       "status": "UP",
       "details": {
-        "database": "H2",
+        "database": "PostgreSQL",
         "validationQuery": "isValid()"
       }
     },
@@ -116,7 +116,7 @@ class: text-left
         "total": 252841029632,
         "free": 17691353088,
         "threshold": 10485760,
-        "path": "C:\\git\\zomzog\\iut\\.",
+        "path": "/home/iut/app/.",
         "exists": true
       }
     },

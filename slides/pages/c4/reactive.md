@@ -5,7 +5,7 @@ class: text-left
 
 # Réactif (WebFlux + coroutines)
 
-```kotlin {1|2-4|5} [build.kts]
+```kotlin {1|2-4|5} [build.gradle.kts]
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")

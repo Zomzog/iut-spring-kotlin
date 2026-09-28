@@ -3,7 +3,7 @@ layout: cover
 hideInToc: false
 ---
 
-# Télémetry — OpenTelemetry (OTel)
+# Télémétrie — OpenTelemetry (OTel)
 
 ---
 layout: full
@@ -167,7 +167,9 @@ class: text-left
 
 Par agent
 
+```bash
 java -javaagent:path/to/opentelemetry-javaagent.jar -Dotel.service.name=your-service-name -jar myapp.jar
+```
 
 `javaagent` (opentelemetry-javaagent) : simple à lancer sans modifier le code ; moins de contrôle fin.
 
