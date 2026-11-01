@@ -167,6 +167,14 @@ il faut une annotation pour que Spring puisse faire le lien
 La gestion, des exceptions, est en entonnoir
 
 On peut traiter les erreurs spécialisées et avoir des couches de traitement de plus en plus génériques
+
+⚠️ MethodArgumentNotValidException ne concerne que @Valid sur un @RequestBody.
+Une contrainte sur un paramètre (@RequestParam, @PathVariable) lève HandlerMethodValidationException :
+ce handler ne la traite pas.
+
+Piège du fallback sur Exception : dans un advice écrit à la main, il capte aussi toutes les exceptions de Spring MVC.
+Une validation de paramètre qui devait donner 400 répond alors 500 (prouvé par NaiveFallbackSwallowsValidationTest).
+La slide suivante règle ça.
 -->
 
 ---
@@ -219,6 +227,10 @@ class HttpErrorHandler : ResponseEntityExceptionHandler() {
 Il est aussi possible d'étendre la gestion par défaut de Spring
 
 Pour ça il faut étendre ResponseEntityExceptionHandler et surcharger les handlers
+
+Cette classe traite déjà les exceptions de Spring MVC, dont HandlerMethodValidationException : elle répond 400.
+On ne surcharge que ce qu'on veut personnaliser (ici le body d'une validation de @RequestBody),
+le reste garde le comportement par défaut (prouvé par BaseClassKeepsValidationTest).
 -->
 
 ---
