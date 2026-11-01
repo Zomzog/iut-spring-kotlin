@@ -65,11 +65,11 @@ flowchart TD
     DispatcherServlet <--> MyController
     MyController <--> MyService
     DispatcherServlet --> |serialization| Client
-    DispatcherServlet --> |translateError| ControllerAdvice
+    DispatcherServlet --> |translateError| RestControllerAdvice
 ```
 
 <!--
-Ce dispatcher va gérer les erreurs en s'appuyant sur un ControllerAdvice
+Ce dispatcher va gérer les erreurs en s'appuyant sur un RestControllerAdvice
 -->
 
 ---
@@ -103,17 +103,17 @@ layout: full
 class: text-left
 ---
 
-## ControllerAdvice
+## RestControllerAdvice
 
 ````md magic-move
 ```kotlin
-@ControllerAdvice
+@RestControllerAdvice
 class HttpErrorHandler {
 }
 ```
 
 ```kotlin
-@ControllerAdvice
+@RestControllerAdvice
 class HttpErrorHandler {
 
     fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException) =
@@ -121,7 +121,7 @@ class HttpErrorHandler {
 }
 ```
 ```kotlin
-@ControllerAdvice
+@RestControllerAdvice
 class HttpErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
@@ -130,7 +130,7 @@ class HttpErrorHandler {
 }
 ```
 ```kotlin {4-5}
-@ControllerAdvice
+@RestControllerAdvice
 class HttpErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
@@ -140,7 +140,7 @@ class HttpErrorHandler {
 ```
 
 ```kotlin
-@ControllerAdvice
+@RestControllerAdvice
 class HttpErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
@@ -155,7 +155,7 @@ class HttpErrorHandler {
 ````
 
 <!--
-Un ControllerAdvice est un Bean particulier.
+Un RestControllerAdvice est un Bean particulier.
 Comme RestController ou @Configuration,
 il a son propre cycle de vie.
 
@@ -174,16 +174,16 @@ layout: full
 class: text-left
 ---
 
-## ControllerAdvice - Spring
+## RestControllerAdvice - Spring
 
 ````md magic-move
 ```kotlin
-@ControllerAdvice
+@RestControllerAdvice
 class HttpErrorHandler : ResponseEntityExceptionHandler() {
 }
 ```
 ```kotlin
-@ControllerAdvice
+@RestControllerAdvice
 class HttpErrorHandler : ResponseEntityExceptionHandler() {
 
   override fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException,
@@ -197,7 +197,7 @@ class HttpErrorHandler : ResponseEntityExceptionHandler() {
 ```
 
 ```kotlin
-@ControllerAdvice
+@RestControllerAdvice
 class HttpErrorHandler : ResponseEntityExceptionHandler() {
 
   override fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException,
@@ -208,9 +208,9 @@ class HttpErrorHandler : ResponseEntityExceptionHandler() {
       return ResponseEntity.badRequest().body("Your arg is invalid")
   }
 
-  @ExceptionHandler(MyCustomException::class)
-  fun fallback(e: MyCustomException) =
-      ResponseEntity.internalServerError().body("NO!")
+  @ExceptionHandler(DemoNotFoundException::class)
+  fun handleDemoNotFound(e: DemoNotFoundException) =
+      ResponseEntity.status(HttpStatus.NOT_FOUND).body("Demo not found")
 }
 ```
 ````
@@ -228,25 +228,61 @@ class: text-left
 
 ## Layered test
 
+````md magic-move
 ```kotlin
 @WebMvcTest(DemoController::class)
-class DemoDtoTest {
+class DemoControllerTest {
 
-    @Autowired
-    lateinit var mockMvc: MockMvc
     @MockkBean
-    lateinit var demoService: DemoService
+    private lateinit var demoService: DemoService
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
     @Test
-    fun `happy path`() {
-        // GIVEN
-        every { demoService.list() } throws ImATeapotException()
-        // WHEN
-        mockMvc.get("/api/v1/demo")
-            // THEN
+    fun `invalid body gives 400`() {
+        mockMvc.post("/api/v1/demo") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"name":""}"""
+        }.andExpect {
+            status { isBadRequest() }
+            content { string("Your arg is invalid") }
+        }
+    }
+}
+```
+```kotlin
+@WebMvcTest(DemoController::class)
+class DemoControllerTest {
+
+    @MockkBean
+    private lateinit var demoService: DemoService
+    @Autowired
+    private lateinit var mockMvc: MockMvc
+
+    @Test
+    fun `unknown id gives 404`() {
+        every { demoService.findById(42) } throws DemoNotFoundException()
+
+        mockMvc.get("/api/v1/demo/42")
             .andExpect {
-                status { isBadRequest() }
+                status { isNotFound() }
+                content { string("Demo not found") }
             }
     }
 }
 ```
+````
+
+<!--
+@WebMvcTest charge aussi les RestControllerAdvice :
+le handler est actif sans rien importer, on teste donc la réponse HTTP complète.
+
+Premier test : la validation rejette le body avant d'entrer dans le contrôleur.
+Le service n'est pas stubbé, il n'est jamais appelé.
+On vérifie le body : sans notre handler, Spring répond déjà 400, mais avec un body vide.
+
+Deuxième test : le service mocké lance l'exception, le handler la traduit en 404.
+
+Sans handler, MockMvc ne donne pas de 500 :
+l'exception sort de mockMvc.get sous forme de ServletException et fait échouer le test.
+-->
