@@ -446,7 +446,7 @@ class: text-left
 @Table(name = "users")
 class UserEntity(
         @Id val email: String,
-        val phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
@@ -461,7 +461,7 @@ class PhoneEntity(
 @Table(name = "users")
 class UserEntity(
         @Id val email: String,
-        val phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
@@ -479,7 +479,7 @@ class UserEntity(
         @Id val email: String,
         @OneToMany(cascade = [CascadeType.ALL])
         @JoinColumn(referencedColumnName = "email")
-        val phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
@@ -511,7 +511,7 @@ class UserEntity(
         @Id val email: String,
         @OneToMany(cascade = [CascadeType.ALL])
         @JoinColumn(referencedColumnName = "email")
-        val phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
@@ -529,7 +529,7 @@ class UserEntity(
         @Id val email: String,
         @OneToMany(cascade = [CascadeType.ALL])
         @JoinColumn(referencedColumnName = "email")
-        val phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
@@ -548,7 +548,7 @@ class PhoneEntity(
 class UserEntity(
         @Id val email: String,
         @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
-        var phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
@@ -579,13 +579,13 @@ class: text-left
 @Table(name = "users")
 class UserEntity(
         @Id val email: String,
-        var phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        val users: List<UserEntity>,
+        var users: MutableList<UserEntity> = mutableListOf(),
         val number: String,
 )
 ```
@@ -599,13 +599,13 @@ class UserEntity(
                 name = "user_phone",
                 joinColumns = [JoinColumn(name = "email")],
                 inverseJoinColumns = [JoinColumn(name = "id")])
-        var phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        val users: List<UserEntity>,
+        var users: MutableList<UserEntity> = mutableListOf(),
         val number: String,
 )
 ```
@@ -619,18 +619,25 @@ class UserEntity(
                 name = "user_phone",
                 joinColumns = [JoinColumn(name = "email")],
                 inverseJoinColumns = [JoinColumn(name = "id")])
-        var phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @ManyToMany
-        val users: List<UserEntity>,
+        @ManyToMany(mappedBy = "phones")
+        var users: MutableList<UserEntity> = mutableListOf(),
         val number: String,
 )
 ```
 ````
+
+<!--
+Côté propriétaire (UserEntity) : @JoinTable décrit la table de jointure.
+Côté inverse (PhoneEntity) : @ManyToMany(mappedBy = "phones") renvoie vers le champ propriétaire.
+Sans mappedBy, Hibernate voit deux relations indépendantes et crée une seconde table de jointure : les deux côtés se désynchronisent.
+var + MutableList : Hibernate remplace la collection par une PersistentBag, une List immuable ne permet pas d'ajouter ni de retirer.
+-->
 
 ---
 layout: cover
@@ -738,7 +745,7 @@ class UserEntity(
         @Id val email: String,
         @OneToMany(cascade = [CascadeType.ALL])
         @JoinColumn(referencedColumnName = "email")
-        val phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
@@ -763,7 +770,7 @@ class: text-left
 class UserEntity(
         @Id val email: String,
         @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
-        var phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
@@ -790,7 +797,7 @@ class: text-left
 class UserEntity(
         @Id val email: String,
         @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
-        var phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
@@ -821,17 +828,21 @@ class UserEntity(
                 name = "user_phone",
                 joinColumns = [JoinColumn(name = "email")],
                 inverseJoinColumns = [JoinColumn(name = "id")])
-        var phones: List<PhoneEntity> = emptyList(),
+        var phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @ManyToMany
-        val users: List<UserEntity>,
+        @ManyToMany(mappedBy = "phones")
+        var users: MutableList<UserEntity> = mutableListOf(),
         val number: String,
 )
 ```
+
+<!--
+Règle : @JoinTable du côté propriétaire, mappedBy du côté inverse. Sans mappedBy : deux tables de jointure.
+-->
 
 ---
 layout: full
