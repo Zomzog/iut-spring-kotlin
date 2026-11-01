@@ -51,7 +51,7 @@ Du coup, on va faire de la validation de ce paramètre.
 La réponse devient un 400 avec un body d'erreur.
 Ce body est au format ProblemDetail (RFC 9457, application/problem+json),
 c'est la cible. Comment l'activer et le personnaliser :
-on le verra dans la partie sur les erreurs (ControllerAdvice et formats de réponse).
+on le verra dans la partie sur les erreurs (RestControllerAdvice et formats de réponse).
 -->
 
 ---
@@ -658,7 +658,7 @@ Impossible : les valeurs d'une annotation doivent être des **constantes connues
 
 </div>
 
-<div v-click.at='11'>
+<div v-click.at='12'>
 
 ```kotlin
 @RestController
@@ -706,7 +706,7 @@ class MinMaxValidator: ConstraintValidator<MinMax, Int> {
   }
 }
 ```
-```kotlin {all|1,11}
+```kotlin {all|1,11|12}
 class MinMaxValidator: ConstraintValidator<MinMax, Int> {
   private var min: Int = 0
   private var max: Int = 0
@@ -757,6 +757,11 @@ Un validateur étend l'interface ConstraintValidator
 initialize reçoit l'annotation MinMax : c'est le premier type générique de ConstraintValidator<MinMax, Int>
 isValid reçoit la valeur à valider : c'est le second type générique, ici Int
 
+ConstraintValidatorContext permet de remplacer ou compléter le message de l'annotation au moment de la validation :
+on désactive la violation par défaut (disableDefaultConstraintViolation),
+puis on en construit une autre (buildConstraintViolationWithTemplate), éventuellement sur une autre propriété.
+On ne s'en sert pas ici : le message de l'annotation suffit.
+
 Il y a deux phases à la validation,
 la création du validateur (initialize)
 puis l'utilisation sur une valeur (isValid)
@@ -768,6 +773,7 @@ sans @Validated.
 ---
 layout: full
 class: text-left
+glowSeed: 1144
 ---
 
 ## TL;DR Validation
@@ -781,6 +787,16 @@ class: text-left
 
 - Pas de `@Validated` sur un contrôleur depuis Spring Framework 6.1
 - Bean Validation ne vérifie pas la cohérence des contraintes (`@Min(6) @Max(4)` ⚠️)
+
+<style>
+:not(pre) > code {
+  background: rgba(255, 255, 255, 0.12);
+  color: inherit;
+  padding: 0 0.3em;
+  border-radius: 0.25em;
+  font-size: 0.85em;
+}
+</style>
 
 <!--
 Sur un contrôleur : rien à ajouter, la validation est native.
