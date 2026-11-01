@@ -10,7 +10,7 @@ import seedrandom from 'seedrandom'
  * - glow: 'left' | 'right' | 'top' | 'bottom' | 'full' -  Distribution of the polygons points
  * - glowOpacity: number - Opacity of the polygons (4)
  * - glowHue: number - Hue shift for the polygons (default: 0)
- * - glowSeed: string | false - Seed for the stable random distribution (default: 'default')
+ * - glowSeed: string | false - Fixed seed, same value gives the same background on any slide (default: based on the slide number, false: random)
  */
 import { computed, ref, watch } from 'vue'
 
@@ -35,10 +35,12 @@ const formatter = computed(() => (currentSlideRoute.value.meta?.slide as any)?.f
 const distribution = computed(() => (formatter.value.glow || 'full') as Distribution)
 const opacity = computed<number>(() => +(formatter.value.glowOpacity ?? 0.4))
 const hue = computed<number>(() => +(formatter.value.glowHue || 0))
-const seed = computed<string>(() => (formatter.value.glowSeed === 'false' || formatter.value.glowSeed === false)
-  ? Date.now().toString()
-  : formatter.value.glowSeed || 'default',
-)
+const seed = computed<string>(() => {
+  const { glowSeed } = formatter.value
+  if (glowSeed === 'false' || glowSeed === false)
+    return Date.now().toString()
+  return glowSeed ? `${glowSeed}` : `default-${currentSlideRoute.value.no}`
+})
 const overflow = 0.3
 const disturb = 0.3
 const disturbChance = 0.3
@@ -101,7 +103,7 @@ function distance2([x1, y1]: Range, [x2, y2]: Range) {
 function usePloy(number = 16) {
   function getPoints(): Range[] {
     const limits = distributionToLimits(distribution.value)
-    const rng = seedrandom(`${seed.value}-${currentSlideRoute.value.no}`)
+    const rng = seedrandom(seed.value)
     function randomBetween([a, b]: Range) {
       return rng() * (b - a) + a
     }
