@@ -373,6 +373,54 @@ Le fichier de main n'est donc pas lu du tout : rien n'est fusionné
 -->
 
 ---
+layout: full
+class: text-left
+---
+
+## Profil de test
+
+```yaml [src/main/resources/application.yml]
+spring:
+    application.name: demo
+    main.lazy-initialization: true
+```
+
+```yaml [src/test/resources/application-test.yml]
+spring:
+    application.name: demoTest
+```
+
+```kotlin
+@SpringBootTest
+@ActiveProfiles("test")
+class DemoTest
+```
+
+<div v-click.at='1'>
+
+spring.application.name = <span v-click.at='2'>demoTest</span>
+
+spring.main.lazy-initialization = <span v-click.at='2'>true</span>
+
+</div>
+
+<div v-click.at='2'>
+
+Autre nom : le fichier de profil se superpose à celui de main, sans le remplacer
+
+</div>
+
+<!--
+Même contenu que la slide précédente, mais avec un autre nom de fichier : application-test.yml.
+
+Le fichier de main est toujours lu, le profil test ne fait qu'écraser les clés qu'il redéfinit.
+lazy-initialization vient de main, application.name vient du profil.
+
+@ActiveProfiles est l'équivalent, en test, de SPRING_PROFILES_ACTIVE ou de -D vus plus haut
+qui, eux, servent à lancer l'application.
+-->
+
+---
 layout: cover
 hideInToc: false
 ---

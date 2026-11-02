@@ -265,6 +265,9 @@ La gestion, des exceptions, est en entonnoir
 
 On peut traiter les erreurs spécialisées et avoir des couches de traitement de plus en plus génériques
 
+Spring prend le handler dont le type d'exception est le plus proche de celui qui a été levé, pas le premier écrit :
+l'ordre des méthodes dans la classe ne compte pas, et Exception ne répond que si rien de plus précis ne correspond.
+
 ⚠️ MethodArgumentNotValidException ne concerne que @Valid sur un @RequestBody.
 Une contrainte sur un paramètre (@RequestParam, @PathVariable) lève HandlerMethodValidationException :
 ce handler ne la traite pas.
