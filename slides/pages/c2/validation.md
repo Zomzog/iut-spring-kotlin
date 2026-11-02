@@ -303,7 +303,7 @@ class Pony(
 </div>
 
 <!--
-La notion de getter/setter étant caché par Kotlin,
+La notion de getter/setter étant cachée par Kotlin,
 on précise la cible des annotations
 
 C'est pour ça que, dans le DTO, on écrit @field:Min(4) :
@@ -749,10 +749,15 @@ class MinMaxValidator: ConstraintValidator<MinMax, Int> {
 Ajout de deux valeurs variables min et max
 
 On ne peut pas les passer à @Min et @Max : les valeurs d'une annotation sont des constantes.
+Le compilateur répond `Unresolved reference 'min'` : le paramètre n'existe pas à cet endroit.
+Et même visible, il ne serait pas constant.
 
 Ajout d'une classe de validation
+`@Constraint(validatedBy = [MinMaxValidator::class])` relie l'annotation à son validateur.
 
-Un validateur étend l'interface ConstraintValidator
+Un validateur implémente l'interface ConstraintValidator
+
+`min` et `max` sont des `var` : ils ne sont connus qu'à `initialize`, pas à la construction.
 
 initialize reçoit l'annotation MinMax : c'est le premier type générique de ConstraintValidator<MinMax, Int>
 isValid reçoit la valeur à valider : c'est le second type générique, ici Int
