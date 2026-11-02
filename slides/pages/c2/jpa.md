@@ -548,6 +548,19 @@ interface DemoRepository : JpaRepository<UUID, DemoEntity>
 
 </div>
 
+<!--
+Seule la première écriture est la bonne.
+
+class : ça ne compile pas, il faudrait implémenter toutes les méthodes.
+C'est Spring Data qui génère l'implémentation, à partir de l'interface.
+
+@Repository : ça marche, mais c'est inutile.
+Spring Data trouve déjà le repository parce qu'il hérite de JpaRepository.
+
+`JpaRepository<UUID, DemoEntity>` : les types sont inversés, c'est l'entité puis l'id.
+Ça compile, mais l'application ne démarre pas : `Not a managed type: class java.util.UUID`.
+-->
+
 ---
 layout: full
 class: text-left
