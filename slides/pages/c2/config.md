@@ -12,18 +12,14 @@ class: text-left
 
 ## Application Configuration
 
-src/resources/application.properties
-
-```properties
+```properties [src/main/resources/application.properties]
 spring.application.name=demo
 spring.main.lazy-initialization=true
 ```
 
 <div v-click>
 
-src/resources/application.yml
-
-```yaml
+```yaml [src/main/resources/application.yml]
 spring:
     application.name: demo
     main.lazy-initialization: true
@@ -33,9 +29,7 @@ spring:
 
 <div v-click>
 
-src/resources/application.yaml
-
-```yaml
+```yaml [src/main/resources/application.yaml]
 spring:
     application.name: demo
     main.lazy-initialization: true
@@ -55,7 +49,7 @@ layout: full
 class: text-left
 ---
 
-src/resources/application.yaml
+src/main/resources/application.yml
 
 <div v-click>
 
@@ -87,6 +81,10 @@ spring:
 
 </div>
 
+<!--
+Trois écritures de la même propriété. Spring fait du relaxed binding : lazy-initialization et lazyInitialization désignent la même clé.
+-->
+
 ---
 layout: full
 class: text-left
@@ -100,6 +98,10 @@ flowchart LR
     application.properties
 ```
 
+<!--
+On part du fichier properties.
+-->
+
 ---
 layout: full
 class: text-left
@@ -112,6 +114,10 @@ transition: fade
 flowchart LR
     application.properties --> |\>| application.yml
 ```
+
+<!--
+S'il y a les deux, le properties gagne.
+-->
 
 ---
 layout: full
@@ -183,7 +189,7 @@ un profile MySql
 un profile MongoDb
 
 <!--
-
+Un profil active une partie de la configuration sans toucher au code : ici, le choix de la base de données.
 -->
 
 ---
@@ -193,18 +199,12 @@ class: text-left
 
 ## Profiles
 
-src/resources/application-dev.yml
-
-```yaml [application-dev.yml]
-
+```yaml [src/main/resources/application-dev.yml]
 spring:
     application.name: myDevConfig
 ```
 
-src/resources/application-prod.yml
-
-```yaml [application-prod.yml]
-
+```yaml [src/main/resources/application-prod.yml]
 spring:
     application.name: myProdConfig
 ```
@@ -227,7 +227,7 @@ spring.profiles.active: dev,mysql
 En variable d'environnement
 
 ```bash
-export spring_profiles_active=dev
+export SPRING_PROFILES_ACTIVE=dev
 ```
 
 </div>
@@ -236,13 +236,24 @@ export spring_profiles_active=dev
 JVM parameter
 
 ```bash
-java -jar app.jar -Dspring.profiles.active=prod,mongo
+java -Dspring.profiles.active=prod,mongo -jar app.jar
+```
+
+</div>
+<div v-click>
+
+Argument de l'application
+
+```bash
+java -jar app.jar --spring.profiles.active=prod,mongo
 ```
 
 </div>
 
 <!--
 Par fichier de properties, uniquement dans le fichier racine
+
+Le -D doit être avant -jar : après, il est ignoré sans erreur
 -->
 
 ---
@@ -252,7 +263,7 @@ class: text-left
 
 ## Ordre
 
-```
+```bash
 -Dspring.profiles.active=prod,mongo
 ```
 
@@ -263,26 +274,23 @@ flowchart LR
 ```
 
 ```yaml [application-mongo.yml]
-
 spring:
     application.name: demoMongo
 ```
 
 ```yaml [application-prod.yml]
-
 spring:
     application.name: demoProd
 ```
 
 ```yaml [application.yaml]
-
 spring:
     application.name: demoYaml
 ```
 
-<div v-click>
+<div v-click.at='1'>
 
-spring.application.name = demoMongo
+spring.application.name = <span v-click.at='2'>demoMongo</span>
 
 </div>
 
@@ -327,6 +335,44 @@ Au complet si on joue avec les extensions
 -->
 
 ---
+layout: full
+class: text-left
+---
+
+## Fichier de test
+
+```yaml [src/main/resources/application.yml]
+spring:
+    application.name: demo
+    main.lazy-initialization: true
+```
+
+```yaml [src/test/resources/application.yml]
+spring:
+    application.name: demoTest
+```
+
+<div v-click.at='1'>
+
+spring.application.name = <span v-click.at='2'>demoTest</span>
+
+spring.main.lazy-initialization = <span v-click.at='2'>non définie</span>
+
+</div>
+
+<div v-click.at='2'>
+
+Même nom, même place sur le classpath : en test, ce fichier remplace celui de main en entier, sans fusion
+
+</div>
+
+<!--
+src/test/resources passe devant src/main/resources sur le classpath
+
+Le fichier de main n'est donc pas lu du tout : rien n'est fusionné
+-->
+
+---
 layout: cover
 hideInToc: false
 ---
@@ -341,10 +387,8 @@ class: text-left
 ## Injection
 
 ```kotlin
-class Demo {
-  @Value("\${custom.path.value}")
-  private lateinit var value: String
-}
+@Component
+class Demo(@Value("\${custom.path.value}") private val value: String)
 ```
 
 <div v-click>
@@ -352,17 +396,16 @@ class Demo {
 ## Injection avec fallback
 
 ```kotlin
-class Demo {
-  @Value("\${custom.path.value:defaultValue}")
-  private lateinit var value: String
-}
+@Component
+class Demo(@Value("\${custom.path.value:defaultValue}") private val value: String)
 ```
 
 </div>
 
 <!--
-Injection comme une champs, 
-une sorte d'autowired de la valeur
+Injection par le constructeur, comme un bean, mais pour une valeur
+
+@Value n'est résolu que sur un bean, d'où le @Component
 
 Avec une valeur par défaut
 -->
@@ -382,7 +425,7 @@ class: text-left
 path:
   custom-prop:
     demo: val1
-    anotherDemo: val2
+    anotherDemo: 42
 ```
 
 ::right::
@@ -392,15 +435,16 @@ path:
 @ConfigurationProperties("path.custom-prop")
 data class CustomProperties(
     val demo: String,
-    val anotherDemo: String,
+    val anotherDemo: Int,
 )
 ```
 
 ```kotlin
 @ConfigurationProperties("path.custom-prop")
+@Validated
 data class CustomProperties(
-    @NotBlank val demo: String, 
-    @Min(10) val anotherDemo: Int,
+    @field:NotBlank val demo: String,
+    @field:Min(10) val anotherDemo: Int,
 )
 ```
 ````
@@ -423,6 +467,8 @@ On peut transformer les properties en instance de class
 @EnableConfigurationProperties active la lecture
 
 C'est un bean, donc on peut réutiliser la validation
+
+Comme pour un @Service : sans @Validated, les contraintes sont ignorées en silence
 -->
 
 ---
@@ -444,7 +490,7 @@ class Demo(val properties: CustomProperties) {
 @Configuration
 class Demo {
     @Bean
-    fun aBean(val properties: CustomProperties) =...
+    fun aBean(properties: CustomProperties) = Something(properties)
 }
 ```
 

@@ -304,11 +304,11 @@ class Pony(
 
 <!--
 La notion de getter/setter étant caché par Kotlin,
-on doit fournir la cible des annotations
+on précise la cible des annotations
 
 C'est pour ça que, dans le DTO, on écrit @field:Min(4) :
-sans cible, Kotlin met l'annotation sur le paramètre du constructeur,
-et Bean Validation ne la voit pas sur le champ.
+Bean Validation lit la contrainte sur le champ, et la cible le dit explicitement.
+Sans cible, ça dépend de la version de Kotlin : en 2.4 elle va sur le champ et sur le paramètre.
 -->
 
 ---
