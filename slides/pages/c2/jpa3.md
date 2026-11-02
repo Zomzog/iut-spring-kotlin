@@ -452,7 +452,7 @@ class UserEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
     val name: String,
-    @ManyToMany(cascade = [CascadeType.ALL])
+    @ManyToMany(cascade = [CascadeType.PERSIST])
     @JoinTable(
         name = "user_group",
         joinColumns = [JoinColumn(name = "user_id")],

@@ -14,10 +14,13 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
+import org.springframework.data.jpa.repository.JpaRepository
 
 /*
  * Le code des slides de relations, presque mot pour mot : un object par slide de c2/jpa3.md.
  * Les fins de magic-move de c2/jpa2.md sont les mêmes que ces slides.
+ * Les slides Cascades et orphanRemoval de c2/jpa2.md reposent sur OneToManyBi, OneToManyOrphanRemoval,
+ * OneToManyCascadePersist, OneToManyCascadeMerge, OneToManyCascadeRemove et ManyToManyCascadeAll.
  *
  * Hors de bzh.zomzog.iut.amphi : ce package est scanné par les @DataJpaTest, et ces @Entity portent
  * les mêmes noms que celles de Database.kt.
@@ -260,6 +263,35 @@ object ManyToManyBi {
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long?,
         val name: String,
+        @ManyToMany(cascade = [CascadeType.PERSIST])
+        @JoinTable(
+            name = "user_group",
+            joinColumns = [JoinColumn(name = "user_id")],
+            inverseJoinColumns = [JoinColumn(name = "group_id")],
+        )
+        val groups: MutableList<GroupEntity> = mutableListOf(),
+    )
+
+    @Entity
+    @Table(name = "groups")
+    class GroupEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Long?,
+        @ManyToMany(mappedBy = "groups")
+        val users: MutableList<UserEntity> = mutableListOf(),
+    )
+
+    val entities = arrayOf(UserEntity::class, GroupEntity::class)
+}
+
+/** Many-to-Many avec ALL : REMOVE se propage à un groupe partagé. */
+object ManyToManyCascadeAll {
+    @Entity
+    @Table(name = "users")
+    class UserEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Long?,
+        val name: String,
         @ManyToMany(cascade = [CascadeType.ALL])
         @JoinTable(
             name = "user_group",
@@ -357,6 +389,8 @@ object OneToManyBi {
         val phoneNumber: String,
     )
 
+    interface UserRepository : JpaRepository<UserEntity, Long>
+
     val entities = arrayOf(UserEntity::class, PhoneEntity::class)
 }
 
@@ -387,6 +421,8 @@ object OneToManyOrphanRemoval {
         val phoneNumber: String,
     )
 
+    interface UserRepository : JpaRepository<UserEntity, Long>
+
     val entities = arrayOf(UserEntity::class, PhoneEntity::class)
 }
 
@@ -410,6 +446,90 @@ object ManyToOneCascade {
         val id: Long?,
         val name: String,
     )
+
+    val entities = arrayOf(UserEntity::class, PhoneEntity::class)
+}
+
+/** One-to-Many avec PERSIST seul, slide Cascades. */
+object OneToManyCascadePersist {
+    @Entity
+    @Table(name = "users")
+    class UserEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Long?,
+        val name: String,
+        @OneToMany(mappedBy = "user", cascade = [CascadeType.PERSIST])
+        val phones: MutableList<PhoneEntity> = mutableListOf(),
+    )
+
+    @Entity
+    @Table(name = "phone")
+    class PhoneEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Long?,
+        @ManyToOne
+        @JoinColumn(name = "user_id")
+        val user: UserEntity,
+        val phoneNumber: String,
+    )
+
+    interface UserRepository : JpaRepository<UserEntity, Long>
+
+    val entities = arrayOf(UserEntity::class, PhoneEntity::class)
+}
+
+/** One-to-Many avec MERGE seul, slide Cascades. */
+object OneToManyCascadeMerge {
+    @Entity
+    @Table(name = "users")
+    class UserEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Long?,
+        val name: String,
+        @OneToMany(mappedBy = "user", cascade = [CascadeType.MERGE])
+        val phones: MutableList<PhoneEntity> = mutableListOf(),
+    )
+
+    @Entity
+    @Table(name = "phone")
+    class PhoneEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Long?,
+        @ManyToOne
+        @JoinColumn(name = "user_id")
+        val user: UserEntity,
+        val phoneNumber: String,
+    )
+
+    interface UserRepository : JpaRepository<UserEntity, Long>
+
+    val entities = arrayOf(UserEntity::class, PhoneEntity::class)
+}
+
+/** One-to-Many avec REMOVE seul, slides Cascades et orphanRemoval. */
+object OneToManyCascadeRemove {
+    @Entity
+    @Table(name = "users")
+    class UserEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Long?,
+        val name: String,
+        @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
+        val phones: MutableList<PhoneEntity> = mutableListOf(),
+    )
+
+    @Entity
+    @Table(name = "phone")
+    class PhoneEntity(
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Long?,
+        @ManyToOne
+        @JoinColumn(name = "user_id")
+        val user: UserEntity,
+        val phoneNumber: String,
+    )
+
+    interface UserRepository : JpaRepository<UserEntity, Long>
 
     val entities = arrayOf(UserEntity::class, PhoneEntity::class)
 }

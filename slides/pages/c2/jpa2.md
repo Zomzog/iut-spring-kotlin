@@ -26,19 +26,21 @@ class: text-left
 
 | id  | name         | kind        |
 | --- | ------------ | ----------- |
-| 1   | Discord      | DRACONEQUUS |
-| 2   | Rainbow Dash | PEGASUS     |
-| 3   | Pinkie Pie   | EARTH       |
+| <span v-mark.circle.red="1">1</span> | Discord      | DRACONEQUUS |
+| <span v-mark.box.green="2">2</span> | Rainbow Dash | PEGASUS     |
+| <span v-mark.circle.blue="3">3</span> | Pinkie Pie   | EARTH       |
+
+<br>
 
 | PonyId | Occupation |
 | -- | -- |
-| 1 | Spirit of Chaos|
-| 2 | Ruler of Equestria|
-| 3 | Baker|
+| <span v-mark.circle.red="1">1</span> | Spirit of Chaos|
+| <span v-mark.box.green="2">2</span> | Ruler of Equestria|
+| <span v-mark.circle.blue="3">3</span> | Baker|
 
 ::right::
 
-<div v-click>
+<div v-click.at="4">
 
 ```kotlin
 class Pony(
@@ -69,19 +71,21 @@ class: text-left
 
 | id  | name         |
 | --- | ------------ |
-| 1   | Discord      |
+| <span v-mark.circle.red="1">1</span> | Discord      |
 | 2   | Rainbow Dash |
-| 3   | Pinkie Pie   |
+| <span v-mark.circle.blue="2">3</span> | Pinkie Pie   |
+
+<br>
 
 |id| PonyId | Occupation |
 |--| -- | -- |
-| 1 | 1 | Spirit of Chaos|
-| 2 | 1 | Ruler of Equestria|
-| 3 | 3 | Baker|
+| 1 | <span v-mark.circle.red="1">1</span> | Spirit of Chaos|
+| 2 | <span v-mark.circle.red="1">1</span> | Ruler of Equestria|
+| 3 | <span v-mark.circle.blue="2">3</span> | Baker|
 
 ::right::
 
-<div v-click>
+<div v-click.at="3">
 
 ```kotlin
 class Pony(
@@ -113,19 +117,21 @@ class: text-left
 
 | id  | name         | occupation_id |
 | --- | ------------ | ------------- |
-| 1   | Discord      | 1             |
-| 2   | Rainbow Dash | 2             |
-| 3   | Pinkie Pie   | 3             |
+| 1   | Discord      | <span v-mark.circle.red="1">1</span> |
+| 2   | Rainbow Dash | <span v-mark.circle.red="1">1</span> |
+| 3   | Pinkie Pie   | <span v-mark.circle.blue="2">3</span> |
+
+<br>
 
 |id| Occupation |
 |--| -- |
-| 1 | Spirit of Chaos|
+| <span v-mark.circle.red="1">1</span> | Spirit of Chaos|
 | 2 | Ruler of Equestria|
-| 3 | Baker|
+| <span v-mark.circle.blue="2">3</span> | Baker|
 
 ::right::
 
-<div v-click>
+<div v-click.at="3">
 
 ```kotlin
 class Pony(
@@ -145,6 +151,7 @@ class Occupation(
 ---
 layout: TwoColumnsTitle
 class: text-left
+glowSeed: 1144
 ---
 
 ::title::
@@ -155,19 +162,32 @@ class: text-left
 
 | id  | name         |
 | --- | ------------ |
-| 1   | Discord      |
-| 2   | Rainbow Dash |
-| 3   | Pinkie Pie   |
+| <span v-mark.circle.red="2">1</span> | Discord      |
+| <span v-mark.box.green="3">2</span> | Rainbow Dash |
+| <span v-mark.circle.blue="4">3</span> | Pinkie Pie   |
+
+<br>
 
 |id| Occupation |
 |--| -- |
-| 1 | Spirit of Chaos|
-| 2 | Ruler of Equestria|
-| 3 | Baker|
+| <span v-mark.circle.red="2"><span v-mark.box.green="{ at: 3, padding: 8 }">1</span></span> | Spirit of Chaos|
+| <span v-mark.circle.red="2">2</span> | Ruler of Equestria|
+| <span v-mark.circle.blue="4">3</span> | Baker|
 
 ::right::
 
-<div v-click>
+<div v-click.at="1">
+
+|pony_id| occupation_id |
+|--| -- |
+| <span v-mark.circle.red="2">1</span> | <span v-mark.circle.red="2">1</span> |
+| <span v-mark.circle.red="2">1</span> | <span v-mark.circle.red="2">2</span> |
+| <span v-mark.box.green="3">2</span> | <span v-mark.box.green="3">1</span> |
+| <span v-mark.circle.blue="4">3</span> | <span v-mark.circle.blue="4">3</span> |
+
+</div>
+
+<div v-click.at="5">
 
 ```kotlin
 class Pony(
@@ -185,15 +205,9 @@ class Occupation(
 
 </div>
 
-<div v-click>
-
-|pony_id| occupation_id |
-|--| -- |
-| 1 | 1 |
-| 2 | 1 |
-| 3 | 2 |
-
-</div>
+<style>
+td, th { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+</style>
 
 ---
 layout: full
@@ -238,11 +252,15 @@ name: nom de la foreign key
 referencedColumnName : le nom de la colonne de l'autre entité utilisé pour la jointure.
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
 
+::title::
+
 ## One-To-One unidirectionnel
+
+::left::
 
 ````md magic-move
 ```kotlin{all|14}
@@ -304,16 +322,44 @@ class PhoneEntity(
 ```
 ````
 
+::right::
+
+<div v-click class="db-tables">
+
+users
+
+| id | name |
+| --- | --- |
+| 1 | Discord |
+| 2 | Rainbow Dash |
+| 3 | Pinkie Pie |
+
+phone
+
+| id | **user_id** | phone_number |
+| --- | --- | --- |
+| 1 | 1 | 0601020304 |
+| 2 | 2 | 0602030405 |
+| 3 | 3 | 0603040506 |
+
+</div>
+
 <!--
 La clé étrangère est sur phone : la relation ne se lit que de Phone vers User
+
+Deux tables : user_id est sur phone, et il ne se répète pas
 -->
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
 
+::title::
+
 ## One-To-One bi-directionnel
+
+::left::
 
 ````md magic-move
 ```kotlin
@@ -404,6 +450,28 @@ class PhoneEntity(
 ```
 ````
 
+::right::
+
+<div v-click class="db-tables">
+
+users
+
+| id | name |
+| --- | --- |
+| 1 | Discord |
+| 2 | Rainbow Dash |
+| 3 | Pinkie Pie |
+
+phone
+
+| id | **user_id** | phone_number |
+| --- | --- | --- |
+| 1 | 1 | 0601020304 |
+| 2 | 2 | 0602030405 |
+| 3 | 3 | 0603040506 |
+
+</div>
+
 <!--
 L'usage de var et du nullable permet de créer les objets puis les imbriquer
 
@@ -412,14 +480,20 @@ Avec un @JoinColumn de chaque côté, il y a deux clés étrangères : une par t
 Le côté qui porte la clé étrangère est le côté propriétaire. L'autre côté dit mappedBy : il n'ajoute aucune colonne et relit celle du propriétaire
 
 Le mapping devient bi-directionnel
+
+La base est la même qu'en unidirectionnel : le bi-directionnel ne change que le code
 -->
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
 
+::title::
+
 ## One-To-Many unidirectionnel
+
+::left::
 
 ````md magic-move
 ```kotlin
@@ -481,18 +555,46 @@ class PhoneEntity(
 ```
 ````
 
+::right::
+
+<div v-click class="db-tables">
+
+users
+
+| id | name |
+| --- | --- |
+| 1 | Discord |
+| 2 | Rainbow Dash |
+| 3 | Pinkie Pie |
+
+phone
+
+| id | **user_id** | phone_number |
+| --- | --- | --- |
+| 1 | 1 | 0601020304 |
+| 2 | 1 | 0602030405 |
+| 3 | 3 | 0603040506 |
+
+</div>
+
 <!--
 One-to-many unidirectionnel
 
 MutableList : Hibernate remplace la collection, et on doit pouvoir y ajouter ou en retirer un élément
+
+Deux tables : user_id est sur phone, même si PhoneEntity ne connaît pas User, et il se répète
 -->
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
 
+::title::
+
 ## Many-To-One
+
+::left::
 
 ````md magic-move
 ```kotlin
@@ -584,20 +686,48 @@ class PhoneEntity(
 ```
 ````
 
+::right::
+
+<div v-click class="db-tables">
+
+users
+
+| id | name |
+| --- | --- |
+| 1 | Discord |
+| 2 | Rainbow Dash |
+| 3 | Pinkie Pie |
+
+phone
+
+| id | **user_id** | phone_number |
+| --- | --- | --- |
+| 1 | 1 | 0601020304 |
+| 2 | 1 | 0602030405 |
+| 3 | 3 | 0603040506 |
+
+</div>
+
 <!--
 ManyToOne pour le rendre bi-directionnel
 
 Le many porte la clé étrangère : c'est lui le propriétaire, le côté OneToMany passe en mappedBy
 
 La cascade propage l'enregistrement du user à ses phones
+
+La base est la même qu'en One-To-Many unidirectionnel
 -->
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
 
+::title::
+
 ## Many-To-Many
+
+::left::
 
 ````md magic-move
 ```kotlin
@@ -625,7 +755,7 @@ class UserEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
     val name: String,
-    @ManyToMany(cascade = [CascadeType.ALL])
+    @ManyToMany(cascade = [CascadeType.PERSIST])
     @JoinTable(
         name = "user_group",
         joinColumns = [JoinColumn(name = "user_id")],
@@ -649,7 +779,7 @@ class UserEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
     val name: String,
-    @ManyToMany(cascade = [CascadeType.ALL])
+    @ManyToMany(cascade = [CascadeType.PERSIST])
     @JoinTable(
         name = "user_group",
         joinColumns = [JoinColumn(name = "user_id")],
@@ -669,8 +799,126 @@ class GroupEntity(
 ```
 ````
 
+::right::
+
+<div v-click class="db-tables">
+
+users
+
+| id | name |
+| --- | --- |
+| 1 | Discord |
+| 2 | Rainbow Dash |
+| 3 | Pinkie Pie |
+
+user_group
+
+| **user_id** | **group_id** |
+| --- | --- |
+| 1 | 1 |
+| 2 | 1 |
+| 3 | 1 |
+| 3 | 2 |
+
+groups
+
+| id |
+| --- |
+| 1 |
+| 2 |
+
+</div>
+
 <!--
 ManyToMany, il faut une table de jointure
+
+Trois tables : user_id et group_id se répètent tous les deux dans user_group
+-->
+
+---
+layout: full
+class: text-left
+---
+
+## Cascades
+
+| `CascadeType` | Se propage sur |
+| --- | --- |
+| `PERSIST` | `save()` d'une nouvelle entité (id null) |
+| `MERGE` | `save()` d'une entité existante (id renseigné) |
+| `REMOVE` | `delete()` |
+| `ALL` | tous les types |
+
+<br/>
+
+`REFRESH` et `DETACH` existent, inclus dans `ALL`.
+
+<br/>
+
+<div v-click>
+
+`ALL` inclut `REMOVE` : à garder pour les enfants qui appartiennent au parent.
+
+</div>
+
+<style>
+:not(pre) > code {
+  background: rgba(255, 255, 255, 0.12);
+  color: inherit;
+  padding: 0 0.3em;
+  border-radius: 0.25em;
+  font-size: 0.85em;
+}
+</style>
+
+<!--
+Un phone appartient à son user : ALL convient
+
+Un groupe est partagé : avec ALL, supprimer un user tente de supprimer ses groupes, et la base refuse dès qu'un autre user y est lié. D'où PERSIST sur le Many-To-Many
+
+Avec PERSIST seul sur phones, save() d'un user existant n'enregistre pas ses nouveaux phones : il insère une ligne vide, sans numéro ni user, et sans erreur
+-->
+
+---
+layout: TwoColumnsTitle
+class: text-left
+---
+
+::title::
+
+## orphanRemoval
+
+::left::
+
+```kotlin
+@OneToMany(mappedBy = "user", orphanRemoval = true)
+val phones: MutableList<PhoneEntity> = mutableListOf(),
+```
+
+```kotlin
+user.phones.removeIf { it.id == phoneId }
+```
+
+Retirer un phone de la liste le supprime de la base.
+
+::right::
+
+<div v-click class="db-tables">
+
+| Sur `phones` | retirer de la liste | supprimer le user |
+| --- | --- | --- |
+| rien | rien | erreur FK |
+| `cascade = [REMOVE]` | rien | supprimés |
+| `orphanRemoval = true` | supprimé | supprimés |
+
+</div>
+
+<!--
+orphanRemoval : un phone retiré de la liste est supprimé de la base
+
+REMOVE ne réagit qu'à la suppression du user : un phone retiré de la liste reste en base
+
+Sans rien, on ne peut pas supprimer un user qui a des phones : la clé étrangère l'en empêche
 -->
 
 ---

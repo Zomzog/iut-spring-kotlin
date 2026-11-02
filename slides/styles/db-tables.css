@@ -1,0 +1,29 @@
+/* Tables de base de données affichées à côté du code */
+.db-tables {
+  /* même décalage que les blocs de code */
+  margin-top: 4px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  background: var(--slidev-code-background);
+}
+
+.db-tables p {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.db-tables table {
+  margin: 0 0 0.6rem 0;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.db-tables table:last-child {
+  margin-bottom: 0;
+}
+
+.db-tables td,
+.db-tables th {
+  padding: 0.1rem 0.6rem;
+}

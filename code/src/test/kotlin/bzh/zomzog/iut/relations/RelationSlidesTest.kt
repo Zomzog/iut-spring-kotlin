@@ -7,10 +7,13 @@ import assertk.assertions.containsExactlyInAnyOrder
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
+import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration
 import org.hibernate.exception.ConstraintViolationException
 import org.junit.jupiter.api.Test
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactory
+import org.springframework.data.repository.Repository
 import java.io.File
 import java.util.UUID.randomUUID
 import kotlin.reflect.KClass
@@ -207,6 +210,27 @@ class RelationSlidesTest {
 
     @Test
     fun `many-to-many cascade ALL refuses to delete a user whose group is shared`() {
+        sessionFactory(ManyToManyCascadeAll.entities).use { factory ->
+            val shared = ManyToManyCascadeAll.GroupEntity(null)
+            val alice = ManyToManyCascadeAll.UserEntity(null, "Alice")
+            alice.groups.add(shared)
+            factory.inTransaction { it.persist(alice) }
+            factory.inTransaction { session ->
+                val bob = ManyToManyCascadeAll.UserEntity(null, "Bob")
+                bob.groups.add(session.find(ManyToManyCascadeAll.GroupEntity::class.java, shared.id))
+                session.persist(bob)
+            }
+
+            assertFailure {
+                factory.inTransaction { session ->
+                    session.remove(session.find(ManyToManyCascadeAll.UserEntity::class.java, alice.id))
+                }
+            }.isInstanceOf(ConstraintViolationException::class)
+        }
+    }
+
+    @Test
+    fun `many-to-many cascade PERSIST deletes the user and keeps the shared group`() {
         sessionFactory(ManyToManyBi.entities).use { factory ->
             val shared = ManyToManyBi.GroupEntity(null)
             val alice = ManyToManyBi.UserEntity(null, "Alice")
@@ -218,11 +242,14 @@ class RelationSlidesTest {
                 session.persist(bob)
             }
 
-            assertFailure {
-                factory.inTransaction { session ->
-                    session.remove(session.find(ManyToManyBi.UserEntity::class.java, alice.id))
-                }
-            }.isInstanceOf(ConstraintViolationException::class)
+            factory.inTransaction { session ->
+                session.remove(session.find(ManyToManyBi.UserEntity::class.java, alice.id))
+            }
+
+            val names = factory.fromTransaction { session ->
+                session.find(ManyToManyBi.GroupEntity::class.java, shared.id).users.map { it.name }
+            }
+            assertThat(names).containsExactly("Bob")
         }
     }
 
@@ -291,6 +318,150 @@ class RelationSlidesTest {
 
             assertThat(name).isEqualTo("Alice")
         }
+    }
+
+    @Test
+    fun `save of a new user propagates with PERSIST`() {
+        sessionFactory(OneToManyCascadePersist.entities).use { factory ->
+            val user = OneToManyCascadePersist.UserEntity(null, "Alice")
+            user.phones.add(OneToManyCascadePersist.PhoneEntity(null, user, "0601020304"))
+
+            factory.inTransaction { it.repository<OneToManyCascadePersist.UserRepository>().save(user) }
+
+            assertThat(factory.phoneNumbers()).containsExactly("0601020304")
+        }
+    }
+
+    @Test
+    fun `save of an existing user propagates with MERGE`() {
+        sessionFactory(OneToManyCascadeMerge.entities).use { factory ->
+            val user = OneToManyCascadeMerge.UserEntity(null, "Alice")
+            factory.inTransaction { it.persist(user) }
+            user.phones.add(OneToManyCascadeMerge.PhoneEntity(null, user, "0601020304"))
+
+            factory.inTransaction { it.repository<OneToManyCascadeMerge.UserRepository>().save(user) }
+
+            assertThat(factory.phoneNumbers()).containsExactly("0601020304")
+        }
+    }
+
+    @Test
+    fun `save of an existing user with PERSIST alone inserts an empty phone`() {
+        sessionFactory(OneToManyCascadePersist.entities).use { factory ->
+            val user = OneToManyCascadePersist.UserEntity(null, "Alice")
+            factory.inTransaction { it.persist(user) }
+            user.phones.add(OneToManyCascadePersist.PhoneEntity(null, user, "0601020304"))
+
+            factory.inTransaction { it.repository<OneToManyCascadePersist.UserRepository>().save(user) }
+
+            val emptyPhones = factory.fromTransaction { session ->
+                session.createNativeQuery(
+                    "select count(*) from phone where user_id is null and phone_number is null",
+                    Long::class.javaObjectType,
+                ).singleResult
+            }
+            assertThat(emptyPhones).isEqualTo(1L)
+        }
+    }
+
+    @Test
+    fun `without cascade removing from the list deletes nothing`() {
+        sessionFactory(OneToManyBi.entities).use { factory ->
+            val user = OneToManyBi.UserEntity(null, "Alice")
+            val phone = OneToManyBi.PhoneEntity(null, user, "0601020304")
+            factory.inTransaction { session ->
+                session.persist(user)
+                session.persist(phone)
+            }
+
+            factory.inTransaction { session ->
+                session.find(OneToManyBi.UserEntity::class.java, user.id).phones.removeIf { it.id == phone.id }
+            }
+
+            assertThat(factory.phoneNumbers()).containsExactly("0601020304")
+        }
+    }
+
+    @Test
+    fun `without cascade deleting the user fails on the foreign key`() {
+        sessionFactory(OneToManyBi.entities).use { factory ->
+            val user = OneToManyBi.UserEntity(null, "Alice")
+            val phone = OneToManyBi.PhoneEntity(null, user, "0601020304")
+            factory.inTransaction { session ->
+                session.persist(user)
+                session.persist(phone)
+            }
+
+            assertFailure {
+                factory.inTransaction { session ->
+                    val found = session.find(OneToManyBi.UserEntity::class.java, user.id)
+                    session.repository<OneToManyBi.UserRepository>().delete(found)
+                }
+            }.isInstanceOf(ConstraintViolationException::class)
+        }
+    }
+
+    @Test
+    fun `cascade REMOVE does not delete what is removed from the list`() {
+        sessionFactory(OneToManyCascadeRemove.entities).use { factory ->
+            val user = OneToManyCascadeRemove.UserEntity(null, "Alice")
+            val phone = OneToManyCascadeRemove.PhoneEntity(null, user, "0601020304")
+            factory.inTransaction { session ->
+                session.persist(user)
+                session.persist(phone)
+            }
+
+            factory.inTransaction { session ->
+                session.find(OneToManyCascadeRemove.UserEntity::class.java, user.id).phones.removeIf { it.id == phone.id }
+            }
+
+            assertThat(factory.phoneNumbers()).containsExactly("0601020304")
+        }
+    }
+
+    @Test
+    fun `delete of the user propagates with cascade REMOVE`() {
+        sessionFactory(OneToManyCascadeRemove.entities).use { factory ->
+            val user = OneToManyCascadeRemove.UserEntity(null, "Alice")
+            val phone = OneToManyCascadeRemove.PhoneEntity(null, user, "0601020304")
+            factory.inTransaction { session ->
+                session.persist(user)
+                session.persist(phone)
+            }
+
+            factory.inTransaction { session ->
+                val found = session.find(OneToManyCascadeRemove.UserEntity::class.java, user.id)
+                session.repository<OneToManyCascadeRemove.UserRepository>().delete(found)
+            }
+
+            assertThat(factory.phoneNumbers()).isEmpty()
+        }
+    }
+
+    @Test
+    fun `delete of the user propagates with orphanRemoval`() {
+        sessionFactory(OneToManyOrphanRemoval.entities).use { factory ->
+            val user = OneToManyOrphanRemoval.UserEntity(null, "Alice")
+            val phone = OneToManyOrphanRemoval.PhoneEntity(null, user, "0601020304")
+            factory.inTransaction { session ->
+                session.persist(user)
+                session.persist(phone)
+            }
+
+            factory.inTransaction { session ->
+                val found = session.find(OneToManyOrphanRemoval.UserEntity::class.java, user.id)
+                session.repository<OneToManyOrphanRemoval.UserRepository>().delete(found)
+            }
+
+            assertThat(factory.phoneNumbers()).isEmpty()
+        }
+    }
+
+    private inline fun <reified R : Repository<*, *>> Session.repository(): R =
+        JpaRepositoryFactory(this).getRepository(R::class.java)
+
+    private fun SessionFactory.phoneNumbers(): List<String> = fromTransaction { session ->
+        session.createNativeQuery("select phone_number from phone", String::class.java).list()
     }
 
     private fun configuration(entities: Array<out KClass<*>>) = Configuration().apply {
