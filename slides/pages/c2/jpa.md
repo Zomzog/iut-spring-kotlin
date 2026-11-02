@@ -47,26 +47,34 @@ class: text-left
 
 | id  | name         | kind        |
 | --- | ------------ | ----------- |
-| 1   | Discord      | DRACONEQUUS |
+| <span v-mark.circle.red="3">1</span> | Discord      | DRACONEQUUS |
 | 2   | Rainbow Dash | PEGASUS     |
 | 3   | Pinkie Pie   | EARTH       |
 
 <br>
 
-<div v-click>
+<div v-click.at="2">
 
 |id| PonyId | Occupation |
 |--| -- | -- |
-| 1 | 1 | Spirit of Chaos|
-| 2 | 1 | Ruler of Equestria|
+| 1 | <span v-mark.circle.red="3">1</span> | Spirit of Chaos|
+| 2 | <span v-mark.circle.red="3">1</span> | Ruler of Equestria|
 | 3 | 3 | Baker|
 
 </div>
 
 ::right::
 
-<div v-click>
+<div v-click.at="1">
 
+````md magic-move {at: '4'}
+```json
+{
+  "id": 1,
+  "name": "Discord",
+  "kind": "DRACONEQUUS",
+}
+```
 ```json
 {
   "id": 1,
@@ -78,11 +86,31 @@ class: text-left
   ]
 }
 ```
+````
 
 </div>
 
-<div v-click>
+<div v-click.at="5">
 
+````md magic-move {at:'5'}
+```kotlin
+class Pony(
+)
+
+class Occupation(
+)
+```
+```kotlin
+class Pony(
+    val id: Long?,
+    val name: String,
+    val kind: String,
+)
+
+class Occupation(
+    val name: String,
+)
+```
 ```kotlin
 class Pony(
     val id: Long?,
@@ -95,11 +123,13 @@ class Occupation(
     val name: String,
 )
 ```
+````
 
 </div>
 
 <!--
 Un example de BDD relationnel avec un 1-n
+En JPA, on représente ce modèle SQL sous forme d'objets hiérarchiques
 -->
 
 ---
@@ -450,6 +480,20 @@ interface JpaRepository<ENTITY, ID> {
 
   fun deleteAll(): Unit
 }
+```
+```kotlin
+interface CrudRepository<ENTITY, ID> {
+  fun save(entity: ENTITY): ENTITY
+  fun findById(id: ID): Optional<ENTITY>
+  fun deleteById(id: ID): Unit
+  fun deleteAll(): Unit
+}
+
+interface ListCrudRepository<ENTITY, ID> : CrudRepository<ENTITY, ID> {
+  fun findAll(): List<ENTITY>
+}
+
+interface JpaRepository<ENTITY, ID> : ListCrudRepository<ENTITY, ID>
 ```
 ````
 
