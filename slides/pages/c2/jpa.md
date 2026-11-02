@@ -362,7 +362,7 @@ class Repository {
   }
 }
 ```
-```kotlin{9-13}
+```kotlin{9-11}
 class Repository {
 
   @PersistenceContext
@@ -374,7 +374,6 @@ class Repository {
   fun findAll(): List<Pony> = entityManager
       .createQuery("SELECT p from Pony p", Pony::class.java)
       .resultList
-  }
 }
 ```
 ````
@@ -778,7 +777,7 @@ class Pony(
 ```
 ```kotlin
 @Entity
-@Table("PonyTable")
+@Table(name = "PonyTable")
 class Pony(
     @Id @GeneratedValue
     val id: Long?,
@@ -788,7 +787,7 @@ class Pony(
 ```
 ```kotlin
 @Entity
-@Table("PonyTable")
+@Table(name = "PonyTable")
 class Pony(
     @Id @GeneratedValue
     val id: Long?,
@@ -799,7 +798,7 @@ class Pony(
 ```
 ```kotlin
 @Entity
-@Table("PonyTable")
+@Table(name = "PonyTable")
 class Pony(
     @Id @GeneratedValue
     val id: Long?,
@@ -810,7 +809,7 @@ class Pony(
 ```
 ```kotlin
 @Entity
-@Table("PonyTable")
+@Table(name = "PonyTable")
 class Pony(
     @Id @GeneratedValue
     val id: Long?,
