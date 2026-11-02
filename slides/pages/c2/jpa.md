@@ -47,26 +47,34 @@ class: text-left
 
 | id  | name         | kind        |
 | --- | ------------ | ----------- |
-| 1   | Discord      | DRACONEQUUS |
+| <span v-mark.circle.red="3">1</span> | Discord      | DRACONEQUUS |
 | 2   | Rainbow Dash | PEGASUS     |
 | 3   | Pinkie Pie   | EARTH       |
 
 <br>
 
-<div v-click>
+<div v-click.at="2">
 
 |id| PonyId | Occupation |
 |--| -- | -- |
-| 1 | 1 | Spirit of Chaos|
-| 2 | 1 | Ruler of Equestria|
+| 1 | <span v-mark.circle.red="3">1</span> | Spirit of Chaos|
+| 2 | <span v-mark.circle.red="3">1</span> | Ruler of Equestria|
 | 3 | 3 | Baker|
 
 </div>
 
 ::right::
 
-<div v-click>
+<div v-click.at="1">
 
+````md magic-move {at: '4'}
+```json
+{
+  "id": 1,
+  "name": "Discord",
+  "kind": "DRACONEQUUS",
+}
+```
 ```json
 {
   "id": 1,
@@ -78,11 +86,31 @@ class: text-left
   ]
 }
 ```
+````
 
 </div>
 
-<div v-click>
+<div v-click.at="5">
 
+````md magic-move {at:'5'}
+```kotlin
+class Pony(
+)
+
+class Occupation(
+)
+```
+```kotlin
+class Pony(
+    val id: Long?,
+    val name: String,
+    val kind: String,
+)
+
+class Occupation(
+    val name: String,
+)
+```
 ```kotlin
 class Pony(
     val id: Long?,
@@ -95,11 +123,13 @@ class Occupation(
     val name: String,
 )
 ```
+````
 
 </div>
 
 <!--
 Un example de BDD relationnel avec un 1-n
+En JPA, on représente ce modèle SQL sous forme d'objets hiérarchiques
 -->
 
 ---
@@ -334,12 +364,12 @@ class Repository {
   @PersistenceContext
   private lateinit var entityManager: EntityManager
 
-  fun save(pony: Pony) = factory.createEntityManager().use { em ->
+🚫 fun save(pony: Pony) = factory.createEntityManager().use { em ->
     em.transaction.begin()
     em.persist(pony)
     em.transaction.commit()
   }
-  fun findAll(): List<Pony> = factory.createEntityManager().use { em ->
+🚫 fun findAll(): List<Pony> = factory.createEntityManager().use { em ->
     em.createQuery("SELECT p from Pony p WHERE p.name = :ponyName", Pony::class.java)
       .setParameter("ponyName", "Pinkie")
       .getResultList();
@@ -355,14 +385,14 @@ class Repository {
   @Transactional
   fun save(pony: Pony) = entityManager.persist(pony)
 
-  fun findAll(): List<Pony> = factory.createEntityManager().use { em ->
+🚫 fun findAll(): List<Pony> = factory.createEntityManager().use { em ->
     em.createQuery("SELECT p from Pony p WHERE p.name = :ponyName", Pony::class.java)
       .setParameter("ponyName", "Pinkie")
       .getResultList();
   }
 }
 ```
-```kotlin{9-13}
+```kotlin{9-11}
 class Repository {
 
   @PersistenceContext
@@ -374,7 +404,6 @@ class Repository {
   fun findAll(): List<Pony> = entityManager
       .createQuery("SELECT p from Pony p", Pony::class.java)
       .resultList
-  }
 }
 ```
 ````
@@ -452,6 +481,20 @@ interface JpaRepository<ENTITY, ID> {
   fun deleteAll(): Unit
 }
 ```
+```kotlin
+interface CrudRepository<ENTITY, ID> {
+  fun save(entity: ENTITY): ENTITY
+  fun findById(id: ID): Optional<ENTITY>
+  fun deleteById(id: ID): Unit
+  fun deleteAll(): Unit
+}
+
+interface ListCrudRepository<ENTITY, ID> : CrudRepository<ENTITY, ID> {
+  fun findAll(): List<ENTITY>
+}
+
+interface JpaRepository<ENTITY, ID> : ListCrudRepository<ENTITY, ID>
+```
 ````
 
 <div v-click>
@@ -505,6 +548,19 @@ interface DemoRepository : JpaRepository<UUID, DemoEntity>
 
 </div>
 
+<!--
+Seule la première écriture est la bonne.
+
+class : ça ne compile pas, il faudrait implémenter toutes les méthodes.
+C'est Spring Data qui génère l'implémentation, à partir de l'interface.
+
+@Repository : ça marche, mais c'est inutile.
+Spring Data trouve déjà le repository parce qu'il hérite de JpaRepository.
+
+`JpaRepository<UUID, DemoEntity>` : les types sont inversés, c'est l'entité puis l'id.
+Ça compile, mais l'application ne démarre pas : `Not a managed type: class java.util.UUID`.
+-->
+
 ---
 layout: full
 class: text-left
@@ -528,7 +584,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllOrderByIdDesc(): List<DemoEntity>
+    fun findAllByOrderByIdDesc(): List<DemoEntity>
 }
 ```
 ```kotlin
@@ -536,7 +592,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllOrderByIdDesc(): List<DemoEntity>
+    fun findAllByOrderByIdDesc(): List<DemoEntity>
 
     fun findAllByAgeLessThanEqual(age: Int): List<DemoEntity>
 }
@@ -546,7 +602,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllOrderByIdDesc(): List<DemoEntity>
+    fun findAllByOrderByIdDesc(): List<DemoEntity>
 
     fun findAllByAgeLessThanEqual(age: Int): List<DemoEntity>
 
@@ -558,7 +614,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllOrderByIdDesc(): List<DemoEntity>
+    fun findAllByOrderByIdDesc(): List<DemoEntity>
 
     fun findAllByAgeLessThanEqual(age: Int): List<DemoEntity>
 
@@ -723,7 +779,7 @@ class DemoRepositoryCustomImpl : DemoRepositoryCustom {
         val root: Root<DemoEntity> = queryBuilder.from(DemoEntity::class.java)
         var query = queryBuilder.select(root)
         if (name != null) {
-            val nameField: Path<DemoEntity> = root.get("name")
+            val nameField: Path<String> = root.get("name")
             query = query.where(criteriaBuilder.equal(nameField, name))
         }
     }
@@ -740,7 +796,7 @@ class DemoRepositoryCustomImpl : DemoRepositoryCustom {
         val root: Root<DemoEntity> = queryBuilder.from(DemoEntity::class.java)
         var query = queryBuilder.select(root)
         if (name != null) {
-            val nameField: Path<DemoEntity> = root.get("name")
+            val nameField: Path<String> = root.get("name")
             query = query.where(criteriaBuilder.equal(nameField, name))
         }
         return entityManager.createQuery(query).resultList
@@ -778,7 +834,7 @@ class Pony(
 ```
 ```kotlin
 @Entity
-@Table("PonyTable")
+@Table(name = "PonyTable")
 class Pony(
     @Id @GeneratedValue
     val id: Long?,
@@ -788,7 +844,7 @@ class Pony(
 ```
 ```kotlin
 @Entity
-@Table("PonyTable")
+@Table(name = "PonyTable")
 class Pony(
     @Id @GeneratedValue
     val id: Long?,
@@ -799,7 +855,7 @@ class Pony(
 ```
 ```kotlin
 @Entity
-@Table("PonyTable")
+@Table(name = "PonyTable")
 class Pony(
     @Id @GeneratedValue
     val id: Long?,
@@ -810,7 +866,7 @@ class Pony(
 ```
 ```kotlin
 @Entity
-@Table("PonyTable")
+@Table(name = "PonyTable")
 class Pony(
     @Id @GeneratedValue
     val id: Long?,

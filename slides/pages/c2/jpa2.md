@@ -26,19 +26,21 @@ class: text-left
 
 | id  | name         | kind        |
 | --- | ------------ | ----------- |
-| 1   | Discord      | DRACONEQUUS |
-| 2   | Rainbow Dash | PEGASUS     |
-| 3   | Pinkie Pie   | EARTH       |
+| <span v-mark.circle.red="1">1</span> | Discord      | DRACONEQUUS |
+| <span v-mark.box.green="2">2</span> | Rainbow Dash | PEGASUS     |
+| <span v-mark.circle.blue="3">3</span> | Pinkie Pie   | EARTH       |
+
+<br>
 
 | PonyId | Occupation |
 | -- | -- |
-| 1 | Spirit of Chaos|
-| 2 | Ruler of Equestria|
-| 3 | Baker|
+| <span v-mark.circle.red="1">1</span> | Spirit of Chaos|
+| <span v-mark.box.green="2">2</span> | Ruler of Equestria|
+| <span v-mark.circle.blue="3">3</span> | Baker|
 
 ::right::
 
-<div v-click>
+<div v-click.at="4">
 
 ```kotlin
 class Pony(
@@ -69,19 +71,21 @@ class: text-left
 
 | id  | name         |
 | --- | ------------ |
-| 1   | Discord      |
+| <span v-mark.circle.red="1">1</span> | Discord      |
 | 2   | Rainbow Dash |
-| 3   | Pinkie Pie   |
+| <span v-mark.circle.blue="2">3</span> | Pinkie Pie   |
+
+<br>
 
 |id| PonyId | Occupation |
 |--| -- | -- |
-| 1 | 1 | Spirit of Chaos|
-| 2 | 1 | Ruler of Equestria|
-| 3 | 3 | Baker|
+| 1 | <span v-mark.circle.red="1">1</span> | Spirit of Chaos|
+| 2 | <span v-mark.circle.red="1">1</span> | Ruler of Equestria|
+| 3 | <span v-mark.circle.blue="2">3</span> | Baker|
 
 ::right::
 
-<div v-click>
+<div v-click.at="3">
 
 ```kotlin
 class Pony(
@@ -113,19 +117,21 @@ class: text-left
 
 | id  | name         | occupation_id |
 | --- | ------------ | ------------- |
-| 1   | Discord      | 1             |
-| 2   | Rainbow Dash | 2             |
-| 3   | Pinkie Pie   | 3             |
+| 1   | Discord      | <span v-mark.circle.red="1">1</span> |
+| 2   | Rainbow Dash | <span v-mark.circle.red="1">1</span> |
+| 3   | Pinkie Pie   | <span v-mark.circle.blue="2">3</span> |
+
+<br>
 
 |id| Occupation |
 |--| -- |
-| 1 | Spirit of Chaos|
+| <span v-mark.circle.red="1">1</span> | Spirit of Chaos|
 | 2 | Ruler of Equestria|
-| 3 | Baker|
+| <span v-mark.circle.blue="2">3</span> | Baker|
 
 ::right::
 
-<div v-click>
+<div v-click.at="3">
 
 ```kotlin
 class Pony(
@@ -145,6 +151,7 @@ class Occupation(
 ---
 layout: TwoColumnsTitle
 class: text-left
+glowSeed: 1144
 ---
 
 ::title::
@@ -155,19 +162,32 @@ class: text-left
 
 | id  | name         |
 | --- | ------------ |
-| 1   | Discord      |
-| 2   | Rainbow Dash |
-| 3   | Pinkie Pie   |
+| <span v-mark.circle.red="2">1</span> | Discord      |
+| <span v-mark.box.green="3">2</span> | Rainbow Dash |
+| <span v-mark.circle.blue="4">3</span> | Pinkie Pie   |
+
+<br>
 
 |id| Occupation |
 |--| -- |
-| 1 | Spirit of Chaos|
-| 2 | Ruler of Equestria|
-| 3 | Baker|
+| <span v-mark.circle.red="2"><span v-mark.box.green="{ at: 3, padding: 8 }">1</span></span> | Spirit of Chaos|
+| <span v-mark.circle.red="2">2</span> | Ruler of Equestria|
+| <span v-mark.circle.blue="4">3</span> | Baker|
 
 ::right::
 
-<div v-click>
+<div v-click.at="1">
+
+|pony_id| occupation_id |
+|--| -- |
+| <span v-mark.circle.red="2">1</span> | <span v-mark.circle.red="2">1</span> |
+| <span v-mark.circle.red="2">1</span> | <span v-mark.circle.red="2">2</span> |
+| <span v-mark.box.green="3">2</span> | <span v-mark.box.green="3">1</span> |
+| <span v-mark.circle.blue="4">3</span> | <span v-mark.circle.blue="4">3</span> |
+
+</div>
+
+<div v-click.at="5">
 
 ```kotlin
 class Pony(
@@ -185,15 +205,9 @@ class Occupation(
 
 </div>
 
-<div v-click>
-
-|pony_id| occupation_id |
-|--| -- |
-| 1 | 1 |
-| 2 | 1 |
-| 3 | 2 |
-
-</div>
+<style>
+td, th { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+</style>
 
 ---
 layout: full
@@ -238,435 +252,587 @@ name: nom de la foreign key
 referencedColumnName : le nom de la colonne de l'autre entité utilisé pour la jointure.
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
+
+::title::
 
 ## One-To-One unidirectionnel
 
+::left::
+
 ````md magic-move
-```kotlin
+```kotlin{all|14}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        val phone: PhoneEntity,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id // Doit être unique, peut aussi être un @Column(unique = true)
-        val email: String,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 ```
-```kotlin {5}
+```kotlin {14-15}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @OneToOne
-        val phone: PhoneEntity,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id // Doit être unique, peut aussi être un @Column(unique = true)
-        val email: String,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    @OneToOne
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 ```
-```kotlin {5-6}
+```kotlin {14-16|all}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @OneToOne
-        @JoinColumn(referencedColumnName = "email")
-        val phone: PhoneEntity,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id // Doit être unique, peut aussi être un @Column(unique = true)
-        val email: String,
-        val number: String,
-)
-```
-```kotlin{5-6|all}
-@Entity
-@Table(name = "users")
-class UserEntity(
-        @Id val email: String,
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phone: PhoneEntity,
-)
-
-@Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id // Doit être unique, peut aussi être un @Column(unique = true)
-        val email: String,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 ```
 ````
 
+::right::
+
+<div v-click class="db-tables">
+
+users
+
+| id | name |
+| --- | --- |
+| 1 | Discord |
+| 2 | Rainbow Dash |
+| 3 | Pinkie Pie |
+
+phone
+
+| id | **user_id** | phone_number |
+| --- | --- | --- |
+| 1 | 1 | 0601020304 |
+| 2 | 2 | 0602030405 |
+| 3 | 3 | 0603040506 |
+
+</div>
+
 <!--
-Reference par nom de colonnes, la plus simple mais unidirectionnelle
+La clé étrangère est sur phone : la relation ne se lit que de Phone vers User
+
+Deux tables : user_id est sur phone, et il ne se répète pas
 -->
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
 
+::title::
+
 ## One-To-One bi-directionnel
+
+::left::
 
 ````md magic-move
 ```kotlin
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phone: PhoneEntity,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id // Doit être unique, peut aussi être un @Column(unique = true)
-        val email: String,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 ```
-```kotlin{15-17}
+```kotlin {7}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phone: PhoneEntity,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    var phone: PhoneEntity? = null,
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id // Doit être unique, peut aussi être un @Column(unique = true)
-        val email: String,
-        @OneToOne
-        @JoinColumn(referencedColumnName = "email")
-        val user: UserEntity,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 ```
-```kotlin{15-16|all}
+```kotlin {7-9}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phone: PhoneEntity,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    @OneToOne
+    @JoinColumn(name = "phone_id")
+    var phone: PhoneEntity? = null,
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id // Doit être unique, peut aussi être un @Column(unique = true)
-        val email: String,
-        @OneToOne(mappedBy = "phone")
-        val user: UserEntity,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 ```
-```kotlin{13}
+```kotlin {7-8|all}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phone: PhoneEntity,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    @OneToOne(mappedBy = "user")
+    var phone: PhoneEntity? = null,
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @OneToOne(mappedBy = "phone")
-        val user: UserEntity,
-        val number: String,
-)
-```
-```kotlin{5-6|all}
-@Entity
-@Table(name = "users")
-class UserEntity(
-        @Id val email: String,
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(name = "fk_email")
-        var phone: PhoneEntity?,
-)
-
-@Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @OneToOne(mappedBy = "phone")
-        val user: UserEntity,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 ```
 ````
+
+::right::
+
+<div v-click class="db-tables">
+
+users
+
+| id | name |
+| --- | --- |
+| 1 | Discord |
+| 2 | Rainbow Dash |
+| 3 | Pinkie Pie |
+
+phone
+
+| id | **user_id** | phone_number |
+| --- | --- | --- |
+| 1 | 1 | 0601020304 |
+| 2 | 2 | 0602030405 |
+| 3 | 3 | 0603040506 |
+
+</div>
 
 <!--
 L'usage de var et du nullable permet de créer les objets puis les imbriquer
 
+Avec un @JoinColumn de chaque côté, il y a deux clés étrangères : une par table
+
+Le côté qui porte la clé étrangère est le côté propriétaire. L'autre côté dit mappedBy : il n'ajoute aucune colonne et relit celle du propriétaire
+
 Le mapping devient bi-directionnel
+
+La base est la même qu'en unidirectionnel : le bi-directionnel ne change que le code
 -->
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
+
+::title::
 
 ## One-To-Many unidirectionnel
 
+::left::
+
 ````md magic-move
 ```kotlin
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        val phones: List<PhoneEntity> = emptyList(),
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    val phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        val email: String,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val phoneNumber: String,
 )
 ```
-```kotlin{7}
+```kotlin {7}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        val phones: List<PhoneEntity> = emptyList(),
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    @OneToMany
+    val phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        val email: String,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val phoneNumber: String,
 )
 ```
-```kotlin{3-5|all}
+```kotlin {7-8|all}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @OneToMany(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phones: List<PhoneEntity> = emptyList(),
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    @OneToMany
+    @JoinColumn(name = "user_id") // la FK est sur phone
+    val phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        val email: String,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val phoneNumber: String,
 )
 ```
 ````
+
+::right::
+
+<div v-click class="db-tables">
+
+users
+
+| id | name |
+| --- | --- |
+| 1 | Discord |
+| 2 | Rainbow Dash |
+| 3 | Pinkie Pie |
+
+phone
+
+| id | **user_id** | phone_number |
+| --- | --- | --- |
+| 1 | 1 | 0601020304 |
+| 2 | 1 | 0602030405 |
+| 3 | 3 | 0603040506 |
+
+</div>
 
 <!--
 One-to-many unidirectionnel
+
+MutableList : Hibernate remplace la collection, et on doit pouvoir y ajouter ou en retirer un élément
+
+Deux tables : user_id est sur phone, même si PhoneEntity ne connaît pas User, et il se répète
 -->
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
+
+::title::
 
 ## Many-To-One
 
+::left::
+
 ````md magic-move
 ```kotlin
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @OneToMany(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phones: List<PhoneEntity> = emptyList(),
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    @OneToMany
+    @JoinColumn(name = "user_id") // la FK est sur phone
+    val phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        val email: String,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val phoneNumber: String,
 )
 ```
-```kotlin{10-12}
+```kotlin {17-19}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @OneToMany(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phones: List<PhoneEntity> = emptyList(),
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    @OneToMany
+    @JoinColumn(name = "user_id") // la FK est sur phone
+    val phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @ManyToOne
-        @JoinColumn(name="fk_email")
-        val user: UserEntity?,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 ```
-```kotlin{3|all}
+```kotlin {7}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
-        var phones: List<PhoneEntity> = emptyList(),
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    @OneToMany(mappedBy = "user")
+    val phones: MutableList<PhoneEntity> = mutableListOf(),
 )
 
 @Entity
 @Table(name = "phone")
 class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @ManyToOne
-        @JoinColumn(name="fk_email")
-        val user: UserEntity?,
-        val number: String,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
+    val phoneNumber: String,
+)
+```
+```kotlin {7|all}
+@Entity
+@Table(name = "users")
+class UserEntity(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    val phones: MutableList<PhoneEntity> = mutableListOf(),
+)
+
+@Entity
+@Table(name = "phone")
+class PhoneEntity(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
+    val phoneNumber: String,
 )
 ```
 ````
+
+::right::
+
+<div v-click class="db-tables">
+
+users
+
+| id | name |
+| --- | --- |
+| 1 | Discord |
+| 2 | Rainbow Dash |
+| 3 | Pinkie Pie |
+
+phone
+
+| id | **user_id** | phone_number |
+| --- | --- | --- |
+| 1 | 1 | 0601020304 |
+| 2 | 1 | 0602030405 |
+| 3 | 3 | 0603040506 |
+
+</div>
+
 <!--
 ManyToOne pour le rendre bi-directionnel
+
+Le many porte la clé étrangère : c'est lui le propriétaire, le côté OneToMany passe en mappedBy
+
+La cascade propage l'enregistrement du user à ses phones
+
+La base est la même qu'en One-To-Many unidirectionnel
 -->
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
 
+::title::
+
 ## Many-To-Many
+
+::left::
 
 ````md magic-move
 ```kotlin
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        var phones: List<PhoneEntity> = emptyList(),
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    val groups: MutableList<GroupEntity> = mutableListOf(),
 )
+
 @Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        val users: List<UserEntity>,
-        val number: String,
+@Table(name = "groups")
+class GroupEntity(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val users: MutableList<UserEntity> = mutableListOf(),
 )
 ```
-```kotlin{5-9}
+```kotlin {7-13}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @ManyToMany(cascade = [CascadeType.ALL])
-        @JoinTable(
-                name = "user_phone",
-                joinColumns = [JoinColumn(name = "email")],
-                inverseJoinColumns = [JoinColumn(name = "id")])
-        var phones: List<PhoneEntity> = emptyList(),
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    @ManyToMany(cascade = [CascadeType.PERSIST])
+    @JoinTable(
+        name = "user_group",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "group_id")],
+    )
+    val groups: MutableList<GroupEntity> = mutableListOf(),
 )
+
 @Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        val users: List<UserEntity>,
-        val number: String,
+@Table(name = "groups")
+class GroupEntity(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val users: MutableList<UserEntity> = mutableListOf(),
 )
 ```
-```kotlin{16|all}
+```kotlin {21-22|all}
 @Entity
 @Table(name = "users")
 class UserEntity(
-        @Id val email: String,
-        @ManyToMany(cascade = [CascadeType.ALL])
-        @JoinTable(
-                name = "user_phone",
-                joinColumns = [JoinColumn(name = "email")],
-                inverseJoinColumns = [JoinColumn(name = "id")])
-        var phones: List<PhoneEntity> = emptyList(),
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    val name: String,
+    @ManyToMany(cascade = [CascadeType.PERSIST])
+    @JoinTable(
+        name = "user_group",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "group_id")],
+    )
+    val groups: MutableList<GroupEntity> = mutableListOf(),
 )
+
 @Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @ManyToMany
-        val users: List<UserEntity>,
-        val number: String,
+@Table(name = "groups")
+class GroupEntity(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+    @ManyToMany(mappedBy = "groups")
+    val users: MutableList<UserEntity> = mutableListOf(),
 )
 ```
 ````
 
----
-layout: cover
-hideInToc: false
----
+::right::
 
-## TL;DR Jointures
+<div v-click class="db-tables">
 
----
-layout: full
-class: text-left
----
+users
 
-## OneToOne - unidirectionnel
+| id | name |
+| --- | --- |
+| 1 | Discord |
+| 2 | Rainbow Dash |
+| 3 | Pinkie Pie |
 
-```kotlin
-@Entity
-@Table(name = "users")
-class UserEntity(
-        @Id val email: String,
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phone: PhoneEntity,
-)
+user_group
 
-@Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id // Doit être unique, peut aussi être un @Column(unique = true)
-        val email: String,
-        val number: String,
-)
-```
+| **user_id** | **group_id** |
+| --- | --- |
+| 1 | 1 |
+| 2 | 1 |
+| 3 | 1 |
+| 3 | 2 |
+
+groups
+
+| id |
+| --- |
+| 1 |
+| 2 |
+
+</div>
 
 <!--
 ManyToMany, il faut une table de jointure
+
+Trois tables : user_id et group_id se répètent tous les deux dans user_group
 -->
 
 ---
@@ -674,164 +840,86 @@ layout: full
 class: text-left
 ---
 
-## OneToOne - bi-directionnel
+## Cascades
 
-```kotlin
-@Entity
-@Table(name = "users")
-class UserEntity(
-        @Id val email: String,
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phone: PhoneEntity,
-)
+| `CascadeType` | Se propage sur |
+| --- | --- |
+| `PERSIST` | `save()` d'une nouvelle entité (id null) |
+| `MERGE` | `save()` d'une entité existante (id renseigné) |
+| `REMOVE` | `delete()` |
+| `ALL` | tous les types |
 
-@Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id // Doit être unique, peut aussi être un @Column(unique = true)
-        val email: String,
-        @OneToOne(mappedBy = "phone")
-        val user: UserEntity,
-        val number: String,
-)
-```
+<br/>
+
+`REFRESH` et `DETACH` existent, inclus dans `ALL`.
+
+<br/>
+
+<div v-click>
+
+`ALL` inclut `REMOVE` : à garder pour les enfants qui appartiennent au parent.
+
+</div>
+
+<style>
+:not(pre) > code {
+  background: rgba(255, 255, 255, 0.12);
+  color: inherit;
+  padding: 0 0.3em;
+  border-radius: 0.25em;
+  font-size: 0.85em;
+}
+</style>
+
+<!--
+Un phone appartient à son user : ALL convient
+
+Un groupe est partagé : avec ALL, supprimer un user tente de supprimer ses groupes, et la base refuse dès qu'un autre user y est lié. D'où PERSIST sur le Many-To-Many
+
+Avec PERSIST seul sur phones, save() d'un user existant n'enregistre pas ses nouveaux phones : il insère une ligne vide, sans numéro ni user, et sans erreur
+-->
 
 ---
-layout: full
+layout: TwoColumnsTitle
 class: text-left
 ---
 
-## OneToOne - bi-directionnel
+::title::
+
+## orphanRemoval
+
+::left::
 
 ```kotlin
-@Entity
-@Table(name = "users")
-class UserEntity(
-        @Id val email: String,
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(name = "fk_email")
-        var phone: PhoneEntity?,
-)
-
-@Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @OneToOne(mappedBy = "phone")
-        val user: UserEntity,
-        val number: String,
-)
+@OneToMany(mappedBy = "user", orphanRemoval = true)
+val phones: MutableList<PhoneEntity> = mutableListOf(),
 ```
-
----
-layout: full
-class: text-left
----
-
-## OneToMany - unidirectionnel
 
 ```kotlin
-@Entity
-@Table(name = "users")
-class UserEntity(
-        @Id val email: String,
-        @OneToMany(cascade = [CascadeType.ALL])
-        @JoinColumn(referencedColumnName = "email")
-        val phones: List<PhoneEntity> = emptyList(),
-)
-
-@Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        val email: String,
-        val number: String,
-)
+user.phones.removeIf { it.id == phoneId }
 ```
 
----
-layout: full
-class: text-left
----
+Retirer un phone de la liste le supprime de la base.
 
-## Many-To-One
+::right::
 
-```kotlin
-@Entity
-@Table(name = "users")
-class UserEntity(
-        @Id val email: String,
-        @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
-        var phones: List<PhoneEntity> = emptyList(),
-)
+<div v-click class="db-tables">
 
-@Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @ManyToOne
-        @JoinColumn(name="fk_email")
-        val user: UserEntity?,
-        val number: String,
-)
-```
+| Sur `phones` | retirer de la liste | supprimer le user |
+| --- | --- | --- |
+| rien | rien | erreur FK |
+| `cascade = [REMOVE]` | rien | supprimés |
+| `orphanRemoval = true` | supprimé | supprimés |
 
----
-layout: full
-class: text-left
----
+</div>
 
-## One-To-Many
+<!--
+orphanRemoval : un phone retiré de la liste est supprimé de la base
 
-```kotlin
-@Entity
-@Table(name = "users")
-class UserEntity(
-        @Id val email: String,
-        @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
-        var phones: List<PhoneEntity> = emptyList(),
-)
+REMOVE ne réagit qu'à la suppression du user : un phone retiré de la liste reste en base
 
-@Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @ManyToOne
-        @JoinColumn(name="fk_email")
-        val user: UserEntity?,
-        val number: String,
-)
-```
-
----
-layout: full
-class: text-left
----
-
-## Many-To-Many
-
-```kotlin
-@Entity
-@Table(name = "users")
-class UserEntity(
-        @Id val email: String,
-        @ManyToMany(cascade = [CascadeType.ALL])
-        @JoinTable(
-                name = "user_phone",
-                joinColumns = [JoinColumn(name = "email")],
-                inverseJoinColumns = [JoinColumn(name = "id")])
-        var phones: List<PhoneEntity> = emptyList(),
-)
-@Entity
-@Table(name = "phone")
-class PhoneEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int?,
-        @ManyToMany
-        val users: List<UserEntity>,
-        val number: String,
-)
-```
+Sans rien, on ne peut pas supprimer un user qui a des phones : la clé étrangère l'en empêche
+-->
 
 ---
 layout: full

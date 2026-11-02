@@ -7,7 +7,8 @@
         "dev:c2": "slidev c2.md --open",
         "dev:c3": "slidev c3.md --open",
         "dev:c4": "slidev c4.md --open",
-        "build": "for c in c1 c2 c3 c4; do slidev build $c.md --base \"${BASE:-/}$c/\" --out dist/$c || exit 1; done && cp pages/index.html dist/"
+        "dev:c42": "slidev c42.md --open",
+        "build": "for c in c1 c2 c3 c4 c42; do slidev build $c.md --base \"${BASE:-/}$c/\" --out dist/$c || exit 1; done && cp pages/index.html dist/"
     },
     "dependencies": {
         "@slidev/cli": "^53.0.0",

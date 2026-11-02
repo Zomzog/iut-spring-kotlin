@@ -3,7 +3,7 @@ layout: cover
 hideInToc: false
 ---
 
-## Monitoring
+# Monitoring
 
 ---
 layout: full
@@ -42,7 +42,7 @@ class: text-left
 
 <div v-click>
 
-L'ajout de la dépendance Spring fournit directement plusieurs endpoints sous `/actuator`.
+L'ajout de la dépendance fournit plusieurs endpoints sous `/actuator`, mais seul `/actuator/health` est exposé en HTTP par défaut.
 
 |endpoints | description|
 |--|--|
@@ -213,7 +213,7 @@ class: text-left
 
 <v-click>
 
-En ajoutant simplement ces dépendances, Spring Boot active automatiquement l'endpoint `/actuator/prometheus` (cf. `@ConditionalOnClass` et les auto-configurations).
+Ces dépendances créent l'endpoint `/actuator/prometheus` (cf. `@ConditionalOnClass` et les auto-configurations), mais il faut encore l'exposer via `exposure.include`.
 
 </v-click>
 <v-click>
