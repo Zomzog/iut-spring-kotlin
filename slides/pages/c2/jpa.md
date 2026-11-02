@@ -334,12 +334,12 @@ class Repository {
   @PersistenceContext
   private lateinit var entityManager: EntityManager
 
-  fun save(pony: Pony) = factory.createEntityManager().use { em ->
+🚫 fun save(pony: Pony) = factory.createEntityManager().use { em ->
     em.transaction.begin()
     em.persist(pony)
     em.transaction.commit()
   }
-  fun findAll(): List<Pony> = factory.createEntityManager().use { em ->
+🚫 fun findAll(): List<Pony> = factory.createEntityManager().use { em ->
     em.createQuery("SELECT p from Pony p WHERE p.name = :ponyName", Pony::class.java)
       .setParameter("ponyName", "Pinkie")
       .getResultList();
@@ -355,7 +355,7 @@ class Repository {
   @Transactional
   fun save(pony: Pony) = entityManager.persist(pony)
 
-  fun findAll(): List<Pony> = factory.createEntityManager().use { em ->
+🚫 fun findAll(): List<Pony> = factory.createEntityManager().use { em ->
     em.createQuery("SELECT p from Pony p WHERE p.name = :ponyName", Pony::class.java)
       .setParameter("ponyName", "Pinkie")
       .getResultList();
@@ -527,7 +527,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllOrderByIdDesc(): List<DemoEntity>
+    fun findAllByOrderByIdDesc(): List<DemoEntity>
 }
 ```
 ```kotlin
@@ -535,7 +535,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllOrderByIdDesc(): List<DemoEntity>
+    fun findAllByOrderByIdDesc(): List<DemoEntity>
 
     fun findAllByAgeLessThanEqual(age: Int): List<DemoEntity>
 }
@@ -545,7 +545,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllOrderByIdDesc(): List<DemoEntity>
+    fun findAllByOrderByIdDesc(): List<DemoEntity>
 
     fun findAllByAgeLessThanEqual(age: Int): List<DemoEntity>
 
@@ -557,7 +557,7 @@ interface DemoRepository : JpaRepository<DemoEntity, UUID> {
 
     fun findAllByName(name: String): List<DemoEntity>
 
-    fun findAllOrderByIdDesc(): List<DemoEntity>
+    fun findAllByOrderByIdDesc(): List<DemoEntity>
 
     fun findAllByAgeLessThanEqual(age: Int): List<DemoEntity>
 
@@ -722,7 +722,7 @@ class DemoRepositoryCustomImpl : DemoRepositoryCustom {
         val root: Root<DemoEntity> = queryBuilder.from(DemoEntity::class.java)
         var query = queryBuilder.select(root)
         if (name != null) {
-            val nameField: Path<DemoEntity> = root.get("name")
+            val nameField: Path<String> = root.get("name")
             query = query.where(criteriaBuilder.equal(nameField, name))
         }
     }
@@ -739,7 +739,7 @@ class DemoRepositoryCustomImpl : DemoRepositoryCustom {
         val root: Root<DemoEntity> = queryBuilder.from(DemoEntity::class.java)
         var query = queryBuilder.select(root)
         if (name != null) {
-            val nameField: Path<DemoEntity> = root.get("name")
+            val nameField: Path<String> = root.get("name")
             query = query.where(criteriaBuilder.equal(nameField, name))
         }
         return entityManager.createQuery(query).resultList
